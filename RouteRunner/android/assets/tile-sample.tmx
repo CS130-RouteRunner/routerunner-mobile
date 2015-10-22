@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" nextobjectid="25">
+ <tileset firstgid="1" name="basic" tilewidth="16" tileheight="16" spacing="1" margin="1" tilecount="480">
+  <image source="tiles.png" width="343" height="410"/>
+  <tile id="66">
+   <properties>
+    <property name="base2" value=""/>
+   </properties>
+  </tile>
+  <tile id="81">
+   <properties>
+    <property name="dest2" value=""/>
+   </properties>
+  </tile>
+  <tile id="94">
+   <properties>
+    <property name="base1" value=""/>
+   </properties>
+  </tile>
+  <tile id="155">
+   <properties>
+    <property name="dest1" value=""/>
+   </properties>
+  </tile>
+  <tile id="246">
+   <properties>
+    <property name="free" value="unblocked tiles"/>
+   </properties>
+  </tile>
+  <tile id="291">
+   <properties>
+    <property name="gas" value=""/>
+   </properties>
+  </tile>
+  <tile id="311">
+   <properties>
+    <property name="gas" value=""/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="map" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzdmTFuwzAMRZU9HnsDLwV6gCwBCvQE7gV6sS49pdcmqAUwAkl9UpTsdPhQEFsSH/mlyM6aUloVvRxMWqzvREfjkGI+E1GOz60t+/eKaT7puZXySTm+GY7cIvVr1X38y+lxLo5Zy8W5aFvjscbi+S4qJmTu1pg93kL6W/0bWdtanrhrUj2s/u3pqxaOI/rqWeSpx5oec9GzHigHuibL+0bWtMZ7TX9r8rp9lvK0Jn7tRnm/dX3k+BeAQ6t5BMd88nMshawcyHzlZ0kX0N+euqEclrWW+0xEaCzSWK0c5Zh5DZWcVyJ6fTLEQvlrtY3cQzj/ahzouprA+7haSl5CYqCfOQ6pJtK4HMeUcJ8ifpWYPRyWPSLCW9JcXCxLhcPiZ4uv0LXO9anNjcSJ7C896mGdD2XT+krzvxaS+vTyKt2ja/WJ4uDGKfcLbsxy3HxfPiNp5wuUbW8OrR7amtE48jljFId03puV52TEq+jZrbdqcVj3YqQe1uueNdzaj8tDLScohzfGUfz3tnxG0vocWdZ11ppX5D5PPTy+8nDvxeGJkYtH+m6Uas8NFg5p/GfwFX0fwI2FcoyomcbKvQ/wcFhyi/bxMEZyRP7ngewzLazcuTHrorwP9NQwwg+SuN+zaF95Oaze867zEf+11fhbc8v5LtJHWo1qHrGwcdejOf6TLDnx+qp3PZDxEQ5rnyP4gcbydtPX1kb5obd+bvrYWsqRNTqeFo6svWOJ1C/wYsdg
+  </data>
+ </layer>
+ <objectgroup name="base1">
+  <object id="2" x="32" y="752" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="base2">
+  <object id="3" x="752" y="752" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="dest1">
+  <object id="4" x="752" y="32" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="dest2">
+  <object id="6" x="32" y="32" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="gas">
+  <object id="7" x="496" y="32" height="16"/>
+  <object id="8" x="480" y="32" width="16" height="32"/>
+  <object id="9" x="96" y="96" width="16" height="32"/>
+  <object id="10" x="64" y="240" width="16" height="32"/>
+  <object id="11" x="304" y="208" width="16" height="32"/>
+  <object id="14" x="560" y="160" width="16" height="32"/>
+  <object id="15" x="720" y="160" width="16" height="32"/>
+  <object id="16" x="672" y="400" width="16" height="32"/>
+  <object id="17" x="416" y="416" width="16" height="32"/>
+  <object id="19" x="160" y="480" width="16" height="32"/>
+  <object id="20" x="512" y="560" width="16" height="32"/>
+  <object id="21" x="736" y="608" width="16" height="32"/>
+  <object id="22" x="176" y="656" width="16" height="32"/>
+  <object id="24" x="48" y="608" width="16" height="32"/>
+ </objectgroup>
+</map>
