@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -56,8 +57,18 @@ public class GameMaster implements Screen {
         renderer.render();
 
         renderer.getBatch().begin();
-        truck.draw(renderer.getBatch());
+        //truck.draw(renderer.getBatch());
+        renderer.getBatch().draw(truck, truck.getX(), truck.getY());
         renderer.getBatch().end();
+
+        if(Gdx.input.isTouched()) {
+            Vector3 touchPos = new Vector3();
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+            truck.setMoveTo(touchPos.x - 64/2, touchPos.y);
+        }
+
+        truck.update(0.5f);
     }
 
     @Override
