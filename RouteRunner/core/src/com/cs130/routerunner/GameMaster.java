@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -31,10 +32,9 @@ public class GameMaster implements Screen{
     private Texture texture;
     private OrthographicCamera cam_;
     private Viewport viewport_;
-    private TmxMapLoader mapLoader_;
-    private TiledMap map_;
-    private OrthogonalTiledMapRenderer renderer_;
     private TapHandler tapHandler_;
+    private SpriteBatch batch;
+    private Sprite mapSprite;
 
     private Actor truck;
     private Route r;
@@ -54,16 +54,23 @@ public class GameMaster implements Screen{
 
         //setup some map related things
         this.game_ = game;
+
+        mapSprite = new Sprite(new Texture(Gdx.files.internal
+                ("1280x1280westwood2x.png")));
+        mapSprite.setPosition(0,0);
+        mapSprite.setSize(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT);
+
         cam_ = new OrthographicCamera();
-        viewport_ = new StretchViewport(game.VIEW_WIDTH, game_.VIEW_HEIGHT,
+        viewport_ = new StretchViewport(Settings.VIEW_WIDTH,
+                Settings.VIEW_HEIGHT,
                 cam_);
 
-        mapLoader_ = new TmxMapLoader();
-        map_ = mapLoader_.load("tile-sample.tmx");
-        renderer_ = new OrthogonalTiledMapRenderer(map_);
 
         cam_.position.set(viewport_.getWorldWidth() / 2,
                 viewport_.getWorldHeight() / 2, 0);
+        cam_.update();
+
+        batch = new SpriteBatch();
 
         Gdx.input.setInputProcessor(
                 new GestureDetector(new GestureHandler((this))));
@@ -107,32 +114,17 @@ public class GameMaster implements Screen{
     @Override
     public void render(float delta) {
         update(delta);
+        cam_.update();
+        batch.setProjectionMatrix(cam_.combined);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer_.setView(cam_);
-        renderer_.render();
-
-
-        renderer_.getBatch().begin();
-        //truck.draw(renderer.getBatch());
-
-        renderer_.getBatch().draw(truck, truck.getX(), truck.getY());
-        renderer_.getBatch().draw(baseSprite, base.getX(), base.getY());
-        renderer_.getBatch().end();
-
-//        if(Gdx.input.isTouched()) {
-//            Vector3 touchPos = new Vector3();
-//            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-//            camera.unproject(touchPos);
-//            truck.setMoveTo(touchPos.x - 64/2, touchPos.y);
-//            //TESTING OF ROUTES
-//        }
-
-        //truck.update(0.5f);
-        if (r != null)
-            r.updateTruckPosition();
+        batch.begin();
+        mapSprite.draw(batch);
+        batch.draw(truck, truck.getX(), truck.getY());
+        batch.draw(baseSprite, base.getX(), base.getY());
+        batch.end();
     }
 
     @Override
@@ -167,6 +159,8 @@ public class GameMaster implements Screen{
     // the main game logic goes here
     public void update(float delta) {
         // detect collisions for actors
+        if (r != null)
+            r.updateTruckPosition();
     }
     public void handleTap(float x, float y, int count) {
         // the user has tapped, and we need to do stuff depending on what
@@ -188,16 +182,18 @@ public class GameMaster implements Screen{
     public void clampCameraZoom() {
         cam_.zoom =
                 MathUtils.clamp(cam_.zoom, Settings.MAX_ZOOM,
-                        game_.WORLD_WIDTH / cam_.viewportWidth);
+                        Settings.WORLD_WIDTH / cam_.viewportWidth);
         cam_.update();
     }
     public void clampCameraPan() {
         float effectiveViewportWidth = cam_.viewportWidth * cam_.zoom;
         float effectiveViewportHeight = cam_.viewportHeight * cam_.zoom;
         float leftBoundary = effectiveViewportWidth / 2f;
-        float rightBoundary = game_.WORLD_WIDTH - (effectiveViewportWidth / 2f);
+        float rightBoundary = Settings.WORLD_WIDTH - (effectiveViewportWidth /
+                2f);
         float bottomBoundary = effectiveViewportHeight / 2f;
-        float topBoundary = game_.WORLD_HEIGHT - (effectiveViewportHeight / 2f);
+        float topBoundary =
+                Settings.WORLD_HEIGHT - (effectiveViewportHeight / 2f);
         cam_.position.x =
                 MathUtils.clamp(cam_.position.x, leftBoundary, rightBoundary);
         cam_.position.y =
