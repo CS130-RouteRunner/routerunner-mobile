@@ -10,7 +10,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -24,7 +23,7 @@ import java.awt.TexturePaint;
 public class GameMaster implements Screen {
     private RouteRunner game;
     private Texture texture;
-    private OrthographicCamera camera;
+    private OrthographicCamera cam;
     private Viewport viewport;
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -35,14 +34,14 @@ public class GameMaster implements Screen {
     public GameMaster(RouteRunner game) {
         //setup some map related things
         this.game = game;
-        camera = new OrthographicCamera();
-        viewport = new StretchViewport(game.VIEW_WIDTH, game.VIEW_HEIGHT, camera);
+        cam = new OrthographicCamera();
+        viewport = new StretchViewport(game.VIEW_WIDTH, game.VIEW_HEIGHT, cam);
 
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("tile-sample.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
 
-        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+        cam.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         Gdx.input.setInputProcessor(
                 new GestureDetector(new TouchHandler((this))));
@@ -56,7 +55,7 @@ public class GameMaster implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.setView(camera);
+        renderer.setView(cam);
         renderer.render();
 
         renderer.getBatch().begin();
@@ -94,15 +93,32 @@ public class GameMaster implements Screen {
     }
 
     public void moveCamera(float deltaX, float deltaY) {
-        camera.translate(-deltaX, deltaY);
-        float leftBoundary = camera.viewportWidth / 2f;
-        float rightBoundary = game.WORLD_WIDTH - (camera.viewportWidth / 2f);
-        float bottomBoundary = camera.viewportHeight / 2f;
-        float topBoundary = game.WORLD_HEIGHT - (camera.viewportHeight / 2f);
-        camera.position.x =
-                MathUtils.clamp(camera.position.x, leftBoundary, rightBoundary);
-        camera.position.y =
-                MathUtils.clamp(camera.position.y, bottomBoundary, topBoundary);
-        camera.update();
+        cam.translate(-deltaX, deltaY);
+        clampCameraPan();
+    }
+
+    public void zoomCamera(float zoom) {
+        cam.zoom += zoom;
+        clampCameraZoom();
+    }
+
+    public void clampCameraZoom() {
+        cam.zoom =
+                MathUtils.clamp(cam.zoom, Settings.MAX_ZOOM,
+                        game.WORLD_WIDTH / cam.viewportWidth);
+        cam.update();
+    }
+    public void clampCameraPan() {
+        float effectiveViewportWidth = cam.viewportWidth * cam.zoom;
+        float effectiveViewportHeight = cam.viewportHeight * cam.zoom;
+        float leftBoundary = effectiveViewportWidth / 2f;
+        float rightBoundary = game.WORLD_WIDTH - (effectiveViewportWidth / 2f);
+        float bottomBoundary = effectiveViewportHeight / 2f;
+        float topBoundary = game.WORLD_HEIGHT - (effectiveViewportHeight / 2f);
+        cam.position.x =
+                MathUtils.clamp(cam.position.x, leftBoundary, rightBoundary);
+        cam.position.y =
+                MathUtils.clamp(cam.position.y, bottomBoundary, topBoundary);
+        cam.update();
     }
 }

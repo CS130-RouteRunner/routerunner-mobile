@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
  * Created by julianyang on 10/22/15.
  */
 public class TouchHandler implements GestureDetector.GestureListener {
-    private float PAN_SPEED = 0.3f;
     private GameMaster gameMaster;
 
     public TouchHandler(GameMaster gameMaster) {
@@ -36,7 +35,9 @@ public class TouchHandler implements GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        gameMaster.moveCamera(PAN_SPEED * deltaX, PAN_SPEED * deltaY);
+        gameMaster.moveCamera(
+                Settings.PAN_SPEED * deltaX,
+                Settings.PAN_SPEED * deltaY);
         return true;
     }
 
@@ -47,7 +48,9 @@ public class TouchHandler implements GestureDetector.GestureListener {
 
     @Override
     public boolean zoom (float originalDistance, float currentDistance){
-        return false;
+        gameMaster.zoomCamera(
+                (originalDistance - currentDistance) * Settings.ZOOM_SPEED);
+        return true;
     }
 
     @Override
