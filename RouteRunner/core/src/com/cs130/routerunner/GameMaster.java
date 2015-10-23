@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -31,8 +33,8 @@ public class GameMaster implements Screen {
     private Actor truck;
 
     public GameMaster(RouteRunner game) {
+        //setup some map related things
         this.game = game;
-        //texture = new Texture("tiles.png");
         camera = new OrthographicCamera();
         viewport = new StretchViewport(game.VIEW_WIDTH, game.VIEW_HEIGHT, camera);
 
@@ -42,6 +44,8 @@ public class GameMaster implements Screen {
 
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
+        Gdx.input.setInputProcessor(
+                new GestureDetector(new TouchHandler((this))));
         truck = new Actor(new Sprite(new Texture("bus.png")));
     }
 
@@ -89,4 +93,16 @@ public class GameMaster implements Screen {
 
     }
 
+    public void moveCamera(float deltaX, float deltaY) {
+        camera.translate(-deltaX, deltaY);
+        float leftBoundary = camera.viewportWidth / 2f;
+        float rightBoundary = game.WORLD_WIDTH - (camera.viewportWidth / 2f);
+        float bottomBoundary = camera.viewportHeight / 2f;
+        float topBoundary = game.WORLD_HEIGHT - (camera.viewportHeight / 2f);
+        camera.position.x =
+                MathUtils.clamp(camera.position.x, leftBoundary, rightBoundary);
+        camera.position.y =
+                MathUtils.clamp(camera.position.y, bottomBoundary, topBoundary);
+        camera.update();
+    }
 }
