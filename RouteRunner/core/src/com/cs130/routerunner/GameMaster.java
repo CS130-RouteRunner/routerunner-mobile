@@ -19,28 +19,28 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * logins and whatnot.
  */
 public class GameMaster implements Screen {
-    private RouteRunner game;
-    private Texture texture;
-    private OrthographicCamera cam;
-    private Viewport viewport;
-    private TmxMapLoader mapLoader;
-    private TiledMap map;
-    private OrthogonalTiledMapRenderer renderer;
+    private RouteRunner game_;
+    private OrthographicCamera cam_;
+    private Viewport viewport_;
+    private TmxMapLoader mapLoader_;
+    private TiledMap map_;
+    private OrthogonalTiledMapRenderer renderer_;
 
     private Actor truck;
 
     public GameMaster(RouteRunner game) {
         //setup some map related things
-        this.game = game;
-        cam = new OrthographicCamera();
-        viewport = new StretchViewport(game.VIEW_WIDTH, game.VIEW_HEIGHT, cam);
+        this.game_ = game;
+        cam_ = new OrthographicCamera();
+        viewport_ = new StretchViewport(game.VIEW_WIDTH, game_.VIEW_HEIGHT,
+                cam_);
 
-        mapLoader = new TmxMapLoader();
-        map = mapLoader.load("tile-sample.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
+        mapLoader_ = new TmxMapLoader();
+        map_ = mapLoader_.load("tile-sample.tmx");
+        renderer_ = new OrthogonalTiledMapRenderer(map_);
 
-        cam.position.set(viewport.getWorldWidth() / 2,
-                viewport.getWorldHeight() / 2, 0);
+        cam_.position.set(viewport_.getWorldWidth() / 2,
+                viewport_.getWorldHeight() / 2, 0);
 
         Gdx.input.setInputProcessor(
                 new GestureDetector(new GestureHandler((this))));
@@ -54,12 +54,12 @@ public class GameMaster implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.setView(cam);
-        renderer.render();
+        renderer_.setView(cam_);
+        renderer_.render();
 
-        renderer.getBatch().begin();
-        truck.draw(renderer.getBatch());
-        renderer.getBatch().end();
+        renderer_.getBatch().begin();
+        truck.draw(renderer_.getBatch());
+        renderer_.getBatch().end();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class GameMaster implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
+        viewport_.update(width, height);
     }
 
     @Override
@@ -102,32 +102,32 @@ public class GameMaster implements Screen {
 
     // Navigation related things!
     public void moveCamera(float deltaX, float deltaY) {
-        cam.translate(-deltaX, deltaY);
+        cam_.translate(-deltaX, deltaY);
         clampCameraPan();
     }
 
     public void zoomCamera(float zoom) {
-        cam.zoom += zoom;
+        cam_.zoom += zoom;
         clampCameraZoom();
     }
 
     public void clampCameraZoom() {
-        cam.zoom =
-                MathUtils.clamp(cam.zoom, Settings.MAX_ZOOM,
-                        game.WORLD_WIDTH / cam.viewportWidth);
-        cam.update();
+        cam_.zoom =
+                MathUtils.clamp(cam_.zoom, Settings.MAX_ZOOM,
+                        game_.WORLD_WIDTH / cam_.viewportWidth);
+        cam_.update();
     }
     public void clampCameraPan() {
-        float effectiveViewportWidth = cam.viewportWidth * cam.zoom;
-        float effectiveViewportHeight = cam.viewportHeight * cam.zoom;
+        float effectiveViewportWidth = cam_.viewportWidth * cam_.zoom;
+        float effectiveViewportHeight = cam_.viewportHeight * cam_.zoom;
         float leftBoundary = effectiveViewportWidth / 2f;
-        float rightBoundary = game.WORLD_WIDTH - (effectiveViewportWidth / 2f);
+        float rightBoundary = game_.WORLD_WIDTH - (effectiveViewportWidth / 2f);
         float bottomBoundary = effectiveViewportHeight / 2f;
-        float topBoundary = game.WORLD_HEIGHT - (effectiveViewportHeight / 2f);
-        cam.position.x =
-                MathUtils.clamp(cam.position.x, leftBoundary, rightBoundary);
-        cam.position.y =
-                MathUtils.clamp(cam.position.y, bottomBoundary, topBoundary);
-        cam.update();
+        float topBoundary = game_.WORLD_HEIGHT - (effectiveViewportHeight / 2f);
+        cam_.position.x =
+                MathUtils.clamp(cam_.position.x, leftBoundary, rightBoundary);
+        cam_.position.y =
+                MathUtils.clamp(cam_.position.y, bottomBoundary, topBoundary);
+        cam_.update();
     }
 }
