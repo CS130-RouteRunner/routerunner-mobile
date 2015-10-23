@@ -13,8 +13,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.awt.TexturePaint;
-
 /**
  * Created by julianyang on 10/22/15.
  * GameMaster should be the root for all of the actual gameplay.  We will have another screen for
@@ -41,16 +39,17 @@ public class GameMaster implements Screen {
         map = mapLoader.load("tile-sample.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
 
-        cam.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+        cam.position.set(viewport.getWorldWidth() / 2,
+                viewport.getWorldHeight() / 2, 0);
 
         Gdx.input.setInputProcessor(
-                new GestureDetector(new TouchHandler((this))));
+                new GestureDetector(new GestureHandler((this))));
         truck = new Actor(new Sprite(new Texture("bus.png")));
     }
 
     @Override
     public void render(float delta) {
-        //update(delta);
+        update(delta);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -92,6 +91,16 @@ public class GameMaster implements Screen {
 
     }
 
+    // the main game logic goes here
+    public void update(float delta) {
+        // detect collisions for actors
+    }
+    public void handleTap(float x, float y, int count) {
+        // the user has tapped, and we need to do stuff depending on what
+        // mode we're in (ie creating a route)
+    }
+
+    // Navigation related things!
     public void moveCamera(float deltaX, float deltaY) {
         cam.translate(-deltaX, deltaY);
         clampCameraPan();
