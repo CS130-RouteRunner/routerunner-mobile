@@ -14,6 +14,7 @@ public class Actor extends Sprite {
 
     public float movingTowardsX;
     public float movingTowardsY;
+    private final float DEFAULT_MOVEMENT = 0.5f;
 
     public Actor(Sprite sprite){
         super(sprite);
@@ -25,6 +26,9 @@ public class Actor extends Sprite {
         super.draw(batch);
     }
 
+    public void update(){
+        update(DEFAULT_MOVEMENT);
+    }
     public void update(float delta){
         if (movingTowardsX > this.getX())
             this.setX(this.getX() + delta);
