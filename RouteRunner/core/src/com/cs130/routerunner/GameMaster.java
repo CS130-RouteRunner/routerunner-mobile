@@ -1,6 +1,8 @@
 package com.cs130.routerunner;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,18 +12,26 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import java.awt.TexturePaint;
+import java.util.ArrayList;
 
 /**
  * Created by julianyang on 10/22/15.
  * GameMaster should be the root for all of the actual gameplay.  We will have another screen for
  * logins and whatnot.
  */
-public class GameMaster implements Screen {
+public class GameMaster implements Screen, InputProcessor {
     private RouteRunner game_;
+    private Texture texture;
     private OrthographicCamera cam_;
     private Viewport viewport_;
     private TmxMapLoader mapLoader_;
@@ -29,8 +39,17 @@ public class GameMaster implements Screen {
     private OrthogonalTiledMapRenderer renderer_;
 
     private Actor truck;
+    private Route r;
+
+    private Rectangle base;
+    private ShapeRenderer shapeRenderer;
+
+    private boolean currentlyMakingRoute = false;
+    private RouteFactory routeFactory;
 
     public GameMaster(RouteRunner game) {
+        Gdx.input.setInputProcessor(this);
+
         //setup some map related things
         this.game_ = game;
         cam_ = new OrthographicCamera();
@@ -47,6 +66,38 @@ public class GameMaster implements Screen {
         Gdx.input.setInputProcessor(
                 new GestureDetector(new GestureHandler((this))));
         truck = new Actor(new Sprite(new Texture("bus.png")));
+        truck.setX(0f);
+        truck.setY(0f);
+
+        //r = new Route(truck);
+
+        base = new Rectangle(500, 500, 100, 100);
+
+//          test one
+//        Vector3 v0 = new Vector3(0f, 0f, 0f);
+//        Vector3 v1 = new Vector3(0f, 100f, 0f);
+//        Vector3 v2 = new Vector3(100f, 100f, 0f);
+//        Vector3 v3 = new Vector3(100f, 200f, 0f);
+//        Vector3 v4 = new Vector3(1000f, 200f, 0f);
+//        Vector3 v5 = new Vector3(0f, 200f, 0f);
+//        ArrayList<Vector3> wp = new ArrayList<Vector3>();
+//        wp.add(v0);
+//        wp.add(v1);
+//        wp.add(v2);
+//        wp.add(v3);
+//        wp.add(v4);
+//        wp.add(v5);
+//        r.setWayPoints(wp);
+
+        routeFactory = new RouteFactory();
+
+        //test two
+        routeFactory.startCreatingRoute();
+//        routeFactory.addWayPoint(0f, 0f);
+//        routeFactory.addWayPoint(200f, 0f);
+//        routeFactory.addWayPoint(200f, 200f);
+//        r = routeFactory.getRoute(truck);
+
     }
 
     @Override
@@ -64,15 +115,23 @@ public class GameMaster implements Screen {
         //truck.draw(renderer.getBatch());
         renderer_.getBatch().draw(truck, truck.getX(), truck.getY());
         renderer_.getBatch().end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(base.getX(), base.getY(), base.getWidth(), base.getHeight());
+        shapeRenderer.end();
 
-        if(Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            cam_.unproject(touchPos);
-            truck.setMoveTo(touchPos.x - 64/2, touchPos.y);
-        }
 
-        truck.update(0.5f);
+//        if(Gdx.input.isTouched()) {
+//            Vector3 touchPos = new Vector3();
+//            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+//            camera.unproject(touchPos);
+//            truck.setMoveTo(touchPos.x - 64/2, touchPos.y);
+//            //TESTING OF ROUTES
+//        }
+
+        //truck.update(0.5f);
+        if (r != null)
+            r.updateTruckPosition();
     }
 
     @Override
@@ -142,5 +201,53 @@ public class GameMaster implements Screen {
         cam_.position.y =
                 MathUtils.clamp(cam_.position.y, bottomBoundary, topBoundary);
         cam_.update();
+    }
+    //input processing functions
+    @Override public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+        Vector3 touchPos = new Vector3();
+        touchPos.set(screenX, screenY, 0);
+        cam_.unproject(touchPos);
+
+        if (currentlyMakingRoute == false){
+            currentlyMakingRoute = true;
+            routeFactory.startCreatingRoute();
+        }
+        else {
+            routeFactory.addWayPoint(touchPos.x, touchPos.y);
+            if(routeFactory.wayPoints.size() > 3){
+                currentlyMakingRoute = false;
+                r = routeFactory.getRoute(truck);
+            }
+        }
+
+        return true;
+    }
+
+    @Override public boolean touchDragged (int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override public boolean keyDown (int keycode) {
+        return false;
+    }
+
+    @Override public boolean keyUp (int keycode) {
+        return false;
+    }
+
+    @Override public boolean keyTyped (char character) {
+        return false;
+    }
+
+    @Override public boolean scrolled (int amount) {
+        return false;
+    }
+
+    public boolean mouseMoved (int screenX, int screenY){
+        return false;
     }
 }
