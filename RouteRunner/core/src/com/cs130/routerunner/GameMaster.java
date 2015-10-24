@@ -47,6 +47,8 @@ public class GameMaster implements Screen, InputProcessor {
     private boolean currentlyMakingRoute = false;
     private RouteFactory routeFactory;
 
+    private Sprite baseSprite;
+
     public GameMaster(RouteRunner game) {
         Gdx.input.setInputProcessor(this);
 
@@ -69,9 +71,11 @@ public class GameMaster implements Screen, InputProcessor {
         truck.setX(0f);
         truck.setY(0f);
 
+        baseSprite = new Sprite(new Texture("bus.png"));
+
         //r = new Route(truck);
 
-        base = new Rectangle(500, 500, 100, 100);
+        base = new Rectangle(500, 500, 500, 500);
 
 //          test one
 //        Vector3 v0 = new Vector3(0f, 0f, 0f);
@@ -113,12 +117,11 @@ public class GameMaster implements Screen, InputProcessor {
 
         renderer_.getBatch().begin();
         //truck.draw(renderer.getBatch());
+
         renderer_.getBatch().draw(truck, truck.getX(), truck.getY());
+        renderer_.getBatch().draw(baseSprite, base.getX(), base.getY());
         renderer_.getBatch().end();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(base.getX(), base.getY(), base.getWidth(), base.getHeight());
-        shapeRenderer.end();
+
 
 
 //        if(Gdx.input.isTouched()) {
@@ -214,7 +217,7 @@ public class GameMaster implements Screen, InputProcessor {
         }
         else {
             routeFactory.addWayPoint(touchPos.x, touchPos.y);
-            if(routeFactory.wayPoints.size() > 3){
+            if(base.contains(touchPos.x, touchPos.y)){
                 currentlyMakingRoute = false;
                 r = routeFactory.getRoute(truck);
             }
@@ -249,5 +252,12 @@ public class GameMaster implements Screen, InputProcessor {
 
     public boolean mouseMoved (int screenX, int screenY){
         return false;
+    }
+
+    public boolean pointInRectangle (Rectangle r, float x, float y) {
+        Vector3 rect = new Vector3(r.x, r.y, 0);
+        cam_.unproject(rect);
+
+        return rect.x <= x && rect.x + r.width >= x && rect.y <= y && rect.y + r.height >= y;
     }
 }
