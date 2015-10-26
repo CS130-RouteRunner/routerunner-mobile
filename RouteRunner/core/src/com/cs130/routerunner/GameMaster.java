@@ -1,8 +1,6 @@
 package com.cs130.routerunner;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,23 +11,19 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import java.awt.TexturePaint;
-import java.util.ArrayList;
+import com.cs130.routerunner.Routes.*;
+import com.cs130.routerunner.TapHandler.TapHandler;
 
 /**
  * Created by julianyang on 10/22/15.
  * GameMaster should be the root for all of the actual gameplay.  We will have another screen for
  * logins and whatnot.
  */
-public class GameMaster implements Screen, InputProcessor {
+public class GameMaster implements Screen{
     private RouteRunner game_;
     private Texture texture;
     private OrthographicCamera cam_;
@@ -37,6 +31,7 @@ public class GameMaster implements Screen, InputProcessor {
     private TmxMapLoader mapLoader_;
     private TiledMap map_;
     private OrthogonalTiledMapRenderer renderer_;
+    private TapHandler tapHandler_;
 
     private Actor truck;
     private Route r;
@@ -50,7 +45,9 @@ public class GameMaster implements Screen, InputProcessor {
     private Sprite baseSprite;
 
     public GameMaster(RouteRunner game) {
-        Gdx.input.setInputProcessor(this);
+
+        //setup touch stuff
+        tapHandler_ = new TapHandler(this);
 
         //setup some map related things
         this.game_ = game;
@@ -173,6 +170,7 @@ public class GameMaster implements Screen, InputProcessor {
     public void handleTap(float x, float y, int count) {
         // the user has tapped, and we need to do stuff depending on what
         // mode we're in (ie creating a route)
+        tapHandler_.Tap(x, y, count);
     }
 
     // Navigation related things!
@@ -205,50 +203,6 @@ public class GameMaster implements Screen, InputProcessor {
                 MathUtils.clamp(cam_.position.y, bottomBoundary, topBoundary);
         cam_.update();
     }
-    //input processing functions
-    @Override public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-        Vector3 touchPos = new Vector3();
-        touchPos.set(screenX, screenY, 0);
-        cam_.unproject(touchPos);
-
-        if (currentlyMakingRoute == false){
-            currentlyMakingRoute = true;
-            routeFactory.startCreatingRoute();
-        }
-        else {
-            routeFactory.addWayPoint(touchPos.x, touchPos.y);
-            if(base.contains(touchPos.x, touchPos.y)){
-                currentlyMakingRoute = false;
-                r = routeFactory.getRoute(truck);
-            }
-        }
-
-        return true;
-    }
-
-    @Override public boolean touchDragged (int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override public boolean touchUp (int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override public boolean keyDown (int keycode) {
-        return false;
-    }
-
-    @Override public boolean keyUp (int keycode) {
-        return false;
-    }
-
-    @Override public boolean keyTyped (char character) {
-        return false;
-    }
-
-    @Override public boolean scrolled (int amount) {
-        return false;
-    }
 
     public boolean mouseMoved (int screenX, int screenY){
         return false;
@@ -259,5 +213,21 @@ public class GameMaster implements Screen, InputProcessor {
         cam_.unproject(rect);
 
         return rect.x <= x && rect.x + r.width >= x && rect.y <= y && rect.y + r.height >= y;
+    }
+
+    public void unproject(Vector3 v){
+        cam_.unproject(v);
+    }
+
+    public RouteFactory getRouteFactory(){
+        return routeFactory;
+    }
+
+    public void setRoute(){
+        r = routeFactory.getRoute(truck);
+    }
+
+    public boolean baseContains(float x, float y){
+        return base.contains(x, y);
     }
 }
