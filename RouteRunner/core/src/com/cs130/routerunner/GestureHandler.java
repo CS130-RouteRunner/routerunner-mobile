@@ -20,6 +20,8 @@ public class GestureHandler implements GestureDetector.GestureListener {
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
+        // Input x,y coordinates are relative to the screen.  Unwrap the
+        // camera to grab the x,y coordinates relative to the map.
         gameMaster_.handleTap(x, y, count);
         return true;
     }
