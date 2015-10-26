@@ -1,6 +1,8 @@
 package com.cs130.routerunner;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -119,8 +121,6 @@ public class GameMaster implements Screen{
         renderer_.getBatch().draw(baseSprite, base.getX(), base.getY());
         renderer_.getBatch().end();
 
-
-
 //        if(Gdx.input.isTouched()) {
 //            Vector3 touchPos = new Vector3();
 //            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -162,7 +162,7 @@ public class GameMaster implements Screen{
     public void hide() {
 
     }
-
+    
     // the main game logic goes here
     public void update(float delta) {
         // detect collisions for actors
