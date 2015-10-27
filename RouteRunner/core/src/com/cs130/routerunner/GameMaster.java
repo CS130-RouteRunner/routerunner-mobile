@@ -24,34 +24,32 @@ import com.cs130.routerunner.TapHandler.TapHandler;
  */
 public class GameMaster implements Screen{
     private RouteRunner game_;
-    private Texture texture;
     private OrthographicCamera cam_;
     private Viewport viewport_;
     private TapHandler tapHandler_;
-    private SpriteBatch batch;
-    private Sprite mapSprite;
+    private SpriteBatch batch_;
+    private Sprite mapSprite_;
 
-    private Actor truck;
-    private Route r;
-
-    private Rectangle base;
-    private ShapeRenderer shapeRenderer;
-
-    private boolean currentlyMakingRoute = false;
-    private RouteFactory routeFactory;
-
-    private Sprite baseSprite;
+    private Actor truck_;
+    private Route route_;
+    private Rectangle base_;
+    private RouteFactory routeFactory_;
+    private Sprite baseSprite_;
 
     public GameMaster(RouteRunner game) {
         //create self reference
         this.game_ = game;
         //setup touch stuff
         tapHandler_ = new TapHandler(this);
+        Gdx.input.setInputProcessor(
+                new GestureDetector(new GestureHandler((this))));
+
         //setup some map related things
-        mapSprite = new Sprite(new Texture(Gdx.files.internal
+        mapSprite_ = new Sprite(new Texture(Gdx.files.internal
                 ("testmap3.png")));
-        mapSprite.setPosition(0,0);
-        mapSprite.setSize(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT);
+        mapSprite_.setPosition(0,0);
+        mapSprite_.setSize(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT);
+
         //setup camera
         cam_ = new OrthographicCamera();
         viewport_ = new StretchViewport(Settings.VIEW_WIDTH,
@@ -62,40 +60,38 @@ public class GameMaster implements Screen{
         cam_.update();
 
         //setup batch (drawing mechanism)
-        batch = new SpriteBatch();
+        batch_ = new SpriteBatch();
 
-        //set input
-        Gdx.input.setInputProcessor(
-                new GestureDetector(new GestureHandler((this))));
-
+        // TODO(rlau): change this into an array of actors later
         //create first (example) truck
-        truck = new Actor(new Sprite(new Texture("bus.png")));
-        truck.setX(0f);
-        truck.setY(0f);
+        truck_ = new Actor(new Sprite(new Texture("bus.png")));
+        truck_.setX(0f);
+        truck_.setY(0f);
 
         //create base sprite and logical box
-        baseSprite = new Sprite(new Texture("base.png"));
-        base = new Rectangle(500, 500, 500, 500);
+        baseSprite_ = new Sprite(new Texture("base.png"));
+        base_ = new Rectangle(500, 500, 500, 500);
 
         //create routeFactory
-        routeFactory = new RouteFactory();
-        routeFactory.startCreatingRoute();
+        routeFactory_ = new RouteFactory();
+        routeFactory_.startCreatingRoute();
     }
 
     @Override
     public void render(float delta) {
         update(delta);
         cam_.update();
-        batch.setProjectionMatrix(cam_.combined);
+        batch_.setProjectionMatrix(cam_.combined);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
-        mapSprite.draw(batch);
-        batch.draw(truck, truck.getX(), truck.getY());
-        batch.draw(baseSprite, base.getX(), base.getY());
-        batch.end();
+        batch_.begin();
+        mapSprite_.draw(batch_);
+        // TODO(rlau): change this to draw from the array of actors
+        batch_.draw(truck_, truck_.getX(), truck_.getY());
+        batch_.draw(baseSprite_, base_.getX(), base_.getY());
+        batch_.end();
     }
 
     @Override
@@ -130,8 +126,8 @@ public class GameMaster implements Screen{
     // the main game logic goes here
     public void update(float delta) {
         // detect collisions for actors
-        if (r != null)
-            r.updateTruckPosition();
+        if (route_ != null)
+            route_.updateTruckPosition();
     }
     public void handleTap(float x, float y, int count) {
         // the user has tapped, and we need to do stuff depending on what
@@ -194,14 +190,14 @@ public class GameMaster implements Screen{
     }
 
     public RouteFactory getRouteFactory(){
-        return routeFactory;
+        return routeFactory_;
     }
 
     public void setRoute(){
-        r = routeFactory.getRoute(truck);
+        route_ = routeFactory_.getRoute(truck_);
     }
 
     public boolean baseContains(float x, float y){
-        return base.contains(x, y);
+        return base_.contains(x, y);
     }
 }
