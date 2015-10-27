@@ -40,6 +40,7 @@ public class SnapToRoads {
             // do some error handling
         }
         List<SnappedPoint> Points = Arrays.asList(SPoints);
+
         // Convert LatLngs to LatLngPoints
         ArrayList<LatLngPoint> ConvertedSnappedPoints = new ArrayList<LatLngPoint>();
         for (SnappedPoint p : Points) {
