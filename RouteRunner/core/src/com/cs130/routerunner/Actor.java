@@ -26,6 +26,23 @@ public class Actor extends Sprite {
         super.draw(batch);
     }
 
+    // TODO(Kailin/Evan): fill this method out
+    public boolean tryToTap(float x, float y) {
+        // return whether actor was tapped on.
+        return false;
+    }
+
+    // TODO(Kailin/Evan): fill this method out
+    public void displayInfo() {
+        // display "edit route" button
+    }
+
+    // TODO(Kailin/Evan): fill this method out
+    public void hideInfo() {
+        // clean up any displayed buttons / info
+        // namely, hide or destroy "edit route" button
+    }
+
     public void update(){
         update(DEFAULT_MOVEMENT);
     }
