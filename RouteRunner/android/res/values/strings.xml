@@ -2,5 +2,10 @@
 <resources>
 
     <string name="app_name">RouteRunner</string>
-
+    <string name="title_activity_main">MainActivity</string>
+    <string name="edit_message">Blank</string>
+    <string name="button_start">Start</string>
+    <string name="button_publish">Publish</string>
+    <string name="button_unsubscribe">Unsubscribe</string>
+    <string name="button_subscribe">Subscribe</string>
 </resources>
