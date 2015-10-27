@@ -165,6 +165,12 @@ public class GameMaster implements Screen{
     public void handleTap(float x, float y, int count) {
         // the user has tapped, and we need to do stuff depending on what
         // mode we're in (ie creating a route)
+
+        //AS OF 10/26/2015 TOUCH IS AS FOLLOWS:
+        //you can tap the screen to switch from normal mode to route-edit mode
+        //in route edit mode you tap waypoints to create a route, ending in the other base (currently another car)
+        //when route creation is finished the car in the bottom left will start moving and you're back in normal mode
+        //tap again to draw another route for the car
         tapHandler_.Tap(x, y, count);
     }
 
