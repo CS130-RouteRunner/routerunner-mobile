@@ -1,18 +1,13 @@
 package com.cs130.routerunner;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -48,67 +43,43 @@ public class GameMaster implements Screen{
     private Sprite baseSprite;
 
     public GameMaster(RouteRunner game) {
-
+        //create self reference
+        this.game_ = game;
         //setup touch stuff
         tapHandler_ = new TapHandler(this);
-
         //setup some map related things
-        this.game_ = game;
-
         mapSprite = new Sprite(new Texture(Gdx.files.internal
                 ("testmap3.png")));
         mapSprite.setPosition(0,0);
         mapSprite.setSize(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT);
-
+        //setup camera
         cam_ = new OrthographicCamera();
         viewport_ = new StretchViewport(Settings.VIEW_WIDTH,
                 Settings.VIEW_HEIGHT,
                 cam_);
-
-
         cam_.position.set(viewport_.getWorldWidth() / 2,
                 viewport_.getWorldHeight() / 2, 0);
         cam_.update();
 
+        //setup batch (drawing mechanism)
         batch = new SpriteBatch();
 
+        //set input
         Gdx.input.setInputProcessor(
                 new GestureDetector(new GestureHandler((this))));
+
+        //create first (example) truck
         truck = new Actor(new Sprite(new Texture("bus.png")));
         truck.setX(0f);
         truck.setY(0f);
 
-        baseSprite = new Sprite(new Texture("bus.png"));
-
-        //r = new Route(truck);
-
+        //create base sprite and logical box
+        baseSprite = new Sprite(new Texture("base.png"));
         base = new Rectangle(500, 500, 500, 500);
 
-//          test one
-//        Vector3 v0 = new Vector3(0f, 0f, 0f);
-//        Vector3 v1 = new Vector3(0f, 100f, 0f);
-//        Vector3 v2 = new Vector3(100f, 100f, 0f);
-//        Vector3 v3 = new Vector3(100f, 200f, 0f);
-//        Vector3 v4 = new Vector3(1000f, 200f, 0f);
-//        Vector3 v5 = new Vector3(0f, 200f, 0f);
-//        ArrayList<Vector3> wp = new ArrayList<Vector3>();
-//        wp.add(v0);
-//        wp.add(v1);
-//        wp.add(v2);
-//        wp.add(v3);
-//        wp.add(v4);
-//        wp.add(v5);
-//        r.setWayPoints(wp);
-
+        //create routeFactory
         routeFactory = new RouteFactory();
-
-        //test two
         routeFactory.startCreatingRoute();
-//        routeFactory.addWayPoint(0f, 0f);
-//        routeFactory.addWayPoint(200f, 0f);
-//        routeFactory.addWayPoint(200f, 200f);
-//        r = routeFactory.getRoute(truck);
-
     }
 
     @Override
