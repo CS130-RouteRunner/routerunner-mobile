@@ -3,6 +3,8 @@ import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import com.google.maps.model.SnappedPoint;
 import com.google.maps.model.LatLng;
 import com.google.maps.RoadsApi;
@@ -30,15 +32,14 @@ public class SnapToRoads {
         }
 
         // Make the API call to get the snapped points
-        ArrayList<SnappedPoint> Points = new ArrayList<SnappedPoint>();
+        SnappedPoint[] SPoints = new SnappedPoint[0];
         try {
-            SnappedPoint[] SPoints = RoadsApi.snapToRoads(Context, true, DataPoints).await();
-            Points = new ArrayList<SnappedPoint>(Arrays.asList(SPoints));
+            SPoints = RoadsApi.snapToRoads(Context, true, DataPoints).await();
         }
         catch (Exception e) {
             // do some error handling
         }
-
+        List<SnappedPoint> Points = Arrays.asList(SPoints);
         // Convert LatLngs to LatLngPoints
         ArrayList<LatLngPoint> ConvertedSnappedPoints = new ArrayList<LatLngPoint>();
         for (SnappedPoint p : Points) {
