@@ -1,5 +1,7 @@
 package com.cs130.routerunner.TapHandler;
 
+import com.cs130.routerunner.Actor;
+
 /**
  * Created by julianyang on 10/22/15.
  * This is the "State" interface for the State design pattern.  We use the
@@ -8,5 +10,6 @@ package com.cs130.routerunner.TapHandler;
  * As of now, we have two States: RouteEditMode, NormalMode
  */
 public interface TapMode {
-    public void Tap(float x, float y, int count);
+    void Tap(float x, float y, int count);
+    void SetSelectedActor(Actor a);
 }

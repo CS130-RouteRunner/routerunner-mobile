@@ -13,6 +13,9 @@ public class RouteEditMode implements TapMode {
     public RouteEditMode(TapHandler tapHandler) {
        this.tapHandler_ = tapHandler;
     }
+    public void SetSelectedActor(Actor a) {
+        selectedActor_ = a;
+    }
 
     public void Tap(float x, float y, int count) {
         // we have entered setting a waypoint mode, so push this waypoint to
@@ -21,9 +24,15 @@ public class RouteEditMode implements TapMode {
         touchPos.set(x, y, 0);
         tapHandler_.gameMaster_.unproject(touchPos);
 
+        // TODO(Julian/Patrick): collect all the points into an array. And
+        // then get transformed points from SnapToRoads
+
         RouteFactory routeFactory = tapHandler_.gameMaster_.getRouteFactory();
 
         routeFactory.addWayPoint(touchPos.x, touchPos.y);
+
+        // TODO(Julian/Patrick): change this to a confirm route button or
+        // something
         if(tapHandler_.gameMaster_.baseContains(touchPos.x, touchPos.y)){
             //when we have touched the base, then set the route and re-enter normal mode
             tapHandler_.gameMaster_.setRoute();

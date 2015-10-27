@@ -18,6 +18,7 @@ public class TapHandler {
     GameMaster gameMaster_;
     TapMode routeEditMode_ = new RouteEditMode(this);
     TapMode normalMode_ = new NormalMode(this);
+    TapMode actorSelectedMode_ = new ActorSelectedMode(this);
     TapMode curMode_ = normalMode_;
 
     public TapHandler(GameMaster gameMaster) {
