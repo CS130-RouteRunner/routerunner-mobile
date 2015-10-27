@@ -3,7 +3,7 @@ package com.cs130.routerunner.android.Test;
 import android.test.InstrumentationTestCase;
 
 import com.badlogic.gdx.math.Vector3;
-import com.cs130.routerunner.CoordinateConverter.CoordinateConverter;
+import com.cs130.routerunner.CoordinateConverter.LegacyCoordinateConverter;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by julianyang on 10/25/15.
  */
-public class CoordinateConverterTest extends InstrumentationTestCase {
+public class LegacyCoordinateConverterTest extends InstrumentationTestCase {
     private boolean close(LatLngPoint a, LatLngPoint b) {
         // compare two sets of floats
         float lat_actual = Math.abs(a.lat - b.lat);
@@ -42,13 +42,13 @@ public class CoordinateConverterTest extends InstrumentationTestCase {
         data.add(new CoordinateTestPoint(2, 90, -180, 0, -295));
 
         for (CoordinateTestPoint testPoint : data) {
-            Vector3 pixel = CoordinateConverter.ll2px(
+            Vector3 pixel = LegacyCoordinateConverter.ll2px(
                     testPoint.lat, testPoint.lng, testPoint.zoom);
             assertEquals((long)pixel.x, testPoint.x);
             assertEquals((long) pixel.y, testPoint.y);
 
 
-            assertTrue(close(CoordinateConverter.px2ll(pixel, testPoint.zoom)
+            assertTrue(close(LegacyCoordinateConverter.px2ll(pixel, testPoint.zoom)
                     , new LatLngPoint(testPoint.lat, testPoint.lng)));
         }
     }
