@@ -5,6 +5,7 @@ import android.test.InstrumentationTestCase;
 import com.badlogic.gdx.math.Vector3;
 import com.cs130.routerunner.CoordinateConverter.LegacyCoordinateConverter;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
+import com.cs130.routerunner.CoordinateConverter.XYPoint;
 
 import java.util.ArrayList;
 
@@ -42,10 +43,10 @@ public class LegacyCoordinateConverterTest extends InstrumentationTestCase {
         data.add(new CoordinateTestPoint(2, 90, -180, 0, -295));
 
         for (CoordinateTestPoint testPoint : data) {
-            Vector3 pixel = LegacyCoordinateConverter.ll2px(
+            XYPoint pixel = LegacyCoordinateConverter.ll2px(
                     testPoint.lat, testPoint.lng, testPoint.zoom);
-            assertEquals((long)pixel.x, testPoint.x);
-            assertEquals((long) pixel.y, testPoint.y);
+            assertEquals(pixel.x, testPoint.x);
+            assertEquals(pixel.y, testPoint.y);
 
 
             assertTrue(close(LegacyCoordinateConverter.px2ll(pixel, testPoint.zoom)

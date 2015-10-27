@@ -43,7 +43,7 @@ public class LegacyCoordinateConverter {
             43748177636.891624};
 
 
-    public static Vector3 ll2px(double lat, double lng, int zoom) {
+    public static XYPoint ll2px(double lat, double lng, int zoom) {
         // Given two floats and an int, return a 2-tuple of ints.
 
         // Note that the pixel coordinates are tied to the entire map, not
@@ -69,13 +69,10 @@ public class LegacyCoordinateConverter {
                 cbk + (0.5 * Math.log((1 + foo) /
                         (1 - foo))) * (-CFK[zoom]));
 
-        Vector3 pixelCoord = new Vector3();
-        pixelCoord.x = x;
-        pixelCoord.y = y;
-        return pixelCoord;
+        return new XYPoint(x, y);
     }
 
-    public static LatLngPoint px2ll(Vector3 pixel, int zoom) {
+    public static LatLngPoint px2ll(XYPoint pixel, int zoom) {
         /* Given three ints, return a 2-tuple of floats.
 
         Note that the pixel coordinates are tied to the entire map, not to the map
@@ -93,7 +90,7 @@ public class LegacyCoordinateConverter {
         double bar = (pixel.y - foo) / -CFK[zoom];
         double blam = 2 * Math.atan((float) Math.exp(bar)) - MathUtils.PI
                 / 2;
-        double lat = blam / (MathUtils.PI / 180);
+        double lat = blam / (Math.PI / 180);
 
         return new LatLngPoint((float)lat, (float)lng);
     }
