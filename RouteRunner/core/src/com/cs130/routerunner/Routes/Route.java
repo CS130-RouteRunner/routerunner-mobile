@@ -13,11 +13,10 @@ public class Route {
     public Actor truck;
     private int currWayPointIndex;
 
-    public Route(Actor t){
-        truck = t;
+    public Route(){
         currWayPointIndex = 0;
     }
-    public void updateTruckPosition(){
+    public void updateTruckPosition(Actor truck){
         if (wayPoints == null || wayPoints.size() == 0)
             return;
 

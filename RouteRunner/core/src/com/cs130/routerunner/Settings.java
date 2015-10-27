@@ -22,4 +22,7 @@ public class Settings {
             (float) WEB_IMAGE_DPI;
 
     public static final String SNAP_ROADS_KEY = "AIzaSyAQceKfG7dnkUsnOelOzUfpul5Zi4-FKUg";
+
+    // Actor (truck) default movement speed
+    public static final float DEFAULT_MOVEMENT = 0.5f;
 }
