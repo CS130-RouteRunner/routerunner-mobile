@@ -20,4 +20,6 @@ public class Settings {
     public static final int WEB_IMAGE_DPI = 72;
     public static final float MAP_TO_WEB_DPI_RATIO = WORLD_MAP_DPI /
             (float) WEB_IMAGE_DPI;
+
+    public static final String SNAP_ROADS_KEY = "AIzaSyAQceKfG7dnkUsnOelOzUfpul5Zi4-FKUg";
 }
