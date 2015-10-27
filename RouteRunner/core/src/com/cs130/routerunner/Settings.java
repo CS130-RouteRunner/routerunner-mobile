@@ -11,4 +11,5 @@ public class Settings {
     public static final int WORLD_HEIGHT = 3412;
 	public static final int VIEW_WIDTH = 800;
 	public static final int VIEW_HEIGHT = 450;
+    public static final String SNAP_ROADS_KEY = "AIzaSyAQceKfG7dnkUsnOelOzUfpul5Zi4-FKUg";
 }
