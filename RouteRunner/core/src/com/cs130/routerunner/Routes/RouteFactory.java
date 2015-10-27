@@ -20,8 +20,8 @@ public class RouteFactory {
         wayPoints.add(v);
     }
 
-    public Route getRoute(Actor truck){
-        Route r = new Route(truck);
+    public Route getRoute(){
+        Route r = new Route();
         r.setWayPoints(wayPoints);
         return r;
     }

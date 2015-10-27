@@ -16,6 +16,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.cs130.routerunner.Routes.*;
 import com.cs130.routerunner.TapHandler.TapHandler;
 
+import java.util.ArrayList;
+
 /**
  * Created by julianyang on 10/22/15.
  * GameMaster should be the root for all of the actual gameplay.  We will have another screen for
@@ -29,7 +31,7 @@ public class GameMaster implements Screen{
     private SpriteBatch batch_;
     private Sprite mapSprite_;
 
-    private Actor truck_;
+    private ArrayList<Actor> trucks_;
     private Route route_;
     private Rectangle base_;
     private RouteFactory routeFactory_;
@@ -61,11 +63,15 @@ public class GameMaster implements Screen{
         //setup batch (drawing mechanism)
         batch_ = new SpriteBatch();
 
-        // TODO(rlau): change this into an array of actors later
+        // TODO(rlau): create actor creation method
+        trucks_ = new ArrayList<Actor>();
+
         //create first (example) truck
-        truck_ = new Actor(new Sprite(new Texture("bus.png")));
-        truck_.setX(0f);
-        truck_.setY(0f);
+        Actor truck = new Actor(new Sprite(new Texture("bus.png")));
+        truck.setX(0f);
+        truck.setY(0f);
+        trucks_.add(truck);
+
 
         //create base sprite and logical box
         baseSprite_ = new Sprite(new Texture("base.png"));
@@ -87,8 +93,9 @@ public class GameMaster implements Screen{
 
         batch_.begin();
         mapSprite_.draw(batch_);
-        // TODO(rlau): change this to draw from the array of actors
-        batch_.draw(truck_, truck_.getX(), truck_.getY());
+        for (Actor truck: trucks_) {
+            batch_.draw(truck, truck.getX(), truck.getY());
+        }
         batch_.draw(baseSprite_, base_.getX(), base_.getY());
         batch_.end();
     }
@@ -125,8 +132,10 @@ public class GameMaster implements Screen{
     // the main game logic goes here
     public void update(float delta) {
         // detect collisions for actors
-        if (route_ != null)
-            route_.updateTruckPosition();
+        for (Actor truck: trucks_) {
+            truck.moveAlongRoute();
+        }
+
     }
     public void handleTap(float x, float y, int count) {
         // the user has tapped, and we need to do stuff depending on what
@@ -193,7 +202,10 @@ public class GameMaster implements Screen{
     }
 
     public void setRoute(){
-        route_ = routeFactory_.getRoute(truck_);
+        //TODO: (rlau) change this method to set the route of a specific truck, not just all of em
+        for (Actor truck: trucks_) {
+            truck.setRoute(routeFactory_.getRoute());
+        }
     }
 
     public boolean baseContains(float x, float y){
