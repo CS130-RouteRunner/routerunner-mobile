@@ -25,8 +25,7 @@ import java.util.ArrayList;
  */
 public class GameMaster implements Screen{
     private RouteRunner game_;
-    private OrthographicCamera cam_;
-    private Viewport viewport_;
+    private MapCamera camera_;
     private TapHandler tapHandler_;
     private SpriteBatch batch_;
     private Sprite mapSprite_;
@@ -38,6 +37,10 @@ public class GameMaster implements Screen{
     private Sprite baseSprite_;
 
     public GameMaster(RouteRunner game) {
+
+        camera_ = new MapCamera();
+
+
         //create self reference
         this.game_ = game;
         //setup touch stuff
@@ -50,15 +53,6 @@ public class GameMaster implements Screen{
                 ("testmap3.png")));
         mapSprite_.setPosition(0,0);
         mapSprite_.setSize(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT);
-
-        //setup camera
-        cam_ = new OrthographicCamera();
-        viewport_ = new StretchViewport(Settings.VIEW_WIDTH,
-                Settings.VIEW_HEIGHT,
-                cam_);
-        cam_.position.set(viewport_.getWorldWidth() / 2,
-                viewport_.getWorldHeight() / 2, 0);
-        cam_.update();
 
         //setup batch (drawing mechanism)
         batch_ = new SpriteBatch();
@@ -85,8 +79,8 @@ public class GameMaster implements Screen{
     @Override
     public void render(float delta) {
         update(delta);
-        cam_.update();
-        batch_.setProjectionMatrix(cam_.combined);
+        camera_.update();
+        batch_.setProjectionMatrix(camera_.getCamera().combined);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -106,7 +100,7 @@ public class GameMaster implements Screen{
 
     @Override
     public void resize(int width, int height) {
-        viewport_.update(width, height);
+        camera_.getViewport().update(width, height);
     }
 
     @Override
@@ -128,7 +122,7 @@ public class GameMaster implements Screen{
     public void hide() {
 
     }
-    
+
     // the main game logic goes here
     public void update(float delta) {
         // detect collisions for actors
@@ -149,52 +143,12 @@ public class GameMaster implements Screen{
         tapHandler_.Tap(x, y, count);
     }
 
-    // Navigation related things!
-    public void moveCamera(float deltaX, float deltaY) {
-        cam_.translate(-deltaX, deltaY);
-        clampCameraPan();
-    }
-
-    public void zoomCamera(float zoom) {
-        cam_.zoom += zoom;
-        clampCameraZoom();
-    }
-
-    public void clampCameraZoom() {
-        cam_.zoom =
-                MathUtils.clamp(cam_.zoom, Settings.MAX_ZOOM,
-                        Settings.WORLD_WIDTH / cam_.viewportWidth);
-        cam_.update();
-    }
-    public void clampCameraPan() {
-        float effectiveViewportWidth = cam_.viewportWidth * cam_.zoom;
-        float effectiveViewportHeight = cam_.viewportHeight * cam_.zoom;
-        float leftBoundary = effectiveViewportWidth / 2f;
-        float rightBoundary = Settings.WORLD_WIDTH - (effectiveViewportWidth /
-                2f);
-        float bottomBoundary = effectiveViewportHeight / 2f;
-        float topBoundary =
-                Settings.WORLD_HEIGHT - (effectiveViewportHeight / 2f);
-        cam_.position.x =
-                MathUtils.clamp(cam_.position.x, leftBoundary, rightBoundary);
-        cam_.position.y =
-                MathUtils.clamp(cam_.position.y, bottomBoundary, topBoundary);
-        cam_.update();
-    }
-
     public boolean mouseMoved (int screenX, int screenY){
         return false;
     }
 
-    public boolean pointInRectangle (Rectangle r, float x, float y) {
-        Vector3 rect = new Vector3(r.x, r.y, 0);
-        cam_.unproject(rect);
-
-        return rect.x <= x && rect.x + r.width >= x && rect.y <= y && rect.y + r.height >= y;
-    }
-
-    public void unproject(Vector3 v){
-        cam_.unproject(v);
+    public MapCamera getCamera(){
+        return camera_;
     }
 
     public RouteFactory getRouteFactory(){

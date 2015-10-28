@@ -21,6 +21,7 @@ public class GestureHandler implements GestureDetector.GestureListener {
     @Override
     public boolean tap(float x, float y, int count, int button) {
         // Input x,y coordinates are relative to the screen.  Unwrap the
+
         // camera to grab the x,y coordinates relative to the map.
         gameMaster_.handleTap(x, y, count);
         return true;
@@ -38,7 +39,7 @@ public class GestureHandler implements GestureDetector.GestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        gameMaster_.moveCamera(
+        gameMaster_.getCamera().moveCamera(
                 Settings.PAN_SPEED * deltaX,
                 Settings.PAN_SPEED * deltaY);
         return true;
@@ -51,7 +52,7 @@ public class GestureHandler implements GestureDetector.GestureListener {
 
     @Override
     public boolean zoom (float originalDistance, float currentDistance){
-        gameMaster_.zoomCamera(
+        gameMaster_.getCamera().zoomCamera(
                 (originalDistance - currentDistance) * Settings.ZOOM_SPEED);
         return true;
     }
