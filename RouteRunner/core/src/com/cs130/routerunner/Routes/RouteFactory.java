@@ -25,4 +25,8 @@ public class RouteFactory {
         r.setWayPoints(wayPoints);
         return r;
     }
+
+    public void clearRoute(){
+        wayPoints.clear();
+    }
 }

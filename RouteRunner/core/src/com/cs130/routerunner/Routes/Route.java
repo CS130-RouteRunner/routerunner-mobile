@@ -9,31 +9,31 @@ import java.util.ArrayList;
  * Created by Roger on 10/22/2015.
  */
 public class Route {
-    public ArrayList<Vector3> wayPoints;
-    public Actor truck;
-    private int currWayPointIndex;
+    public ArrayList<Vector3> wayPoints_;
+    public Actor truck_;
+    private int currWayPointIndex_;
 
     public Route(){
-        currWayPointIndex = 0;
+        currWayPointIndex_ = 0;
     }
     public void updateTruckPosition(Actor truck){
-        if (wayPoints == null || wayPoints.size() == 0)
+        if (wayPoints_ == null || wayPoints_.size() == 0)
             return;
 
-        Vector3 currWayPoint = wayPoints.get(currWayPointIndex);
+        Vector3 currWayPoint = wayPoints_.get(currWayPointIndex_);
         //if reached waypoint, then update waypoint
-        if (truck.getX() == currWayPoint.x && truck.getY() == currWayPoint.y && currWayPointIndex < (wayPoints.size()-1)) {
+        if (truck.getX() == currWayPoint.x && truck.getY() == currWayPoint.y && currWayPointIndex_ < (wayPoints_.size()-1)) {
             //WE JUST GOT TO A WAYPT, NOW SET NEXT ONE
-            currWayPointIndex++;
-            currWayPoint = wayPoints.get(currWayPointIndex);
+            currWayPointIndex_++;
+            currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
         }
         else if (truck.getX() == currWayPoint.x && truck.getY() == currWayPoint.y){
             //WE JUST FINISHED THE WHOLE ROUTE, RESET
-            currWayPointIndex = 0;
+            currWayPointIndex_ = 0;
             truck.setX(0f);
             truck.setY(0f);
-            truck.setMoveTo(wayPoints.get(currWayPointIndex).x, wayPoints.get(currWayPointIndex).y);
+            truck.setMoveTo(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
         }
         else{
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
@@ -42,6 +42,6 @@ public class Route {
         truck.update();
     }
     public void setWayPoints(ArrayList<Vector3> wayPoints){
-        this.wayPoints = new ArrayList<Vector3>(wayPoints);
+        this.wayPoints_ = new ArrayList<Vector3>(wayPoints);
     }
 }
