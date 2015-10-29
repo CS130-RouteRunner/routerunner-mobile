@@ -1,5 +1,6 @@
 package com.cs130.routerunner.TapHandler;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.cs130.routerunner.Actor;
 import com.cs130.routerunner.Routes.*;
@@ -19,6 +20,7 @@ public class RouteEditMode implements TapMode {
     }
 
     public void Tap(float x, float y, int count) {
+        Gdx.app.log("RETag", "Inside Route Edit Mode\n");
         // we have entered setting a waypoint mode, so push this waypoint to
         // the actor.
         Vector3 touchPos = new Vector3();

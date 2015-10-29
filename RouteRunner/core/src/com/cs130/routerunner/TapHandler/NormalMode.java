@@ -40,10 +40,10 @@ public class NormalMode implements TapMode {
         if (tappedTruck(x, y)) {
             Gdx.app.log("TapTag", "Tapped Truck " + x + " " + y + "\n");
             tapHandler_.actorSelectedMode_.SetSelectedActor(actorSelected);
-
-            // TODO(Evan): display Edit Route button
-
             tapHandler_.curMode_ = tapHandler_.actorSelectedMode_;
+
+            // Display Edit Route Button
+            actorSelected.displayInfo();
             tapHandler_.curMode_.Tap(x, y, count);
         } else {
             // do nothing for now.

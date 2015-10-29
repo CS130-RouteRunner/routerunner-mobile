@@ -94,4 +94,9 @@ public class Actor extends Sprite {
         }
     }
 
+    // return true if Edit Route Button is tapped
+    public boolean isEditRoute() {
+        return actorInfo_.isEditRoute();
+    }
+
 }

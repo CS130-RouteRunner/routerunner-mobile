@@ -1,5 +1,6 @@
 package com.cs130.routerunner.TapHandler;
 
+import com.badlogic.gdx.Gdx;
 import com.cs130.routerunner.Actor;
 
 /**
@@ -21,9 +22,9 @@ public class ActorSelectedMode implements TapMode {
 
     public void Tap(float x, float y, int count) {
         // TODO(Evan): check if user tapped on the route edit button
-        tapHandler_.curMode_ = tapHandler_.normalMode_;
-
-        if(/**user tapped button**/ true ) {
+        Gdx.app.log("ASTag", "Tapped Truck inside AS\n");
+        if(selectedActor_.isEditRoute()) {
+            Gdx.app.log("ASTag", "Entering Route Edit Mode\n");
             tapHandler_.routeEditMode_.SetSelectedActor(this.selectedActor_);
             tapHandler_.curMode_ = tapHandler_.routeEditMode_;
         } else {
