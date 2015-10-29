@@ -8,4 +8,6 @@
     <string name="button_publish">Publish</string>
     <string name="button_unsubscribe">Unsubscribe</string>
     <string name="button_subscribe">Subscribe</string>
+    <string name="button_post">POST</string>
+    <string name="button_get">GET</string>
 </resources>

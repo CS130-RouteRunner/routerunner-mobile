@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.cs130.routerunner.Settings;
+import com.cs130.routerunner.android.ApiServer.ApiServerGetTask;
+import com.cs130.routerunner.android.ApiServer.ApiServerPostTask;
 import com.pubnub.api.*;
 import org.json.*;
 
@@ -40,6 +42,37 @@ public class LobbyActivity extends Activity {
         //this.listView_ = getListView();
 
         initPubNub();
+    }
+
+    /**
+     * Make POST call to our api server
+     */
+    public void postRequest(View view) {
+        ApiServerPostTask apiServerPostTask = new ApiServerPostTask();
+        String endpoint = "http://route-runner-130.appspot.com/api/matchmaking/new";
+        try {
+            JSONObject params = new JSONObject();
+            params.put("uid", "123");
+            params.put("lid", "routerunner-123");
+            JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
+            System.out.print(response.toString());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    /**
+     * Make GET call to our api server
+     */
+    public void getRequest(View view) {
+        ApiServerGetTask apiServerGetTask = new ApiServerGetTask();
+        String endpoint = "http://route-runner-130.appspot.com/api/matchmaking/join";
+        try {
+            JSONObject response = apiServerGetTask.execute(endpoint).get();
+            System.out.print(response.toString());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     /**
