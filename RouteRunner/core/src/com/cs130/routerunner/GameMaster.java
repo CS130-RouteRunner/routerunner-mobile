@@ -3,16 +3,12 @@ package com.cs130.routerunner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.Routes.*;
 import com.cs130.routerunner.TapHandler.TapHandler;
 
@@ -29,6 +25,7 @@ public class GameMaster implements Screen{
     private TapHandler tapHandler_;
     private SpriteBatch batch_;
     private Sprite mapSprite_;
+    private Stage stage_;
 
     private ArrayList<Actor> trucks_;
     private Route route_;
@@ -55,13 +52,14 @@ public class GameMaster implements Screen{
         mapSprite_.setSize(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT);
 
         //setup batch (drawing mechanism)
-        batch_ = new SpriteBatch();
+        //batch_ = new SpriteBatch();
+        stage_ = new Stage();
 
         // TODO(rlau): create actor creation method
         trucks_ = new ArrayList<Actor>();
 
         //create first (example) truck
-        Actor truck = new Actor(new Sprite(new Texture("bus.png")));
+        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_);
         truck.setX(0f);
         truck.setY(0f);
         trucks_.add(truck);
@@ -80,18 +78,29 @@ public class GameMaster implements Screen{
     public void render(float delta) {
         update(delta);
         camera_.update();
-        batch_.setProjectionMatrix(camera_.getCamera().combined);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch_.begin();
-        mapSprite_.draw(batch_);
+        //batch_.setProjectionMatrix(camera_.getCamera().combined);
+        stage_.getBatch().setProjectionMatrix(camera_.getCamera().combined);
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        //batch_.begin();
+        stage_.getBatch().begin();
+        mapSprite_.draw(stage_.getBatch());
         for (Actor truck: trucks_) {
-            batch_.draw(truck, truck.getX(), truck.getY());
+            //batch_.draw(truck, truck.getX(), truck.getY());
+            stage_.getBatch().draw(truck, truck.getX(), truck.getY());
         }
-        batch_.draw(baseSprite_, base_.getX(), base_.getY());
-        batch_.end();
+        //batch_.draw(baseSprite_, base_.getX(), base_.getY());
+        stage_.getBatch().draw(baseSprite_, base_.getX(), base_.getY());
+        //batch_.end();
+        stage_.getBatch().end();
+
+        stage_.draw();
     }
 
     @Override
@@ -105,7 +114,7 @@ public class GameMaster implements Screen{
 
     @Override
     public void dispose() {
-
+        stage_.dispose();
     }
 
     @Override
