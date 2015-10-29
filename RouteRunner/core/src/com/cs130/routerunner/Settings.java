@@ -34,4 +34,10 @@ public class Settings {
     public static final String PUBNUB_PUBLISH_KEY = "pub-c-7fd0bf0a-96ef-42eb-8378-a52012ac326a";
     public static final String PUBNUB_SUBSCRIBE_KEY = "sub-c-a5a6fc48-79cc-11e5-9720-0619f8945a4f";
 
+    // Server endpoints
+    public static final String LOBBY_PREFIX = "routerunner-";
+    public static final String ROUTERUNNER_BASE = "http://route-runner-130.appspot.com";
+    public static final String MATCHMAKING_URL = "/api/matchmaking/";
+    public static final String CREATE_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "new";
+
 }

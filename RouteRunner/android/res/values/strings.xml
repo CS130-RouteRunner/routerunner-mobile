@@ -3,11 +3,8 @@
 
     <string name="app_name">RouteRunner</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="edit_message">Blank</string>
-    <string name="button_start">Start</string>
+    <string name="button_start">Start Game</string>
     <string name="button_publish">Publish</string>
     <string name="button_unsubscribe">Unsubscribe</string>
-    <string name="button_subscribe">Subscribe</string>
-    <string name="button_post">POST</string>
-    <string name="button_get">GET</string>
+    <string name="button_create">Create Game</string>
 </resources>

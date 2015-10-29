@@ -5,46 +5,34 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     tools:context="com.cs130.routerunner.android.LobbyActivity">
-    <!--<EditText android:id="@+id/edit_message"-->
-        <!--android:layout_weight="1"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:hint="@string/edit_message" />-->
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_start"
         android:onClick="startGame" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_subscribe"
-        android:onClick="subscribeChannel" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_post"
-        android:onClick="postRequest"
-        android:layout_gravity="center_vertical" />
+        android:text="@string/button_create"
+        android:onClick="createLobby" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_get"
-        android:onClick="getRequest"
-        android:layout_gravity="center_vertical" />
+    <ListView
+        android:layout_width="109dp"
+        android:layout_height="match_parent"
+        android:id="@+id/listView" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_publish"
-        android:onClick="publishMessage" />
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/button_publish"-->
+        <!--android:onClick="publishMessage" />-->
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_unsubscribe"
-        android:onClick="unsubscribeChannel" />
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/button_unsubscribe"-->
+        <!--android:onClick="unsubscribeChannel" />-->
 
 </LinearLayout>
