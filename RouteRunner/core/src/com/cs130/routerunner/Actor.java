@@ -40,10 +40,13 @@ public class Actor extends Sprite {
         route_.updateTruckPosition(this);
     }
 
-    // TODO(Kailin/Evan): fill this method out
+    // TODO(Kailin): return whether actor was tapped on
     public boolean tryToTap(float x, float y) {
-        // return whether actor was tapped on.
-        return true;
+        if (x >= this.getX() && x <= (this.getX()+this.getWidth()) &&
+                y >= this.getY() && y <= (this.getY()+this.getHeight()))
+            return true;
+        else
+            return false;
     }
 
     // TODO(Kailin/Evan): fill this method out

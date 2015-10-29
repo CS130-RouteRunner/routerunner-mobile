@@ -20,7 +20,8 @@ public class ActorSelectedMode implements TapMode {
     // TODO(): write a setButton method
 
     public void Tap(float x, float y, int count) {
-        // TODO(Kailin): check if user tapped on the route edit button
+        // TODO(Evan): check if user tapped on the route edit button
+        tapHandler_.curMode_ = tapHandler_.normalMode_;
 
         if(/**user tapped button**/ true ) {
             tapHandler_.routeEditMode_.SetSelectedActor(this.selectedActor_);

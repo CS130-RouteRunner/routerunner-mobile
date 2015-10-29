@@ -64,7 +64,6 @@ public class GameMaster implements Screen{
         truck.setY(0f);
         trucks_.add(truck);
 
-
         //create base sprite and logical box
         baseSprite_ = new Sprite(new Texture("base.png"));
         base_ = new Rectangle(500, 500, 500, 500);
@@ -141,6 +140,12 @@ public class GameMaster implements Screen{
 
     }
     public void handleTap(float x, float y, int count) {
+        // adjust android coordinates to libgdx coordinates
+        Gdx.app.log("GMTag", x + " " + y + "\n");
+        Vector3 touchPos = new Vector3();
+        touchPos.set(x, y, 0);
+        camera_.unproject(touchPos);
+
         // the user has tapped, and we need to do stuff depending on what
         // mode we're in (ie creating a route)
 
@@ -149,7 +154,8 @@ public class GameMaster implements Screen{
         //in route edit mode you tap waypoints to create a route, ending in the other base (currently another car)
         //when route creation is finished the car in the bottom left will start moving and you're back in normal mode
         //tap again to draw another route for the car
-        tapHandler_.Tap(x, y, count);
+
+        tapHandler_.Tap(touchPos.x, touchPos.y, count);
     }
 
     public boolean mouseMoved (int screenX, int screenY){
@@ -159,6 +165,8 @@ public class GameMaster implements Screen{
     public MapCamera getCamera(){
         return camera_;
     }
+
+    public ArrayList<Actor> getTrucks() { return trucks_; }
 
     public RouteFactory getRouteFactory(){
         return routeFactory_;
