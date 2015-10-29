@@ -3,8 +3,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.cs130.routerunner.Routes.Route;
 
 
@@ -19,11 +17,12 @@ public class Actor extends Sprite {
     private float movingTowardsY_;
     private Route route_;
     private Stage stage_;
-    private Dialog dialog_;
+    private ActorInfo actorInfo_;
 
     public Actor(Sprite sprite, Stage stage){
         super(sprite);
         stage_ = stage;
+        actorInfo_ = new ActorInfo(stage_);
     }
 
     @Override
@@ -50,22 +49,14 @@ public class Actor extends Sprite {
     // TODO(Kailin/Evan): fill this method out
     public void displayInfo() {
         // display "edit route" button
-        dialog_ = new Dialog("Info", new Skin(Gdx.files.internal("uiskin.json")), "dialog");
-        dialog_.text("Edit route?");
-        dialog_.button("yes", true);
-        dialog_.button("no", false);
-        dialog_.invalidateHierarchy();
-        dialog_.invalidate();
-        dialog_.layout();
-        dialog_.show(stage_);
+        actorInfo_.display();
     }
 
     // TODO(Kailin/Evan): fill this method out
     public void hideInfo() {
         // clean up any displayed buttons / info
         // namely, hide or destroy "edit route" button
-        if(dialog_ != null)
-            dialog_.hide();
+        actorInfo_.hide();
     }
 
     public void update(){
