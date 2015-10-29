@@ -11,6 +11,10 @@ public class Settings {
     public static final int WORLD_HEIGHT = 3412;
 	public static final int VIEW_WIDTH = 800;
 	public static final int VIEW_HEIGHT = 450;
+    public static final float BUTTON_WIDTH = 380f;
+    public static final float BUTTON_HEIGHT = 100f;
+    public static final float BUTTON_X = 1780 - BUTTON_WIDTH;
+    public static final float BUTTON_Y = 1060 - BUTTON_HEIGHT;
 
     // Pixel Conversion stuff
     public static final float WORLD_CENTER_LAT = 34.05336f;

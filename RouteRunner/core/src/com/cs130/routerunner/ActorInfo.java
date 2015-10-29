@@ -6,29 +6,38 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 
 /**
  * Created by Evannnnn on 10/29/15.
  */
 public class ActorInfo {
     private Stage stage_;
-    private Dialog dialog_;
     private Skin skin_;
-    private boolean editRoute_;
     private InputProcessor preProcessor_;
     private TextureAtlas atlas_;
-    private final float dialogWidth_ = 800f;
-    private final float dialogHeight_ = 450f;
-    private final float buttonWidth_ = 380f;
-    private final float buttonHeight_ = 100f;
+    private boolean editRoute_;
+    private boolean saveRoute_;
+    private Button buttonEditRoute_;
+    private Button buttonSaveRoute_;
 
     public ActorInfo(Stage stage){
         stage_ = stage;
         editRoute_ = false;
+        saveRoute_ = false;
+        /*
+        atlas_ = new TextureAtlas(Gdx.files.internal("ui-blue.atlas"));
+        skin_ = new Skin();
+        skin_.addRegions(atlas_);*/
+        skin_ = new Skin(Gdx.files.internal("uiskin.json"));
+        buttonEditRoute_ = new TextButton("Edit Route", skin_);
+        buttonSaveRoute_ = new TextButton("Save Route", skin_);
+
+        buttonEditRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
+        buttonSaveRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
     }
 
     // below two functions may refactor with InputMultiplexer
@@ -44,58 +53,38 @@ public class ActorInfo {
 
     public void display(){
         updateInputProcessor(stage_);
-        //atlas_ = new TextureAtlas(Gdx.files.internal("ui-blue.atlas"));
-        skin_ = new Skin(Gdx.files.internal("uiskin.json"));
-        dialog_ = new Dialog("Info", skin_, "dialog"){
-            @Override
-            public float getPrefHeight() { return dialogHeight_; }
-            @Override
-            public float getPrefWidth() { return dialogWidth_; }
-        };
-        Button yesButton = new TextButton("yes", skin_){
-            @Override
-            public float getPrefWidth() { return buttonWidth_; }
-            @Override
-            public float getPrefHeight() { return buttonHeight_; }
-        };
-        yesButton.addListener(new ClickListener() {
+        editRoute_ = false;
+        saveRoute_ = false;
+
+        buttonEditRoute_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 editRoute_ = true;
-                hide();
+                saveRoute_ = false;
+                buttonEditRoute_.remove();
+                stage_.addActor(buttonSaveRoute_);
             }
         });
-        Button noButton = new TextButton("no", skin_){
-            @Override
-            public float getPrefWidth() { return buttonWidth_; }
-            @Override
-            public float getPrefHeight() { return buttonHeight_; }
-        };
-        noButton.addListener(new ClickListener(){
+        buttonSaveRoute_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 editRoute_ = false;
+                saveRoute_ = true;
                 hide();
             }
         });
-        dialog_.text("Edit route?");
-        dialog_.button(yesButton, true);
-        dialog_.button(noButton, false);
-        dialog_.invalidateHierarchy();
-        dialog_.invalidate();
-        dialog_.setPosition(0, 0);
-        dialog_.layout();
 
-        dialog_.show(stage_);
+        stage_.addActor(buttonEditRoute_);
     }
 
     public void hide(){
-        if(dialog_ != null && dialog_.isVisible())
-            dialog_.remove();
-
+        if(buttonEditRoute_ != null && buttonEditRoute_.isVisible())
+            buttonEditRoute_.remove();
+        if(buttonSaveRoute_ != null && buttonSaveRoute_.isVisible())
+            buttonSaveRoute_.remove();
         restoreInputProcessor();
     }
 
-    public boolean isEditRoute(){
-        return editRoute_;
-    }
+    public boolean isEditRoute() { return editRoute_; }
+
+    public boolean isSaveRoute() { return saveRoute_; }
 
 }
