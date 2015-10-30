@@ -2,6 +2,7 @@ package com.cs130.routerunner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.Routes.Route;
 import com.cs130.routerunner.TapHandler.TapHandler;
@@ -15,6 +16,9 @@ import sun.rmi.runtime.Log;
 public class Actor extends Sprite {
     private float movingTowardsX_;
     private float movingTowardsY_;
+    private float moveXDelta_ = 0;
+    private float moveYDelta_ = 0;
+
     public Route route_;
     private Stage stage_;
     private TapHandler tapHandler_;
@@ -30,7 +34,7 @@ public class Actor extends Sprite {
 
     @Override
     public void draw(Batch batch) {
-        update(Gdx.graphics.getDeltaTime());
+        update();
         super.draw(batch);
     }
     public void setRoute(Route r){
@@ -66,35 +70,47 @@ public class Actor extends Sprite {
     }
 
     public void update(){
-        update(Settings.DEFAULT_MOVEMENT);
-    }
-    public void update(float delta){
-        if (movingTowardsX_ > this.getX())
-            this.setX(this.getX() + delta);
-        else if (movingTowardsX_ < this.getX())
-            this.setX(this.getX() - delta);
-        else if (movingTowardsY_ > this.getY())
-            this.setY(this.getY() + delta);
-        else
-            this.setY(this.getY() - delta);
+        this.setX(this.getX() + moveXDelta_);
+        this.setY(this.getY() + moveYDelta_);
 
         //once we get within some epsilon, we stop trying to move there
         if (Math.abs(this.getY() - movingTowardsY_) < .5f)
             this.setY(movingTowardsY_);
         if (Math.abs(this.getX() - movingTowardsX_) < .5f)
             this.setX(movingTowardsX_);
+
+        Gdx.app.log("ATag", "DELTAXY: " + moveXDelta_ + "," + moveYDelta_);
+        Gdx.app.log("ATag", "XY: " + this.getX() + "," + this.getY());
     }
-    //set the move to with the greatest difference (since you can only move one dir at a time)
+
     public void setMoveTo(float x, float y) {
-        //only take the direction with the greatest movement
-        if (Math.abs(this.getX() - x) > (Math.abs(this.getY() - y))){
-            movingTowardsX_ = x;
-            movingTowardsY_ = this.getY(); //reset the last "movement"
+
+        //set moving
+        movingTowardsX_ = x;
+        movingTowardsY_ = y;
+/*
+        //TODO: check when slope = infinity
+        //calculate the "moving vector"
+        if (Math.abs(x - this.getX()) < Settings.EPSILON){
+            moveXDelta_ = 0f;
+            moveYDelta_ = Settings.DEFAULT_MOVEMENT;
         }
-        else {
-            movingTowardsY_ = y;
-            movingTowardsX_ = this.getX();
+
+        float slope = (y - this.getY())/(x - this.getX());
+        moveXDelta_ = (float) Math.sqrt(Math.pow(Settings.DEFAULT_MOVEMENT, 2)/ (slope + 1));
+        moveYDelta_ = slope * moveXDelta_;
+ */
+        moveXDelta_ = x - this.getX();
+        moveYDelta_ = y - this.getY();
+        double length = Math.sqrt(moveXDelta_ * moveXDelta_ + moveYDelta_ * moveYDelta_);
+        if (length != 0 ) {
+            moveXDelta_ /= length;
+            moveYDelta_ /= length;
         }
+
+        Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," + moveYDelta_ + " LEN: " + length);
+        moveXDelta_ *= Settings.DEFAULT_MOVEMENT;
+        moveYDelta_ *= Settings.DEFAULT_MOVEMENT;
     }
 
     // return true if Edit Route Button is tapped

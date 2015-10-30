@@ -30,6 +30,9 @@ public class Settings {
     // Actor (truck) default movement speed
     public static final float DEFAULT_MOVEMENT = 0.5f;
 
+    //Our "float equals" epsilon
+    public static final float EPSILON = 0.1f;
+
     // PubNub API keys
     public static final String PUBNUB_PUBLISH_KEY = "pub-c-7fd0bf0a-96ef-42eb-8378-a52012ac326a";
     public static final String PUBNUB_SUBSCRIBE_KEY = "sub-c-a5a6fc48-79cc-11e5-9720-0619f8945a4f";

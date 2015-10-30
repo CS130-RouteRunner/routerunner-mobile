@@ -3,6 +3,7 @@ package com.cs130.routerunner.Routes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.Settings;
 
 import java.util.ArrayList;
 
@@ -24,20 +25,21 @@ public class Route {
 
         Vector3 currWayPoint = wayPoints_.get(currWayPointIndex_);
         //if reached waypoint, then update waypoint
-        if (truck.getX() == currWayPoint.x && truck.getY() == currWayPoint.y && currWayPointIndex_ < (wayPoints_.size()-1)) {
+        if (Math.abs(truck.getX()- currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ < (wayPoints_.size()-1)) {
             //WE JUST GOT TO A WAYPT, NOW SET NEXT ONE
             currWayPointIndex_++;
             currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
+            Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
         }
-        else if (truck.getX() == currWayPoint.x && truck.getY() == currWayPoint.y){
+        else if (Math.abs(truck.getX() - currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON){
             //WE JUST FINISHED THE WHOLE ROUTE, RESET
             currWayPointIndex_ = 0;
             truck.setX(0f);
             truck.setY(0f);
             truck.setMoveTo(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
         }
-        else{
+        else if (currWayPointIndex_ == 0){
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
         }
 
