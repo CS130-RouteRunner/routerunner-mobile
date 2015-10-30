@@ -30,6 +30,9 @@ public class MainActivity extends Activity {
     private String channel_ = "routerunner-global";
     private ArrayList<String> channelList_;
 
+//    /* Client for accessing Google APIs (logout stuff for later) */
+//    private GoogleApiClient mGoogleApiClient;
+
     private String randomString() {
         char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         StringBuilder sb = new StringBuilder();
@@ -233,4 +236,20 @@ public class MainActivity extends Activity {
         //history();
     }
 
+    /*
+
+    private void onSignOutClicked() {
+        // Clear the default account so that GoogleApiClient will not automatically
+        // connect in the future.
+        if (mGoogleApiClient.isConnected()) {
+            Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+        }
+
+        // return to sign in page
+        Intent signIn = new Intent(this, SignInPage.class);
+        startActivity(signIn);
+    }
+
+    */
 }

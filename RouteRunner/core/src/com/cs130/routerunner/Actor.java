@@ -100,6 +100,21 @@ public class Actor extends Sprite {
         moveXDelta_ = (float) Math.sqrt(Math.pow(Settings.DEFAULT_MOVEMENT, 2)/ (slope + 1));
         moveYDelta_ = slope * moveXDelta_;
  */
+
+        /*
+
+        //math for movement
+
+        //get angle
+        double angle = Math.atan2(y-this.getY(), y-this.getX());
+
+        //calculate distance to move
+        moveXDelta_ = (float) Math.cos(angle) * Settings.DEFAULT_MOVEMENT;
+        moveYDelta_ = (float) Math.sin(angle) * Settings.DEFAULT_MOVEMENT;
+
+         */
+
+
         moveXDelta_ = x - this.getX();
         moveYDelta_ = y - this.getY();
         double length = Math.sqrt(moveXDelta_ * moveXDelta_ + moveYDelta_ * moveYDelta_);

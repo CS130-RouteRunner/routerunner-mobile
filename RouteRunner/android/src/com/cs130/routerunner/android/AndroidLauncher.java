@@ -14,4 +14,9 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new RouteRunner(), config);
 	}
+
+// prevents back from returning to menu (using some exit button instead would be better)
+//	@Override
+//	public void onBackPressed() {
+//	}
 }
