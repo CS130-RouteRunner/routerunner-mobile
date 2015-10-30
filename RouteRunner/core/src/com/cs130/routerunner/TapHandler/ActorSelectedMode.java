@@ -31,6 +31,7 @@ public class ActorSelectedMode implements TapMode {
             tapHandler_.routeEditMode_.SetSelectedActor(this.selectedActor_);
 
             this.selectedActor_.route_.clearWaypoints();
+            tapHandler_.gameMaster_.clearWaypoints();
             tapHandler_.curMode_ = tapHandler_.routeEditMode_;
             tapHandler_.curMode_.Init();
 
@@ -38,6 +39,7 @@ public class ActorSelectedMode implements TapMode {
             // user tapped out of ActorSelectMode so go back to normal mode
             // clean up any display stuff (ie "EditRouteButton")
             tapHandler_.curMode_ = tapHandler_.normalMode_;
+            tapHandler_.gameMaster_.clearWaypoints();
             //selectedActor_.hideInfo();
         }
 

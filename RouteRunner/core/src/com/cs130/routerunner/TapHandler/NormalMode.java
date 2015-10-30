@@ -49,6 +49,7 @@ public class NormalMode implements TapMode {
         } else {
             // do nothing for now.
             // TODO():need to implement other buttons (ie buy truck) later
+            tapHandler_.gameMaster_.clearWaypoints();
         }
 
         // We will need to refactor this somewhere else later.

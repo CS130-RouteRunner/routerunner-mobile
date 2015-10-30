@@ -50,7 +50,7 @@ public class GameMaster implements Screen{
 
         //setup some map related things
         mapSprite_ = new Sprite(new Texture(Gdx.files.internal
-                ("testmap3.png")));
+                ("westwood_map2.png")));
         mapSprite_.setPosition(0,0);
         mapSprite_.setSize(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT);
 
@@ -192,10 +192,18 @@ public class GameMaster implements Screen{
 
     //TODO(juliany): clean this up to use routes or soemthing.
     public void setWaypoints(ArrayList<Vector3> waypoints) {
-        this.waypoints_ = waypoints;
+        this.waypoints_ = new ArrayList<Vector3>(waypoints);
+    }
+
+    public void addWaypoint(Vector3 waypoint) {
+        this.waypoints_.add(waypoint);
     }
 
     public boolean baseContains(float x, float y){
         return base_.contains(x, y);
+    }
+
+    public void clearWaypoints() {
+        this.waypoints_.clear();
     }
 }
