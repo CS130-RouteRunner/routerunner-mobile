@@ -39,11 +39,10 @@ public class NormalMode implements TapMode {
         // check if tapped on truck
         if (tappedTruck(x, y)) {
             Gdx.app.log("TapTag", "Tapped Truck " + x + " " + y + "\n");
+            actorSelected.displayInfo();
             tapHandler_.actorSelectedMode_.SetSelectedActor(actorSelected);
             tapHandler_.curMode_ = tapHandler_.actorSelectedMode_;
-
             // Display Edit Route Button
-            actorSelected.displayInfo();
             tapHandler_.curMode_.Tap(x, y, count);
         } else {
             // do nothing for now.
@@ -54,10 +53,10 @@ public class NormalMode implements TapMode {
         // TODO(Roger Lau): change route / actor relationship so that actor
         // owns a route.
         //temporarily all we do is when there is a tap, we start creating route and enter route creation mode
-        RouteFactory routeFactory = tapHandler_.gameMaster_.getRouteFactory();
-        routeFactory.startCreatingRoute();
+        //RouteFactory routeFactory = tapHandler_.gameMaster_.getRouteFactory();
+        //routeFactory.startCreatingRoute();
 
-        tapHandler_.curMode_ = tapHandler_.routeEditMode_;
+        //tapHandler_.curMode_ = tapHandler_.routeEditMode_;
     }
 
     /*

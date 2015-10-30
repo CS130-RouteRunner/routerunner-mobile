@@ -27,10 +27,12 @@ public class ActorSelectedMode implements TapMode {
             Gdx.app.log("ASTag", "Entering Route Edit Mode\n");
             tapHandler_.routeEditMode_.SetSelectedActor(this.selectedActor_);
             tapHandler_.curMode_ = tapHandler_.routeEditMode_;
-        } else {
+        } else if(selectedActor_.isCancelEdit())
+        {
             // user tapped out of ActorSelectMode so go back to normal mode
             // clean up any display stuff (ie "EditRouteButton")
             tapHandler_.curMode_ = tapHandler_.normalMode_;
+            //selectedActor_.hideInfo();
         }
 
 

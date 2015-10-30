@@ -23,6 +23,11 @@ public class RouteEditMode implements TapMode {
         Gdx.app.log("RETag", "Inside Route Edit Mode\n");
         // we have entered setting a waypoint mode, so push this waypoint to
         // the actor.
+        if(selectedActor_.isSaveRoute()){
+            tapHandler_.curMode_ = tapHandler_.normalMode_;
+            tapHandler_.Tap(x, y, count);
+        }
+
         Vector3 touchPos = new Vector3();
         touchPos.set(x, y, 0);
         tapHandler_.gameMaster_.getCamera().unproject(touchPos);

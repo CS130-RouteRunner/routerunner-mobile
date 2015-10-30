@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.Routes.Route;
+import com.cs130.routerunner.TapHandler.TapHandler;
 
 
 import sun.rmi.runtime.Log;
@@ -12,17 +13,18 @@ import sun.rmi.runtime.Log;
  * Created by julianyang on 10/22/15.
  */
 public class Actor extends Sprite {
-
     private float movingTowardsX_;
     private float movingTowardsY_;
     private Route route_;
     private Stage stage_;
+    private TapHandler tapHandler_;
     private ActorInfo actorInfo_;
 
-    public Actor(Sprite sprite, Stage stage){
+    public Actor(Sprite sprite, Stage stage, TapHandler tapHandler){
         super(sprite);
         stage_ = stage;
-        actorInfo_ = new ActorInfo(stage_);
+        tapHandler_ = tapHandler;
+        actorInfo_ = new ActorInfo(stage_, tapHandler_);
     }
 
     @Override
@@ -95,8 +97,8 @@ public class Actor extends Sprite {
     }
 
     // return true if Edit Route Button is tapped
-    public boolean isEditRoute() {
-        return actorInfo_.isEditRoute();
-    }
+    public boolean isEditRoute() { return actorInfo_.isEditRoute(); }
+    public boolean isSaveRoute() { return actorInfo_.isSaveRoute(); }
+    public boolean isCancelEdit() { return actorInfo_.isCancelEdit(); }
 
 }

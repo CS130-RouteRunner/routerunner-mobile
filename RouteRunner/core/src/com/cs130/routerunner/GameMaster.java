@@ -1,6 +1,7 @@
 package com.cs130.routerunner;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,8 +44,8 @@ public class GameMaster implements Screen{
         this.game_ = game;
         //setup touch stuff
         tapHandler_ = new TapHandler(this);
-        Gdx.input.setInputProcessor(
-                new GestureDetector(new GestureHandler((this))));
+        //Gdx.input.setInputProcessor(
+        //        new GestureDetector(new GestureHandler((this))));
 
         //setup some map related things
         mapSprite_ = new Sprite(new Texture(Gdx.files.internal
@@ -55,12 +56,16 @@ public class GameMaster implements Screen{
         //setup batch (drawing mechanism)
         //batch_ = new SpriteBatch();
         stage_ = new Stage();
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(0, stage_);
+        inputMultiplexer.addProcessor(1, new GestureDetector(new GestureHandler((this))));
+        Gdx.input.setInputProcessor(inputMultiplexer);
 
         // TODO(rlau): create actor creation method
         trucks_ = new ArrayList<Actor>();
 
         //create first (example) truck
-        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_);
+        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_);
         truck.setX(0f);
         truck.setY(0f);
         trucks_.add(truck);
