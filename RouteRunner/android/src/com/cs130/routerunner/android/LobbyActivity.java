@@ -1,162 +1,73 @@
 package com.cs130.routerunner.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
-import android.content.Intent;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cs130.routerunner.Settings;
-import com.cs130.routerunner.android.ApiServer.ApiServerGetTask;
-import com.cs130.routerunner.android.ApiServer.ApiServerPostTask;
 import com.pubnub.api.*;
 import org.json.*;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class LobbyActivity extends Activity {
-    private Pubnub pubnub_;
+
     private ListView listView_;
-    private ArrayAdapter<String> lobbyAdapter_;
-    //private ChatAdapter chatAdapter_;
+    private ArrayAdapter<String> playerAdapter_;
 
+    private Pubnub pubnub_;
     private String username_;
-    private String channel_ = "routerunner-global";
-    private ArrayList<String> channelList_;
+    private String channel_;
 
-    private String randomString() {
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            char c = chars[random.nextInt(chars.length)];
-            sb.append(c);
-        }
-        return sb.toString();
-    }
+    private ArrayList<String> playerList_;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-        this.username_ = randomString();   // Change this when login is merged
-        System.out.println(this.username_);
-        this.listView_ = (ListView) findViewById(R.id.listView);
+        this.listView_ = (ListView) findViewById(R.id.playerListView);
+        Intent intent = getIntent();
+
+        // Get extra information
+        String user = intent.getStringExtra("uid");
+        this.username_ = user;
+        String channel = intent.getStringExtra("channel-id");
+        this.channel_ = channel;
+
+        // Dynamically update the text in TextView
+        TextView channel_title = (TextView) findViewById(R.id.channelName);
+        channel_title.setText(channel);
 
         // Connect to PubNub
         initPubNub();
+        subscribeChannel(channel);
+        subscribePresence(channel);
 
-        // Populate lobby list
-        this.channelList_ = new ArrayList<String>();
-        this.channelList_ = getLobbies();
-        this.lobbyAdapter_ = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.channelList_);
-        this.listView_.setAdapter(this.lobbyAdapter_);
-
-        // Add listener to lobby list
-        this.listView_.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String lobbyId = (String)((TextView) view).getText();
-                joinLobby(lobbyId);
-                Toast.makeText(getBaseContext(), "Joined " + lobbyId, Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
-    /**
-     * Creates a lobby.
-     * @param view
-     */
-    public void createLobby(View view) {
-        ApiServerPostTask apiServerPostTask = new ApiServerPostTask();
-        String endpoint = Settings.CREATE_LOBBY_URL;
-        try {
-            JSONObject params = new JSONObject();
-            String userId = this.username_;
-            String lobbyId = Settings.LOBBY_PREFIX + userId;
-            params.put("uid", userId);
-            params.put("lid", lobbyId);
-            JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
-            System.out.println(response.toString());
-            // Data persisted, okay to connect to PubNub
-            subscribeChannel(lobbyId);
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-
-    }
-
-    /**
-     * Join an existing lobby.
-     */
-    public void joinLobby(String lobbyId) {
-        ApiServerPostTask apiServerPostTask = new ApiServerPostTask();
-        String endpoint = Settings.ROUTERUNNER_BASE + Settings.MATCHMAKING_URL + "join";
-        try {
-            JSONObject params = new JSONObject();
-            String userId = this.username_;
-            params.put("uid", userId);
-            params.put("lid", lobbyId);
-            JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
-            System.out.println(response.toString());
-            // Data persisted, okay to join channel on PubNub
-            subscribeChannel(lobbyId);
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-    }
-
-    /**
-     * Retrieves a list of open lobbies.
-     * @return
-     */
-    private ArrayList<String> getLobbies() {
-        ApiServerGetTask apiServerGetTask = new ApiServerGetTask();
-        String endpoint = Settings.ROUTERUNNER_BASE + Settings.MATCHMAKING_URL + "join";
-        try {
-            JSONObject response = apiServerGetTask.execute(endpoint).get();
-            System.out.println(response.toString());
-            JSONArray jlobbies = response.getJSONArray("lobbies");
-            System.out.println(jlobbies);
-            ArrayList<String> lobbies = new ArrayList<String>();
-            for (int i = 0; i < jlobbies.length(); i++) {
-                System.out.println(jlobbies.getString(i));
-                lobbies.add(jlobbies.getString(i));
-            }
-
-            return lobbies;
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-
-        return new ArrayList<String>();
-    }
-
-    /**
-     * Starts the Routerunner game, e.g. opens up LibGDX engine
-     */
-    public void startGame(View view) {
-        // Do something in response to button
-        Intent routeRunner = new Intent(this, AndroidLauncher.class);
-        startActivity(routeRunner);
+        // Get players
+        this.playerList_ = new ArrayList<String>();
+        this.playerAdapter_ = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.playerList_);
+        this.listView_.setAdapter(this.playerAdapter_);
     }
 
     /**
      * Subscribes to a PubNub channel.
+     * @param channel - lobby id to join
      */
-    public void subscribeChannel(String channel) {
+    private void subscribeChannel(String channel) {
         Callback subscribeCallback = new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
                 if (message instanceof JSONObject) {
                     try {
+                        // Will need this for chat, multiplayer msgs
                         JSONObject jmessage = (JSONObject) message;
                         String messageType = jmessage.getString(Message.TYPE);
                         String username = jmessage.getString(Message.USER);
@@ -175,6 +86,11 @@ public class LobbyActivity extends Activity {
             }
 
             @Override
+            public void connectCallback(String channel, Object message) {
+                getPlayers();
+            }
+
+            @Override
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println("ERROR on channel " + channel + " : " + error.toString());
             }
@@ -189,50 +105,121 @@ public class LobbyActivity extends Activity {
     }
 
     /**
-     * Publishes a message to a PubNub channel.
+     * Subscribe to Presence events on this channel.
+     * @param channel - lobby id to subscribe
      */
-    public void publishMessage(View view) {
-        Callback callback = new Callback() {
-            public void successCallback(String channel, Object response) {
-                System.out.println(response.toString());
+    private void subscribePresence(String channel) {
+        Callback presenceCallback = new Callback() {
+            @Override
+            public void successCallback(String channel, Object message) {
+               // System.out.println(channel + " : " + message.getClass() + " : " + message.toString());
+                if (message instanceof JSONObject) {
+                    JSONObject jmessage = (JSONObject) message;
+                    System.out.println(jmessage.toString());
+                    try {
+                        final int occupants = jmessage.getInt("occupancy");
+                        final String user = jmessage.getString("uuid");
+                        final String action = jmessage.getString("action");
+                        LobbyActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (action.equals("join")) {
+                                    if (!playerList_.contains(user)) {
+                                        playerList_.add(user);
+                                        playerAdapter_.notifyDataSetChanged();
+                                    }
+                                }
+
+                            }
+                        });
+                    } catch (Exception e) {
+                        System.out.println(e.toString());
+                    }
+                }
             }
+
+            @Override
             public void errorCallback(String channel, PubnubError error) {
-                System.out.println(error.toString());
+                System.out.println("ERROR on channel " + channel + " : " + error.toString());
             }
         };
-        JSONObject json = new JSONObject();
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            char c = chars[random.nextInt(chars.length)];
-            sb.append(c);
-        }
+
         try {
-            json.put("data", sb.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
+            pubnub_.presence(channel, presenceCallback);
+        } catch (PubnubException e) {
+            System.out.println(e.toString());
         }
-        pubnub_.publish(channel_, json , callback);
     }
 
+
     /**
-     * Unsubscribe a PubNub channel.
+     * Instantiate PubNub object with username as UUID
+     *   Then subscribe to the current channel with presence.
+     *   Finally, populate the listview with past messages from history
      */
-    public void unsubscribeChannel(View view) {
-        pubnub_.unsubscribe(channel_);
-    }
-
-    /**
-      * Instantiate PubNub object with username as UUID
-      *   Then subscribe to the current channel with presence.
-      *   Finally, populate the listview with past messages from history
-    */
     private void initPubNub() {
         this.pubnub_ = new Pubnub(Settings.PUBNUB_PUBLISH_KEY, Settings.PUBNUB_SUBSCRIBE_KEY);
         this.pubnub_.setUUID(this.username_);
         //subscribeWithPresence();
         //history();
+    }
+
+    /**
+     * Retrieves a list of players currently in lobby.
+     * @return
+     */
+    private void getPlayers() {
+        Callback hereCallback = new Callback() {
+            @Override
+            public void successCallback(String channel, Object message) {
+                try {
+                    JSONObject jmessage = (JSONObject) message;
+                    int occupants = jmessage.getInt("occupancy");
+
+                    // Get users in the lobby
+                    JSONArray hereNowJSON = jmessage.getJSONArray("uuids");
+                    System.out.println(hereNowJSON);
+                    final Set<String> players = new HashSet<String>();
+                    players.add(username_);
+                    for (int i = 0; i < hereNowJSON.length(); i++) {
+                        players.add(hereNowJSON.getString(i));
+                        System.out.println(hereNowJSON.getString(i));
+                    }
+                    LobbyActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        // TODO: Dunno why this doesn't work, look at it later
+                        public void run() {
+                            //playerList_ = new ArrayList<String>(players);
+                            //playerAdapter_.notifyDataSetChanged();
+                            //System.out.println(playerList_);
+                        }
+
+                    });
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+            }
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                System.out.println(error.toString());
+            }
+         };
+        try {
+            pubnub_.hereNow(channel_, hereCallback);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+    }
+
+    /**
+     * Starts the Routerunner game, e.g. opens up LibGDX engine
+     */
+    public void startGame(View view) {
+        // Do something in response to button
+        Intent routeRunner = new Intent(this, AndroidLauncher.class);
+        startActivity(routeRunner);
     }
 
 }
