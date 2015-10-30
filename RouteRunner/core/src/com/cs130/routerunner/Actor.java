@@ -70,15 +70,8 @@ public class Actor extends Sprite {
     }
 
     public void update(){
-        if (movingTowardsX_ > this.getX())
-            this.setX(this.getX() + moveXDelta_);
-        else if (movingTowardsX_ < this.getX())
-            this.setX(this.getX() - moveXDelta_);
-
-        if (movingTowardsY_ > this.getY())
-            this.setY(this.getY() + moveYDelta_);
-        else
-            this.setY(this.getY() - moveYDelta_);
+        this.setX(this.getX() + moveXDelta_);
+        this.setY(this.getY() + moveYDelta_);
 
         //once we get within some epsilon, we stop trying to move there
         if (Math.abs(this.getY() - movingTowardsY_) < .5f)
@@ -112,6 +105,7 @@ public class Actor extends Sprite {
 
         moveXDelta_ *= Settings.DEFAULT_MOVEMENT;
         moveYDelta_ *= Settings.DEFAULT_MOVEMENT;
+
     }
 
     // return true if Edit Route Button is tapped
