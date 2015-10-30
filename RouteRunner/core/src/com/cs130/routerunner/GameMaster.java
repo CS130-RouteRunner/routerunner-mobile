@@ -195,6 +195,10 @@ public class GameMaster implements Screen{
         this.waypoints_ = new ArrayList<Vector3>(waypoints);
     }
 
+    public void addWaypoint(Vector3 waypoint) {
+        this.waypoints_.add(waypoint);
+    }
+
     public boolean baseContains(float x, float y){
         return base_.contains(x, y);
     }

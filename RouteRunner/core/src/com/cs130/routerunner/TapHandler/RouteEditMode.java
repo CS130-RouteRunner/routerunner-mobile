@@ -42,8 +42,7 @@ public class RouteEditMode implements TapMode {
             selectedActor_.setRoute(newRoute_); //change after Roger implements
             Gdx.app.log("RETag", "new route: ");
             selectedActor_.route_.printWaypoints();
-            // truck
-            // routes
+            tapHandler_.gameMaster_.clearWaypoints();
             tapHandler_.curMode_ = tapHandler_.normalMode_;
         } else {
             Vector3 touchPos = new Vector3();
@@ -54,6 +53,7 @@ public class RouteEditMode implements TapMode {
             Gdx.app.log("ReTag", "Received tap at: " + touchPos.x + ", " +
                     touchPos.y);
             newRoute_.addWayPoint(touchPos.x, touchPos.y);
+            tapHandler_.gameMaster_.addWaypoint(touchPos);
         }
     }
 }
