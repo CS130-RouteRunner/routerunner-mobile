@@ -39,6 +39,8 @@ public class ActorInfo {
         skin_ = new Skin();
         skin_.addRegions(atlas_);*/
         skin_ = new Skin(Gdx.files.internal("uiskin.json"));
+        skin_.getFont("default-font").getData().setScale(2.00f, 2.00f);
+
         buttonEditRoute_ = new TextButton("Edit Route", skin_);
         buttonCancelEdit_ = new TextButton("Cancel", skin_);
         buttonSaveRoute_ = new TextButton("Save Route", skin_);
