@@ -32,7 +32,6 @@ public class GameMaster implements Screen{
     private ArrayList<Actor> trucks_;
     private Route route_;
     private Rectangle base_;
-    private RouteFactory routeFactory_;
     private Sprite baseSprite_;
 
     private Sprite waypointSprite_;
@@ -78,9 +77,6 @@ public class GameMaster implements Screen{
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
 
-        //create routeFactory
-        routeFactory_ = new RouteFactory();
-        routeFactory_.startCreatingRoute();
     }
 
     @Override
@@ -179,16 +175,6 @@ public class GameMaster implements Screen{
 
     public ArrayList<Actor> getTrucks() { return trucks_; }
 
-    public RouteFactory getRouteFactory(){
-        return routeFactory_;
-    }
-
-    public void setRoute(){
-        //TODO: (rlau) change this method to set the route of a specific truck, not just all of em
-        for (Actor truck: trucks_) {
-            truck.setRoute(routeFactory_.getRoute());
-        }
-    }
 
     //TODO(juliany): clean this up to use routes or soemthing.
     public void setWaypoints(ArrayList<Vector3> waypoints) {

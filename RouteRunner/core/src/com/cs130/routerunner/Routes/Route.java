@@ -37,7 +37,7 @@ public class Route {
             truck.setY(0f);
             truck.setMoveTo(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
         }
-        else{
+        else if (currWayPointIndex_ == 0){
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
         }
 
