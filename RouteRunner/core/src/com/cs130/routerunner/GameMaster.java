@@ -35,6 +35,9 @@ public class GameMaster implements Screen{
     private RouteFactory routeFactory_;
     private Sprite baseSprite_;
 
+    private Sprite waypointSprite_;
+    private ArrayList<Vector3> waypoints_;
+
     public GameMaster(RouteRunner game) {
 
         camera_ = new MapCamera();
@@ -72,6 +75,9 @@ public class GameMaster implements Screen{
         baseSprite_ = new Sprite(new Texture("base.png"));
         base_ = new Rectangle(500, 500, 500, 500);
 
+        waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
+        waypoints_ = new ArrayList<Vector3>();
+
         //create routeFactory
         routeFactory_ = new RouteFactory();
         routeFactory_.startCreatingRoute();
@@ -85,22 +91,22 @@ public class GameMaster implements Screen{
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //batch_.setProjectionMatrix(camera_.getCamera().combined);
         stage_.getBatch().setProjectionMatrix(camera_.getCamera().combined);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //batch_.begin();
         stage_.getBatch().begin();
         mapSprite_.draw(stage_.getBatch());
         for (Actor truck: trucks_) {
-            //batch_.draw(truck, truck.getX(), truck.getY());
             stage_.getBatch().draw(truck, truck.getX(), truck.getY());
         }
-        //batch_.draw(baseSprite_, base_.getX(), base_.getY());
+
+        for (Vector3 waypoint: waypoints_) {
+            stage_.getBatch().draw(waypointSprite_, waypoint.x, waypoint.y);
+        }
+
         stage_.getBatch().draw(baseSprite_, base_.getX(), base_.getY());
-        //batch_.end();
         stage_.getBatch().end();
 
         stage_.draw();
@@ -182,6 +188,11 @@ public class GameMaster implements Screen{
         for (Actor truck: trucks_) {
             truck.setRoute(routeFactory_.getRoute());
         }
+    }
+
+    //TODO(juliany): clean this up to use routes or soemthing.
+    public void setWaypoints(ArrayList<Vector3> waypoints) {
+        this.waypoints_ = waypoints;
     }
 
     public boolean baseContains(float x, float y){

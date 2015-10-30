@@ -43,6 +43,7 @@ public class NormalMode implements TapMode {
             actorSelected.displayInfo();
             tapHandler_.actorSelectedMode_.SetSelectedActor(actorSelected);
             tapHandler_.curMode_ = tapHandler_.actorSelectedMode_;
+            tapHandler_.gameMaster_.setWaypoints(actorSelected.route_.wayPoints_);
             // Display Edit Route Button
             tapHandler_.curMode_.Tap(x, y, count);
         } else {

@@ -37,7 +37,6 @@ public class RouteEditMode implements TapMode {
 
             //convertToLatLng(); //TODO: need to figure out how to convert to latitude + longitude
             //convertToSnappedPoints(); //TODO: convert points to snapped points
-            //routeFactory_.clearRoute(); //clear route for next creation
             Gdx.app.log("RETag", "old route: ");
             selectedActor_.route_.printWaypoints();
             selectedActor_.setRoute(newRoute_); //change after Roger implements
@@ -49,7 +48,6 @@ public class RouteEditMode implements TapMode {
         } else {
             Vector3 touchPos = new Vector3();
             touchPos.set(x, y, 0);
-            //tapHandler_.gameMaster_.getCamera().unproject(touchPos);
 
             // TODO(Julian/Patrick): collect all the points into an array. And
             //if we want to edit routes, get old truck route if exists and populate array
