@@ -192,10 +192,14 @@ public class GameMaster implements Screen{
 
     //TODO(juliany): clean this up to use routes or soemthing.
     public void setWaypoints(ArrayList<Vector3> waypoints) {
-        this.waypoints_ = waypoints;
+        this.waypoints_ = new ArrayList<Vector3>(waypoints);
     }
 
     public boolean baseContains(float x, float y){
         return base_.contains(x, y);
+    }
+
+    public void clearWaypoints() {
+        this.waypoints_.clear();
     }
 }
