@@ -88,15 +88,30 @@ public class Actor extends Sprite {
     }
 
     public void setMoveTo(float x, float y) {
-        //TODO: check when slope = infinity
-        //calculate the "moving vector"
-        float slope = (y - this.getY())/(x - this.getX());
-        moveXDelta_ = (float) Math.sqrt(Math.pow(Settings.DEFAULT_MOVEMENT, 2)/ (slope + 1));
-        moveYDelta_ = slope * moveXDelta_;
 
         //set moving
         movingTowardsX_ = x;
         movingTowardsY_ = y;
+/*
+        //TODO: check when slope = infinity
+        //calculate the "moving vector"
+        if (Math.abs(x - this.getX()) < Settings.EPSILON){
+            moveXDelta_ = 0f;
+            moveYDelta_ = Settings.DEFAULT_MOVEMENT;
+        }
+
+        float slope = (y - this.getY())/(x - this.getX());
+        moveXDelta_ = (float) Math.sqrt(Math.pow(Settings.DEFAULT_MOVEMENT, 2)/ (slope + 1));
+        moveYDelta_ = slope * moveXDelta_;
+ */
+        moveXDelta_ = x - this.getX();
+        moveYDelta_ = y - this.getY();
+        double length = Math.sqrt(moveXDelta_ * moveXDelta_ + moveYDelta_ * moveYDelta_);
+        moveXDelta_ /= length;
+        moveYDelta_ /= length;
+
+        moveXDelta_ *= Settings.DEFAULT_MOVEMENT;
+        moveYDelta_ *= Settings.DEFAULT_MOVEMENT;
     }
 
     // return true if Edit Route Button is tapped

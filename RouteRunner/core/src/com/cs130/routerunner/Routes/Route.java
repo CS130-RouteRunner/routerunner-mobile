@@ -3,6 +3,7 @@ package com.cs130.routerunner.Routes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.Settings;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ public class Route {
             currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
         }
-        else if (truck.getX() == currWayPoint.x && truck.getY() == currWayPoint.y){
+        else if (Math.abs(truck.getX() - currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON){
             //WE JUST FINISHED THE WHOLE ROUTE, RESET
             currWayPointIndex_ = 0;
             truck.setX(0f);
