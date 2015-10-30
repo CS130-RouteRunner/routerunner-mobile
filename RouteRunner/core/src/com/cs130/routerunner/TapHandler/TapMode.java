@@ -10,6 +10,7 @@ import com.cs130.routerunner.Actor;
  * As of now, we have two States: RouteEditMode, NormalMode
  */
 public interface TapMode {
+    void Init();
     void Tap(float x, float y, int count);
     void SetSelectedActor(Actor a);
 }

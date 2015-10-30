@@ -11,9 +11,14 @@ import com.cs130.routerunner.Routes.*;
 public class RouteEditMode implements TapMode {
     Actor selectedActor_;
     TapHandler tapHandler_;
-    RouteFactory routeFactory_;
+    Route newRoute_;
+
     public RouteEditMode(TapHandler tapHandler) {
         this.tapHandler_ = tapHandler;
+        newRoute_ = new Route();
+    }
+    public void Init() {
+        newRoute_ = new Route();
     }
     public void SetSelectedActor(Actor a) {
         selectedActor_ = a;
@@ -23,31 +28,34 @@ public class RouteEditMode implements TapMode {
         Gdx.app.log("RETag", "Inside Route Edit Mode\n");
         // we have entered setting a waypoint mode, so push this waypoint to
         // the actor.
-        if(selectedActor_.isSaveRoute()){
-            tapHandler_.curMode_ = tapHandler_.normalMode_;
-            tapHandler_.Tap(x, y, count);
-        }
 
-        Vector3 touchPos = new Vector3();
-        touchPos.set(x, y, 0);
-        tapHandler_.gameMaster_.getCamera().unproject(touchPos);
-
-        // TODO(Julian/Patrick): collect all the points into an array. And
-        routeFactory_ = tapHandler_.gameMaster_.getRouteFactory();
-        //if we want to edit routes, get old truck route if exists and populate array
-        routeFactory_.addWayPoint(touchPos.x, touchPos.y);
 
         // TODO(Julian/Patrick): change this to a confirm route button or something
-        if(tapHandler_.gameMaster_.baseContains(touchPos.x, touchPos.y)){
+        Gdx.app.log("RETag", "saveRoute is " + selectedActor_.isSaveRoute());
+        if(selectedActor_.isSaveRoute()){
             //when we have touched the base, then set the route and re-enter normal mode
 
             //convertToLatLng(); //TODO: need to figure out how to convert to latitude + longitude
             //convertToSnappedPoints(); //TODO: convert points to snapped points
-            Route createdRoute = routeFactory_.getRoute(); //pair route with truck
             //routeFactory_.clearRoute(); //clear route for next creation
-
-            tapHandler_.gameMaster_.setRoute(); //change after Roger implements truck routes
+            Gdx.app.log("RETag", "old route: ");
+            selectedActor_.route_.printWaypoints();
+            selectedActor_.setRoute(newRoute_); //change after Roger implements
+            Gdx.app.log("RETag", "new route: ");
+            selectedActor_.route_.printWaypoints();
+            // truck
+            // routes
             tapHandler_.curMode_ = tapHandler_.normalMode_;
+        } else {
+            Vector3 touchPos = new Vector3();
+            touchPos.set(x, y, 0);
+            //tapHandler_.gameMaster_.getCamera().unproject(touchPos);
+
+            // TODO(Julian/Patrick): collect all the points into an array. And
+            //if we want to edit routes, get old truck route if exists and populate array
+            Gdx.app.log("ReTag", "Received tap at: " + touchPos.x + ", " +
+                    touchPos.y);
+            newRoute_.addWayPoint(touchPos.x, touchPos.y);
         }
     }
 }

@@ -44,8 +44,6 @@ public class GameMaster implements Screen{
         this.game_ = game;
         //setup touch stuff
         tapHandler_ = new TapHandler(this);
-        //Gdx.input.setInputProcessor(
-        //        new GestureDetector(new GestureHandler((this))));
 
         //setup some map related things
         mapSprite_ = new Sprite(new Texture(Gdx.files.internal
@@ -151,6 +149,7 @@ public class GameMaster implements Screen{
         Vector3 touchPos = new Vector3();
         touchPos.set(x, y, 0);
         camera_.unproject(touchPos);
+        Gdx.app.log("GMTag", "transformed: " + touchPos.x + ", "+  touchPos.y);
 
         // the user has tapped, and we need to do stuff depending on what
         // mode we're in (ie creating a route)

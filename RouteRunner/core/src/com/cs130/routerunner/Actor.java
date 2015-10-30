@@ -15,7 +15,7 @@ import sun.rmi.runtime.Log;
 public class Actor extends Sprite {
     private float movingTowardsX_;
     private float movingTowardsY_;
-    private Route route_;
+    public Route route_;
     private Stage stage_;
     private TapHandler tapHandler_;
     private ActorInfo actorInfo_;
@@ -25,6 +25,7 @@ public class Actor extends Sprite {
         stage_ = stage;
         tapHandler_ = tapHandler;
         actorInfo_ = new ActorInfo(stage_, tapHandler_);
+        route_ = new Route();
     }
 
     @Override

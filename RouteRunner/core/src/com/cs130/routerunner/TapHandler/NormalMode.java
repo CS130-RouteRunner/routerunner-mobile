@@ -17,6 +17,7 @@ public class NormalMode implements TapMode {
     public NormalMode(TapHandler tapHandler) {
         this.tapHandler_ = tapHandler;
     }
+    public void Init() {}
     public void SetSelectedActor(Actor a) {
         // do nothing, normal mode doesn't have a selected actor
     }

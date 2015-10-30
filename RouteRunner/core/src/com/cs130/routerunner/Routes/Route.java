@@ -1,5 +1,6 @@
 package com.cs130.routerunner.Routes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.cs130.routerunner.Actor;
 
@@ -15,6 +16,7 @@ public class Route {
 
     public Route(){
         currWayPointIndex_ = 0;
+        wayPoints_ = new ArrayList<Vector3>();
     }
     public void updateTruckPosition(Actor truck){
         if (wayPoints_ == null || wayPoints_.size() == 0)
@@ -41,7 +43,26 @@ public class Route {
 
         truck.update();
     }
+
+    public void addWayPoint(float x, float y){
+        Vector3 v = new Vector3(x, y, 0f);
+        wayPoints_.add(v);
+    }
+
+    public void clearWaypoints() {
+        wayPoints_.clear();
+        currWayPointIndex_ = 0;
+    }
+
+    public void printWaypoints() {
+        Gdx.app.log("RETag", ">>>>waypoints:");
+        for (Vector3 v : wayPoints_) {
+            Gdx.app.log("RETag", v.x + ", " + v.y);
+        }
+        Gdx.app.log("RETag", "<<<<end waypoints");
+    }
     public void setWayPoints(ArrayList<Vector3> wayPoints){
-        this.wayPoints_ = new ArrayList<Vector3>(wayPoints);
+        this.wayPoints_ = wayPoints;
+
     }
 }
