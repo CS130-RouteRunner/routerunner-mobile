@@ -3,19 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    tools:context="com.cs130.routerunner.android.MainActivity">
+    android:orientation="vertical"
+    tools:context="com.cs130.routerunner.android.MainActivity"
+    android:background="#4f4b4b">
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="@string/button_create"
-        android:onClick="createLobby" />
+        android:onClick="createLobby"
+        android:layout_gravity="center_horizontal"
+        android:background="#149ce0"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:textColor="#ffffff" />
 
     <ListView
-        android:layout_width="109dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/listView" />
+        android:id="@+id/listView"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center" />
 
     <!--<Button-->
         <!--android:layout_width="wrap_content"-->
