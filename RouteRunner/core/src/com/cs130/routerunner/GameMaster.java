@@ -50,7 +50,7 @@ public class GameMaster implements Screen{
 
         //setup some map related things
         mapSprite_ = new Sprite(new Texture(Gdx.files.internal
-                ("testmap3.png")));
+                ("westwood_map2.png")));
         mapSprite_.setPosition(0,0);
         mapSprite_.setSize(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT);
 
