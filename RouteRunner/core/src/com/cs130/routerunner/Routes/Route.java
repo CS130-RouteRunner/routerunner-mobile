@@ -25,7 +25,7 @@ public class Route {
 
         Vector3 currWayPoint = wayPoints_.get(currWayPointIndex_);
         //if reached waypoint, then update waypoint
-        if (truck.getX() == currWayPoint.x && truck.getY() == currWayPoint.y && currWayPointIndex_ < (wayPoints_.size()-1)) {
+        if (Math.abs(truck.getX()- currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ < (wayPoints_.size()-1)) {
             //WE JUST GOT TO A WAYPT, NOW SET NEXT ONE
             currWayPointIndex_++;
             currWayPoint = wayPoints_.get(currWayPointIndex_);
