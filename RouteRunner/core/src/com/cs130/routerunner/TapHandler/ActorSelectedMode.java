@@ -31,6 +31,7 @@ public class ActorSelectedMode implements TapMode {
             tapHandler_.routeEditMode_.SetSelectedActor(this.selectedActor_);
 
             this.selectedActor_.route_.clearWaypoints();
+            tapHandler_.gameMaster_.clearWaypoints();
             tapHandler_.curMode_ = tapHandler_.routeEditMode_;
             tapHandler_.curMode_.Init();
 
