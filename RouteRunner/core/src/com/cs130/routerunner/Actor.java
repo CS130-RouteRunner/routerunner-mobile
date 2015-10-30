@@ -78,6 +78,9 @@ public class Actor extends Sprite {
             this.setY(movingTowardsY_);
         if (Math.abs(this.getX() - movingTowardsX_) < .5f)
             this.setX(movingTowardsX_);
+
+        Gdx.app.log("ATag", "DELTAXY: " + moveXDelta_ + "," + moveYDelta_);
+        Gdx.app.log("ATag", "XY: " + this.getX() + "," + this.getY());
     }
 
     public void setMoveTo(float x, float y) {
@@ -100,12 +103,14 @@ public class Actor extends Sprite {
         moveXDelta_ = x - this.getX();
         moveYDelta_ = y - this.getY();
         double length = Math.sqrt(moveXDelta_ * moveXDelta_ + moveYDelta_ * moveYDelta_);
-        moveXDelta_ /= length;
-        moveYDelta_ /= length;
+        if (length != 0 ) {
+            moveXDelta_ /= length;
+            moveYDelta_ /= length;
+        }
 
+        Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," + moveYDelta_ + " LEN: " + length);
         moveXDelta_ *= Settings.DEFAULT_MOVEMENT;
         moveYDelta_ *= Settings.DEFAULT_MOVEMENT;
-
     }
 
     // return true if Edit Route Button is tapped

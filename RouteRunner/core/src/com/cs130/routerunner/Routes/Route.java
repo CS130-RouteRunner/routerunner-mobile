@@ -30,6 +30,7 @@ public class Route {
             currWayPointIndex_++;
             currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
+            Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
         }
         else if (Math.abs(truck.getX() - currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON){
             //WE JUST FINISHED THE WHOLE ROUTE, RESET
