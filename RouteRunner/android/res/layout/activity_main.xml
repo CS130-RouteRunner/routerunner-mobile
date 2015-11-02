@@ -5,25 +5,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.cs130.routerunner.android.MainActivity"
-    android:background="#4f4b4b">
+    android:background="#FFFFFF">
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:text="@string/button_create"
         android:onClick="createLobby"
-        android:layout_gravity="center_horizontal"
         android:background="#149ce0"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        android:textColor="#ffffff" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center"
+        android:padding="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Join an existing lobby:"
+        android:id="@+id/textView2"
+        android:textColor="#149ce0"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="440dp"
         android:id="@+id/listView"
-        android:layout_gravity="center_horizontal"
-        android:textAlignment="center" />
+        android:layout_marginTop="10dp"
+        android:divider="#149ce0"
+        android:dividerHeight="1dp"
+        android:background="#71149ce0"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:paddingLeft="10dp" />
 
     <!--<Button-->
         <!--android:layout_width="wrap_content"-->

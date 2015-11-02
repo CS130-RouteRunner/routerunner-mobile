@@ -97,7 +97,6 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-
     }
 
     /**
