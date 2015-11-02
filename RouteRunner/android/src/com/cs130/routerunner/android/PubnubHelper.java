@@ -1,7 +1,5 @@
 package com.cs130.routerunner.android;
 
-import android.view.View;
-
 import com.cs130.routerunner.Settings;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.android.ApiServer.ApiServerGetTask;
 import com.cs130.routerunner.android.ApiServer.ApiServerPostTask;
-import com.pubnub.api.*;
+
 import org.json.*;
 
 import java.util.ArrayList;
@@ -27,8 +27,7 @@ public class MainActivity extends Activity {
     //private ChatAdapter chatAdapter_;
 
     private String username_;
-    private String channel_ = "routerunner-global";
-    private ArrayList<String> channelList_;
+    private ArrayList<String> channelList_ = new ArrayList<String>();
 
 //    /* Client for accessing Google APIs (logout stuff for later) */
 //    private GoogleApiClient mGoogleApiClient;
@@ -51,13 +50,13 @@ public class MainActivity extends Activity {
         this.username_ = randomString();   // Change this when login is merged
         System.out.println(this.username_);
         this.listView_ = (ListView) findViewById(R.id.listView);
+        this.listView_.setEmptyView(findViewById(R.id.emptyLobbyItem));
 
         // Connect to PubNub
         pubnubHelper_ = new PubnubHelper(this.username_);
 
         // Populate lobby list
-        this.channelList_ = new ArrayList<String>();
-        this.channelList_ = getLobbies();
+        populateLobbies();
         this.lobbyAdapter_ = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.channelList_);
         this.listView_.setAdapter(this.lobbyAdapter_);
 
@@ -66,8 +65,12 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String lobbyId = (String)((TextView) view).getText();
-                joinLobby(lobbyId);
-                Toast.makeText(getBaseContext(), "Joined " + lobbyId, Toast.LENGTH_LONG).show();
+                try {
+                    joinLobby(lobbyId);
+                    Toast.makeText(getBaseContext(), "Joined " + lobbyId, Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Toast.makeText(getBaseContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -102,32 +105,35 @@ public class MainActivity extends Activity {
     /**
      * Join an existing lobby.
      */
-    public void joinLobby(String lobbyId) {
+    public void joinLobby(String lobbyId) throws Exception {
         ApiServerPostTask apiServerPostTask = new ApiServerPostTask();
         String endpoint = Settings.ROUTERUNNER_BASE + Settings.MATCHMAKING_URL + "join";
-        try {
-            JSONObject params = new JSONObject();
-            String userId = this.username_;
-            params.put("uid", userId);
-            params.put("lid", lobbyId);
-            JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
-            System.out.println(response.toString());
-            // Data persisted, okay to join channel on PubNub
-            pubnubHelper_.subscribeChannel(lobbyId);
-            Intent lobby = new Intent(this, LobbyActivity.class);
-            lobby.putExtra("uid", username_);
-            lobby.putExtra("channel-id", lobbyId);
-            startActivity(lobby);
-        } catch (Exception e) {
-            System.out.println(e.toString());
+        JSONObject params = new JSONObject();
+        String userId = this.username_;
+        params.put("uid", userId);
+        params.put("lid", lobbyId);
+        JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
+        System.out.println("Response: " + response.toString());
+        String msg = response.getString("msg");
+        if (msg.equals("Lobby does not exist!")) {
+            throw new Exception(msg);
         }
+        if (msg.equals("Lobby at max capacity!")) {
+            throw new Exception(msg);
+        }
+        // Data persisted, okay to join channel on PubNub
+        pubnubHelper_.subscribeChannel(lobbyId);
+        Intent lobby = new Intent(this, LobbyActivity.class);
+        lobby.putExtra("uid", username_);
+        lobby.putExtra("channel-id", lobbyId);
+        startActivity(lobby);
     }
 
     /**
-     * Retrieves a list of open lobbies.
+     * Populates the list of lobbies.
      * @return
      */
-    private ArrayList<String> getLobbies() {
+    private void populateLobbies() {
         ApiServerGetTask apiServerGetTask = new ApiServerGetTask();
         String endpoint = Settings.ROUTERUNNER_BASE + Settings.MATCHMAKING_URL + "join";
         try {
@@ -137,16 +143,13 @@ public class MainActivity extends Activity {
             System.out.println(jlobbies);
             ArrayList<String> lobbies = new ArrayList<String>();
             for (int i = 0; i < jlobbies.length(); i++) {
-                System.out.println(jlobbies.getString(i));
                 lobbies.add(jlobbies.getString(i));
             }
 
-            return lobbies;
+            this.channelList_ = lobbies;
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-
-        return new ArrayList<String>();
     }
 
     /*

@@ -11,4 +11,5 @@
     <string name="playersListHeader">Players in room: </string>
     <string name="sign_in_google">Sign in with Google</string>
     <string name="create_account">Create an Account</string>
+    <string name="emptyLobbyList">No lobbies exist!</string>
 </resources>

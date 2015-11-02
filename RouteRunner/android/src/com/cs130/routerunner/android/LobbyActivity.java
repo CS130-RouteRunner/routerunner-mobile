@@ -153,7 +153,6 @@ public class LobbyActivity extends Activity {
      * Starts the Routerunner game, e.g. opens up LibGDX engine
      */
     public void startGame(View view) {
-        // Do something in response to button
         Intent routeRunner = new Intent(this, AndroidLauncher.class);
         startActivity(routeRunner);
     }

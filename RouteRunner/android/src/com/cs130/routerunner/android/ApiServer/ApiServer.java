@@ -51,6 +51,23 @@ public class ApiServer {
                 jsonResponse = new JSONObject(response.toString());
             }
 
+            if (responseCode == HttpURLConnection.HTTP_BAD_REQUEST) { // error
+                // Handle Response
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        connection.getErrorStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                jsonResponse = new JSONObject(response.toString());
+
+                throw new Exception(response.toString());
+            }
+
 
         } catch (Exception e) {
             System.out.println(e.toString());
