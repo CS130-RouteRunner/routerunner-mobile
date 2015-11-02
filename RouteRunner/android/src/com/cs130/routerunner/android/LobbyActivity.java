@@ -22,7 +22,7 @@ public class LobbyActivity extends Activity {
     private ListView listView_;
     private ArrayAdapter<String> playerAdapter_;
 
-    private Pubnub pubnub_;
+    private PubnubHelper pubnubHelper_;
     private String username_;
     private String channel_;
 
@@ -47,61 +47,15 @@ public class LobbyActivity extends Activity {
         channel_title.setText(channel);
 
         // Connect to PubNub
-        initPubNub();
-        subscribeChannel(channel);
+        pubnubHelper_ = new PubnubHelper(this.username_);
+        pubnubHelper_.subscribeChannel(this.channel_);
         subscribePresence(channel);
 
         // Get players
+        getPlayers();
         this.playerList_ = new ArrayList<String>();
         this.playerAdapter_ = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.playerList_);
         this.listView_.setAdapter(this.playerAdapter_);
-    }
-
-    /**
-     * Subscribes to a PubNub channel.
-     * @param channel - lobby id to join
-     */
-    private void subscribeChannel(String channel) {
-        Callback subscribeCallback = new Callback() {
-            @Override
-            public void successCallback(String channel, Object message) {
-                if (message instanceof JSONObject) {
-                    try {
-                        // Will need this for chat, multiplayer msgs
-                        JSONObject jmessage = (JSONObject) message;
-                        String messageType = jmessage.getString(Message.TYPE);
-                        String username = jmessage.getString(Message.USER);
-                        String messageData = jmessage.getString(Message.MESSAGE);
-                        long time = jmessage.getLong(Message.TIME);
-                        if (username.equals(pubnub_.getUUID())) return; // ignore own msgs
-                        if (messageType.equals("chat")) {
-                            Message msg = new Message(username, messageData, time);
-
-                            // Do application-logic
-                        }
-                    } catch (Exception e) {
-                        System.out.println(e.toString());
-                    }
-                }
-            }
-
-            @Override
-            public void connectCallback(String channel, Object message) {
-                getPlayers();
-            }
-
-            @Override
-            public void errorCallback(String channel, PubnubError error) {
-                System.out.println("ERROR on channel " + channel + " : " + error.toString());
-            }
-        };
-
-        try {
-            pubnub_.subscribe(channel, subscribeCallback);
-        } catch (PubnubException e) {
-            System.out.println(e.toString());
-        }
-
     }
 
     /**
@@ -143,25 +97,7 @@ public class LobbyActivity extends Activity {
                 System.out.println("ERROR on channel " + channel + " : " + error.toString());
             }
         };
-
-        try {
-            pubnub_.presence(channel, presenceCallback);
-        } catch (PubnubException e) {
-            System.out.println(e.toString());
-        }
-    }
-
-
-    /**
-     * Instantiate PubNub object with username as UUID
-     *   Then subscribe to the current channel with presence.
-     *   Finally, populate the listview with past messages from history
-     */
-    private void initPubNub() {
-        this.pubnub_ = new Pubnub(Settings.PUBNUB_PUBLISH_KEY, Settings.PUBNUB_SUBSCRIBE_KEY);
-        this.pubnub_.setUUID(this.username_);
-        //subscribeWithPresence();
-        //history();
+        pubnubHelper_.presence(channel, presenceCallback);
     }
 
     /**
@@ -206,7 +142,7 @@ public class LobbyActivity extends Activity {
             }
          };
         try {
-            pubnub_.hereNow(channel_, hereCallback);
+            pubnubHelper_.hereNow(channel_, hereCallback);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
