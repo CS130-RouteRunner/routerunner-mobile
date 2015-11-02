@@ -21,7 +21,7 @@ import java.util.Random;
 
 
 public class MainActivity extends Activity {
-    private Pubnub pubnub_;
+    private PubnubHelper pubnubHelper_;
     private ListView listView_;
     private ArrayAdapter<String> lobbyAdapter_;
     //private ChatAdapter chatAdapter_;
@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
         this.listView_ = (ListView) findViewById(R.id.listView);
 
         // Connect to PubNub
-        initPubNub();
+        pubnubHelper_ = new PubnubHelper(this.username_);
 
         // Populate lobby list
         this.channelList_ = new ArrayList<String>();
@@ -89,7 +89,11 @@ public class MainActivity extends Activity {
             JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
             System.out.println(response.toString());
             // Data persisted, okay to connect to PubNub
-            subscribeChannel(lobbyId);
+            pubnubHelper_.subscribeChannel(lobbyId);
+            Intent lobby = new Intent(this, LobbyActivity.class);
+            lobby.putExtra("uid", username_);
+            lobby.putExtra("channel-id", lobbyId);
+            startActivity(lobby);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -110,7 +114,11 @@ public class MainActivity extends Activity {
             JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
             System.out.println(response.toString());
             // Data persisted, okay to join channel on PubNub
-            subscribeChannel(lobbyId);
+            pubnubHelper_.subscribeChannel(lobbyId);
+            Intent lobby = new Intent(this, LobbyActivity.class);
+            lobby.putExtra("uid", username_);
+            lobby.putExtra("channel-id", lobbyId);
+            startActivity(lobby);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -140,100 +148,6 @@ public class MainActivity extends Activity {
         }
 
         return new ArrayList<String>();
-    }
-
-
-    /**
-     * Subscribes to a PubNub channel.
-     * @param channel - lobby id to join
-     */
-    private void subscribeChannel(String channel) {
-        Callback subscribeCallback = new Callback() {
-            @Override
-            public void successCallback(String channel, Object message) {
-                if (message instanceof JSONObject) {
-                    try {
-                        // Will need this for chat, multiplayer msgs
-                        JSONObject jmessage = (JSONObject) message;
-                        String messageType = jmessage.getString(Message.TYPE);
-                        String username = jmessage.getString(Message.USER);
-                        String messageData = jmessage.getString(Message.MESSAGE);
-                        long time = jmessage.getLong(Message.TIME);
-                        if (username.equals(pubnub_.getUUID())) return; // ignore own msgs
-                        if (messageType.equals("chat")) {
-                            Message msg = new Message(username, messageData, time);
-
-                            // Do application-logic
-                        }
-                    } catch (Exception e) {
-                        System.out.println(e.toString());
-                    }
-                }
-            }
-
-            @Override
-            public void errorCallback(String channel, PubnubError error) {
-                System.out.println("ERROR on channel " + channel + " : " + error.toString());
-            }
-        };
-
-        try {
-            pubnub_.subscribe(channel, subscribeCallback);
-            Intent lobby = new Intent(this, LobbyActivity.class);
-            lobby.putExtra("uid", username_);
-            lobby.putExtra("channel-id", channel);
-            startActivity(lobby);
-        } catch (PubnubException e) {
-            System.out.println(e.toString());
-        }
-
-    }
-
-    /**
-     * Publishes a message to a PubNub channel.
-     */
-    public void publishMessage(View view) {
-        Callback callback = new Callback() {
-            public void successCallback(String channel, Object response) {
-                System.out.println(response.toString());
-            }
-            public void errorCallback(String channel, PubnubError error) {
-                System.out.println(error.toString());
-            }
-        };
-        JSONObject json = new JSONObject();
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            char c = chars[random.nextInt(chars.length)];
-            sb.append(c);
-        }
-        try {
-            json.put("data", sb.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        pubnub_.publish(channel_, json , callback);
-    }
-
-    /**
-     * Unsubscribe a PubNub channel.
-     */
-    public void unsubscribeChannel(View view) {
-        pubnub_.unsubscribe(channel_);
-    }
-
-    /**
-      * Instantiate PubNub object with username as UUID
-      *   Then subscribe to the current channel with presence.
-      *   Finally, populate the listview with past messages from history
-    */
-    private void initPubNub() {
-        this.pubnub_ = new Pubnub(Settings.PUBNUB_PUBLISH_KEY, Settings.PUBNUB_SUBSCRIBE_KEY);
-        this.pubnub_.setUUID(this.username_);
-        //subscribeWithPresence();
-        //history();
     }
 
     /*
