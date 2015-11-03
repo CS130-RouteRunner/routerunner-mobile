@@ -6,7 +6,8 @@
     <string name="button_start">Start Game</string>
     <string name="button_publish">Publish</string>
     <string name="button_unsubscribe">Unsubscribe</string>
-    <string name="button_create">Create New Lobby</string>
+    <string name="button_create">Create Lobby</string>
+    <string name="button_refresh">Refresh List</string>
     <string name="title_activity_lobby">LobbyActivity</string>
     <string name="playersListHeader">Players in room: </string>
     <string name="sign_in_google">Sign in with Google</string>

@@ -57,8 +57,6 @@ public class MainActivity extends Activity {
 
         // Populate lobby list
         populateLobbies();
-        this.lobbyAdapter_ = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.channelList_);
-        this.listView_.setAdapter(this.lobbyAdapter_);
 
         // Add listener to lobby list
         this.listView_.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,10 +94,18 @@ public class MainActivity extends Activity {
             Intent lobby = new Intent(this, LobbyActivity.class);
             lobby.putExtra("uid", username_);
             lobby.putExtra("channel-id", lobbyId);
-            startActivity(lobby);
+            startActivityForResult(lobby, 1);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    /**
+     * Refreshes Lobby List.
+     * @param view
+     */
+    public void refreshLobbyList(View view) {
+        populateLobbies();
     }
 
     /**
@@ -114,23 +120,55 @@ public class MainActivity extends Activity {
         params.put("lid", lobbyId);
         JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
         System.out.println("Response: " + response.toString());
-        String msg = response.getString("msg");
-        if (msg.equals("Lobby does not exist!")) {
-            throw new Exception(msg);
+        String status = response.getString("status");
+        if (status.equals("error")) {
+            throw new Exception(response.getString("msg"));
         }
-        if (msg.equals("Lobby at max capacity!")) {
-            throw new Exception(msg);
-        }
+
         // Data persisted, okay to join channel on PubNub
         pubnubHelper_.subscribeChannel(lobbyId);
         Intent lobby = new Intent(this, LobbyActivity.class);
         lobby.putExtra("uid", username_);
         lobby.putExtra("channel-id", lobbyId);
-        startActivity(lobby);
+        startActivityForResult(lobby, 1);
     }
 
     /**
-     * Populates the list of lobbies.
+     * Handle exiting an existing lobby on back click.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            String lobbyId = data.getStringExtra("lobby-id");
+            try {
+                exitLobby(lobbyId);
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+            //pubnubHelper_.unsubscribeChannel(lobbyId);
+            //Toast.makeText(getBaseContext(), "Exited " + lobbyId, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Update Server and Pubnub when user exists existing lobby.
+     */
+    private void exitLobby(String lobbyId) throws Exception{
+        // Notify server that user is leaving lobby
+        ApiServerPostTask apiServerPostTask = new ApiServerPostTask();
+        String endpoint = Settings.ROUTERUNNER_BASE + Settings.MATCHMAKING_URL + "end";
+        JSONObject params = new JSONObject();
+        params.put("uid", this.username_);
+        params.put("lid", lobbyId);
+        JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
+        System.out.println("Response: " + response.toString());
+
+        // Notify Pubnub that user is leaving lobby
+        pubnubHelper_.unsubscribeChannel(lobbyId);
+    }
+
+    /**
+     * Populates the list of lobbies and updates listView.
      * @return
      */
     private void populateLobbies() {
@@ -139,7 +177,7 @@ public class MainActivity extends Activity {
         try {
             JSONObject response = apiServerGetTask.execute(endpoint).get();
             System.out.println(response.toString());
-            JSONArray jlobbies = response.getJSONArray("lobbies");
+            JSONArray jlobbies = response.getJSONObject("data").getJSONArray("lobbies");
             System.out.println(jlobbies);
             ArrayList<String> lobbies = new ArrayList<String>();
             for (int i = 0; i < jlobbies.length(); i++) {
@@ -147,6 +185,8 @@ public class MainActivity extends Activity {
             }
 
             this.channelList_ = lobbies;
+            this.lobbyAdapter_ = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.channelList_);
+            this.listView_.setAdapter(this.lobbyAdapter_);
         } catch (Exception e) {
             System.out.println(e.toString());
         }

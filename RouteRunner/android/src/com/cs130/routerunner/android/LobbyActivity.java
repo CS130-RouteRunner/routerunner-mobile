@@ -56,6 +56,11 @@ public class LobbyActivity extends Activity {
         this.playerList_ = new ArrayList<String>();
         this.playerAdapter_ = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.playerList_);
         this.listView_.setAdapter(this.playerAdapter_);
+
+        //Set Return Intent
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("lobby-id",channel);
+        setResult(RESULT_OK,returnIntent);
     }
 
     /**
