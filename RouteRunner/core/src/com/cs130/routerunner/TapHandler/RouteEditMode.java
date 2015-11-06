@@ -45,8 +45,6 @@ public class RouteEditMode implements TapMode {
         if(selectedActor_.isSaveRoute()){
             //when we have touched the base, then set the route and re-enter normal mode
 
-            //convertToLatLng(); //TODO: need to figure out how to convert to latitude + longitude
-            //convertToSnappedPoints(); //TODO: convert points to snapped points
             Gdx.app.log("RETag", "old route: ");
             selectedActor_.route_.printWaypoints();
 

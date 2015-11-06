@@ -89,6 +89,9 @@ public class Actor extends Sprite {
         movingTowardsX_ = x;
         movingTowardsY_ = y;
 
+        //uses vector logic:
+        //creates a unit vector in the desired direction
+        //then multiplies by the default move
         moveXDelta_ = x - this.getX();
         moveYDelta_ = y - this.getY();
         double length = Math.sqrt(moveXDelta_ * moveXDelta_ + moveYDelta_ * moveYDelta_);
