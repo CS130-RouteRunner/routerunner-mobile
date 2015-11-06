@@ -37,6 +37,7 @@ public class Actor extends Sprite {
     public void setRoute(Route r){
         route_ = r;
     }
+
     public void move(){
         if (!paused_ && route_ != null) {
             route_.updateTruckPosition(this);
@@ -52,6 +53,9 @@ public class Actor extends Sprite {
             //Gdx.app.log("ATag", "DELTAXY: " + moveXDelta_ + "," +
             // moveYDelta_);
             //Gdx.app.log("ATag", "XY: " + this.getX() + "," + this.getY());
+        } else {
+            Gdx.app.log("ActorMove", "truck is not moving; pause: " + paused_
+                    + " route_ is : " + route_ );
         }
     }
 
@@ -98,8 +102,8 @@ public class Actor extends Sprite {
             moveYDelta_ /= length;
         }
 
-        //Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," +
-        //        moveYDelta_ + " LEN: " + length);
+        Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," +
+               moveYDelta_ + " LEN: " + length);
         moveXDelta_ *= Settings.DEFAULT_MOVEMENT;
         moveYDelta_ *= Settings.DEFAULT_MOVEMENT;
     }

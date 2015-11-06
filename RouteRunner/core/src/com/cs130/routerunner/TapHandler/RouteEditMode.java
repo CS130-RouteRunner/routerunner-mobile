@@ -18,7 +18,6 @@ public class RouteEditMode implements TapMode {
     Actor selectedActor_;
     TapHandler tapHandler_;
     Route newRoute_;
-    Route oldRoute_;
     CoordinateConverter coordinateConverter_;
     SnapToRoads snapToRoads_;
 
@@ -35,7 +34,6 @@ public class RouteEditMode implements TapMode {
         selectedActor_ = a;
     }
     public void SetRoute(Route r) {
-        this.oldRoute_ = r;
     }
 
     public void Tap(float x, float y, int count) {

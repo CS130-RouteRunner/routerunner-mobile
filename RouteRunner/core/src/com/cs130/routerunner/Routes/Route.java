@@ -24,9 +24,11 @@ public class Route {
     //methods
     //updates the given truck along this route path
     public void updateTruckPosition(Actor truck){
-        if (wayPoints_ == null || wayPoints_.size() == 0)
+        if (wayPoints_ == null || wayPoints_.size() == 0) {
+            Gdx.app.debug("Route", "waypoints is null or empty");
             return;
-
+        }
+        Gdx.app.debug("Route", "Cur waypoint index is: " + currWayPointIndex_);
         Vector3 currWayPoint = wayPoints_.get(currWayPointIndex_);
 
         if (Math.abs(truck.getX() - currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ == wayPoints_.size()-1){
@@ -49,6 +51,11 @@ public class Route {
         }
     }
 
+    public void updateSelf(Route newRoute) {
+        //create a copy of the vector of waypoints and reset the index.
+        wayPoints_ = new ArrayList<Vector3>(newRoute.wayPoints_);
+        currWayPointIndex_ = 0;
+    }
     public void addWayPoint(float x, float y){
         Vector3 v = new Vector3(x, y, 0f);
         wayPoints_.add(v);

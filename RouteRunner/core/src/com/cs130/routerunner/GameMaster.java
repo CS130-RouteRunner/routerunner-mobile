@@ -143,6 +143,7 @@ public class GameMaster implements Screen{
     public void update(float delta) {
         // detect collisions for actors
         for (Actor truck: trucks_) {
+            Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
         }
 

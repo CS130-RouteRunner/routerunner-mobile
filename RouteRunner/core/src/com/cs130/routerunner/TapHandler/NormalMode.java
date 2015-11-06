@@ -46,7 +46,7 @@ public class NormalMode implements TapMode {
             tapHandler_.curMode_ = tapHandler_.actorSelectedMode_;
             tapHandler_.gameMaster_.setWaypoints(actorSelected.route_.wayPoints_);
             // Display Edit Route Button
-            tapHandler_.curMode_.Tap(x, y, count);
+            //tapHandler_.curMode_.Tap(x, y, count);
         } else {
             // do nothing for now.
             // TODO():need to implement other buttons (ie buy truck) later
