@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs130.routerunner.TapHandler.TapHandler;
 
+import java.util.EventListener;
+
 
 /**
  * Created by Evannnnn on 10/29/15.
@@ -18,31 +20,18 @@ import com.cs130.routerunner.TapHandler.TapHandler;
 public class ActorInfo {
     private Stage stage_;
     private Skin skin_;
-    private InputProcessor preProcessor_;
-    private TextureAtlas atlas_;
     private static ButtonType lastClicked_;
-    private static boolean editRoute_;
-    private static boolean snapRoute_;
-    private static boolean saveRoute_;
-    private static boolean cancelEdit_;
     private Button buttonEditRoute_;
     private Button buttonSnapRoute_;
     private Button buttonSaveRoute_;
     private Button buttonCancelEdit_;
+    private Button buttonCancelSave_;
     private TapHandler tapHandler_;
 
     public ActorInfo(Stage stage, TapHandler tapHandler){
         stage_ = stage;
         lastClicked_ = ButtonType.NONE;
-        editRoute_ = false;
-        snapRoute_ = false;
-        saveRoute_ = false;
-        cancelEdit_ = true;
         tapHandler_ = tapHandler;
-        /*
-        atlas_ = new TextureAtlas(Gdx.files.internal("ui-blue.atlas"));
-        skin_ = new Skin();
-        skin_.addRegions(atlas_);*/
         skin_ = new Skin(Gdx.files.internal("uiskin.json"));
         skin_.getFont("default-font").getData().setScale(2.00f, 2.00f);
 
@@ -50,32 +39,22 @@ public class ActorInfo {
         buttonCancelEdit_ = new TextButton("Cancel", skin_);
         buttonSnapRoute_ = new TextButton("Snap Route", skin_);
         buttonSaveRoute_ = new TextButton("Save Route", skin_);
+        buttonCancelSave_ = new TextButton("Cancel", skin_);
 
-        buttonEditRoute_.setBounds(Settings.BUTTON_X-Settings.BUTTON_WIDTH, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
-        buttonCancelEdit_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
-        buttonSnapRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
-        buttonSaveRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y,
+        buttonEditRoute_.setBounds(Settings.BUTTON_X-Settings.BUTTON_WIDTH, Settings.BUTTON_Y,
+                Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
+        buttonCancelEdit_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y,
+                Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
+        buttonSnapRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y,
+                Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
+        buttonSaveRoute_.setBounds(Settings.BUTTON_X-Settings.BUTTON_WIDTH, Settings.BUTTON_Y,
+                Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
+        buttonCancelSave_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y,
                 Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
     }
 
-    // below two functions may refactor with InputMultiplexer
-    protected void updateInputProcessor(InputProcessor inputProcessor){
-        preProcessor_ = Gdx.input.getInputProcessor();
-        Gdx.input.setInputProcessor(inputProcessor);
-    }
-
-    protected void restoreInputProcessor(){
-        if(preProcessor_ != null)
-            Gdx.input.setInputProcessor(preProcessor_);
-    }
-
     public void display(){
-        //updateInputProcessor(stage_);
         Gdx.app.log("AIdisplay", "Enter display()\n");
-        editRoute_ = false;
-        snapRoute_ = false;
-        saveRoute_ = false;
-        cancelEdit_ = false;
 
         buttonEditRoute_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -103,6 +82,7 @@ public class ActorInfo {
                 tapHandler_.Tap(x, y, 1);
                 buttonSnapRoute_.remove();
                 stage_.addActor(buttonSaveRoute_);
+                stage_.addActor(buttonCancelSave_);
             }
         });
         buttonSaveRoute_.addListener(new ClickListener() {
@@ -113,10 +93,17 @@ public class ActorInfo {
                 hide();
             }
         });
+        buttonCancelSave_.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                lastClicked_ = ButtonType.CANCEL_SAVE;
+                Gdx.app.log("AIdisplay", "Cancel Save\n");
+                tapHandler_.Tap(x, y, 1);
+                hide();
+            }
+        });
 
         stage_.addActor(buttonEditRoute_);
         stage_.addActor(buttonCancelEdit_);
-        //while(! buttonEditRoute_.isPressed()) continue;
     }
 
     public void hide(){
@@ -128,18 +115,17 @@ public class ActorInfo {
             buttonCancelEdit_.remove();
         if(buttonSaveRoute_ != null && buttonSaveRoute_.isVisible())
             buttonSaveRoute_.remove();
-        //restoreInputProcessor();
+        if(buttonCancelSave_ != null && buttonCancelSave_.isVisible())
+            buttonCancelSave_.remove();
     }
 
     public boolean isEditRoute() { return lastClicked_.equals(ButtonType.EDIT_ROUTE); }
 
     public boolean isSnapRoute() { return lastClicked_.equals(ButtonType.SNAP_ROUTE); }
 
-    public boolean isCancelEdit() {
-        return lastClicked_.equals(ButtonType.CANCEL_EDIT);
-    }
+    public boolean isCancelEdit() { return lastClicked_.equals(ButtonType.CANCEL_EDIT); }
 
-    public boolean isSaveRoute() {
-        return lastClicked_.equals(ButtonType.SAVE_ROUTE);
-    }
+    public boolean isSaveRoute() { return lastClicked_.equals(ButtonType.SAVE_ROUTE); }
+
+    public boolean isCancelSave() { return lastClicked_.equals(ButtonType.CANCEL_SAVE); }
 }

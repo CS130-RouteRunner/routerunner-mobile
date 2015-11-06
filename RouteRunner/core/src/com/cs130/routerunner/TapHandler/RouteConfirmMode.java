@@ -25,10 +25,11 @@ public class RouteConfirmMode implements TapMode {
     public void Tap(float x, float y, int count) {
         Gdx.app.log("RCTag", "Inside Route Confirm Mode");
         if(selectedActor_.isSaveRoute()) {
+            Gdx.app.log("RCTag", "Save");
             // TODO(julian): see if we keep creating Route objects will cause
             // game to slow down.
             selectedActor_.setRoute(snappedRoute_);
-        } else if (selectedActor_.isCancelEdit()) {
+        } else if (selectedActor_.isCancelSave()) {
             // do cleanup if needed
         }
 

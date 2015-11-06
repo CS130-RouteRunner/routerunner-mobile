@@ -116,6 +116,7 @@ public class Actor extends Sprite {
     public boolean isEditRoute() { return actorInfo_.isEditRoute(); }
     public boolean isSnapRoute() { return actorInfo_.isSnapRoute(); }
     public boolean isCancelEdit() { return actorInfo_.isCancelEdit(); }
+    public boolean isCancelSave() { return actorInfo_.isCancelSave(); }
     public boolean isStartedMoving() { return (movingTowardsX_ != -1 || movingTowardsY_ != -1); }
 
 }
