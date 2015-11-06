@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -66,14 +67,15 @@ public class GameMaster implements Screen{
 
         //create first (example) truck
         Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_);
-        truck.setX(0f);
-        truck.setY(0f);
+        truck.setX(35f);
+        truck.setY(35f);
         trucks_.add(truck);
 
         //create base sprite and logical box
         baseSprite_ = new Sprite(new Texture("base.png"));
         base_ = new Rectangle(500, 500, 500, 500);
 
+        //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
 
@@ -95,14 +97,14 @@ public class GameMaster implements Screen{
         stage_.getBatch().begin();
         mapSprite_.draw(stage_.getBatch());
         for (Actor truck: trucks_) {
-            stage_.getBatch().draw(truck, truck.getX(), truck.getY());
+            drawSpriteCentered(truck, truck.getX(), truck.getY());
         }
 
         for (Vector3 waypoint: waypoints_) {
-            stage_.getBatch().draw(waypointSprite_, waypoint.x, waypoint.y);
+            drawSpriteCentered(waypointSprite_, waypoint.x, waypoint.y);
         }
 
-        stage_.getBatch().draw(baseSprite_, base_.getX(), base_.getY());
+        drawSpriteCentered(baseSprite_, base_.getX(), base_.getY());
         stage_.getBatch().end();
 
         stage_.draw();
@@ -191,5 +193,11 @@ public class GameMaster implements Screen{
 
     public void clearWaypoints() {
         this.waypoints_.clear();
+    }
+
+    //draws using the stage batch but automatically centers all sprites
+    //if just drawing a point or regular texture, using stage_.getBatch().draw() is fine
+    public void drawSpriteCentered (Sprite sprite, float x, float y){
+        stage_.getBatch().draw(sprite, x - sprite.getWidth()/2, y - sprite.getHeight()/2);
     }
 }
