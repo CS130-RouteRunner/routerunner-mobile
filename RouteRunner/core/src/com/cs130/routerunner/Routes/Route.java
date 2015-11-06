@@ -22,8 +22,9 @@ public class Route {
     }
 
     //methods
-    //updates the given truck along this route path
-    public void updateTruckPosition(Actor truck){
+    //updates what the given truck's next way point should be
+    //if so, then update to the next waypoint/reset/initialize appropriately
+    public void updateWaypoint(Actor truck){
         if (wayPoints_ == null || wayPoints_.size() == 0) {
             Gdx.app.debug("Route", "waypoints is null or empty");
             return;
@@ -36,18 +37,18 @@ public class Route {
             currWayPointIndex_ = 0;
             truck.setX(0f);
             truck.setY(0f);
-            truck.setMoveTo(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
+            truck.setMovementVectorToNextWaypoint(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
         }
         else if (Math.abs(truck.getX()- currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ < (wayPoints_.size()-1)) {
             //WE JUST GOT TO A WAYPT, NOW SET NEXT ONE
             currWayPointIndex_++;
             currWayPoint = wayPoints_.get(currWayPointIndex_);
-            truck.setMoveTo(currWayPoint.x, currWayPoint.y);
+            truck.setMovementVectorToNextWaypoint(currWayPoint.x, currWayPoint.y);
             //Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
         }
-        else if (!truck.isStartedMoving()){
+        else if (!truck.hasStartedNewRoute()){
             //WE HAVENT STARTED MOVING YET, set the first waypoint
-            truck.setMoveTo(currWayPoint.x, currWayPoint.y);
+            truck.setMovementVectorToNextWaypoint(currWayPoint.x, currWayPoint.y);
         }
     }
 

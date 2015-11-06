@@ -12,6 +12,7 @@ import com.cs130.routerunner.TapHandler.TapHandler;
 public class Actor extends Sprite {
     private float movingTowardsX_ = -1;
     private float movingTowardsY_ = -1;
+    private boolean hasStartedNewRoute_ = false;
     private float moveXDelta_ = 0;
     private float moveYDelta_ = 0;
     private boolean paused_ = false;
@@ -36,11 +37,13 @@ public class Actor extends Sprite {
     }
     public void setRoute(Route r){
         route_ = r;
+        hasStartedNewRoute_ = false;
     }
 
+    //moves the truck
     public void move(){
         if (!paused_ && route_ != null) {
-            route_.updateTruckPosition(this);
+            route_.updateWaypoint(this);
             this.setX(this.getX() + moveXDelta_);
             this.setY(this.getY() + moveYDelta_);
 
@@ -85,7 +88,11 @@ public class Actor extends Sprite {
         move();
     }
 
-    public void setMoveTo(float x, float y) {
+    //takes in the next waypoint x,y
+    //creates a unit vector with start point as the current truck's location
+    //pointing towards the inputted waypoint
+    //sets the x,y movements to be in the direction of this vector
+    public void setMovementVectorToNextWaypoint(float x, float y) {
 
         //set moving
         movingTowardsX_ = x;
@@ -117,6 +124,6 @@ public class Actor extends Sprite {
     public boolean isSnapRoute() { return actorInfo_.isSnapRoute(); }
     public boolean isCancelEdit() { return actorInfo_.isCancelEdit(); }
     public boolean isCancelSave() { return actorInfo_.isCancelSave(); }
-    public boolean isStartedMoving() { return (movingTowardsX_ != -1 || movingTowardsY_ != -1); }
+    public boolean hasStartedNewRoute() { return this.hasStartedNewRoute_; }
 
 }
