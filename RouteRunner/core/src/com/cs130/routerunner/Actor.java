@@ -61,8 +61,8 @@ public class Actor extends Sprite {
 
     // TODO(Kailin): return whether actor was tapped on
     public boolean tryToTap(float x, float y) {
-        if (x >= this.getX() && x <= (this.getX()+this.getWidth()) &&
-                y >= this.getY() && y <= (this.getY()+this.getHeight()))
+        if (x >= (this.getX()-this.getWidth()/2) && x <= (this.getX()+this.getWidth()/2) &&
+                y >= (this.getY()-this.getHeight()/2) && y <= (this.getY()+this.getHeight()/2))
             return true;
         else
             return false;
