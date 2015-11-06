@@ -14,8 +14,8 @@ import sun.rmi.runtime.Log;
  * Created by julianyang on 10/22/15.
  */
 public class Actor extends Sprite {
-    private float movingTowardsX_;
-    private float movingTowardsY_;
+    private float movingTowardsX_ = -1;
+    private float movingTowardsY_ = -1;
     private float moveXDelta_ = 0;
     private float moveYDelta_ = 0;
 
@@ -88,32 +88,6 @@ public class Actor extends Sprite {
         //set moving
         movingTowardsX_ = x;
         movingTowardsY_ = y;
-/*
-        //TODO: check when slope = infinity
-        //calculate the "moving vector"
-        if (Math.abs(x - this.getX()) < Settings.EPSILON){
-            moveXDelta_ = 0f;
-            moveYDelta_ = Settings.DEFAULT_MOVEMENT;
-        }
-
-        float slope = (y - this.getY())/(x - this.getX());
-        moveXDelta_ = (float) Math.sqrt(Math.pow(Settings.DEFAULT_MOVEMENT, 2)/ (slope + 1));
-        moveYDelta_ = slope * moveXDelta_;
- */
-
-        /*
-
-        //math for movement
-
-        //get angle
-        double angle = Math.atan2(y-this.getY(), y-this.getX());
-
-        //calculate distance to move
-        moveXDelta_ = (float) Math.cos(angle) * Settings.DEFAULT_MOVEMENT;
-        moveYDelta_ = (float) Math.sin(angle) * Settings.DEFAULT_MOVEMENT;
-
-         */
-
 
         moveXDelta_ = x - this.getX();
         moveYDelta_ = y - this.getY();
@@ -132,5 +106,6 @@ public class Actor extends Sprite {
     public boolean isEditRoute() { return actorInfo_.isEditRoute(); }
     public boolean isSaveRoute() { return actorInfo_.isSaveRoute(); }
     public boolean isCancelEdit() { return actorInfo_.isCancelEdit(); }
+    public boolean isStartedMoving() { return (movingTowardsX_ != -1 || movingTowardsY_ != -1); }
 
 }
