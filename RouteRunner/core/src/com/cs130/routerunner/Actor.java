@@ -40,9 +40,10 @@ public class Actor extends Sprite {
         hasStartedNewRoute_ = false;
     }
 
+    //moves the truck
     public void move(){
         if (!paused_ && route_ != null) {
-            route_.updateTruckPosition(this);
+            route_.updateWaypoint(this);
             this.setX(this.getX() + moveXDelta_);
             this.setY(this.getY() + moveYDelta_);
 
@@ -87,7 +88,11 @@ public class Actor extends Sprite {
         move();
     }
 
-    public void setMoveTo(float x, float y) {
+    //takes in the next waypoint x,y
+    //creates a unit vector with start point as the current truck's location
+    //pointing towards the inputted waypoint
+    //sets the x,y movements to be in the direction of this vector
+    public void setMovementVectorToNextWaypoint(float x, float y) {
 
         //set moving
         movingTowardsX_ = x;
