@@ -45,7 +45,7 @@ public class Route {
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
             //Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
         }
-        else if (!truck.isStartedMoving()){
+        else if (!truck.hasStartedNewRoute()){
             //WE HAVENT STARTED MOVING YET, set the first waypoint
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
         }

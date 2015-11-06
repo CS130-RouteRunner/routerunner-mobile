@@ -12,6 +12,7 @@ import com.cs130.routerunner.TapHandler.TapHandler;
 public class Actor extends Sprite {
     private float movingTowardsX_ = -1;
     private float movingTowardsY_ = -1;
+    private boolean hasStartedNewRoute_ = false;
     private float moveXDelta_ = 0;
     private float moveYDelta_ = 0;
     private boolean paused_ = false;
@@ -36,6 +37,7 @@ public class Actor extends Sprite {
     }
     public void setRoute(Route r){
         route_ = r;
+        hasStartedNewRoute_ = false;
     }
 
     public void move(){
@@ -117,6 +119,6 @@ public class Actor extends Sprite {
     public boolean isSnapRoute() { return actorInfo_.isSnapRoute(); }
     public boolean isCancelEdit() { return actorInfo_.isCancelEdit(); }
     public boolean isCancelSave() { return actorInfo_.isCancelSave(); }
-    public boolean isStartedMoving() { return (movingTowardsX_ != -1 || movingTowardsY_ != -1); }
+    public boolean hasStartedNewRoute() { return this.hasStartedNewRoute_; }
 
 }
