@@ -2,13 +2,9 @@ package com.cs130.routerunner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.Routes.Route;
 import com.cs130.routerunner.TapHandler.TapHandler;
-
-
-import sun.rmi.runtime.Log;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -18,6 +14,7 @@ public class Actor extends Sprite {
     private float movingTowardsY_ = -1;
     private float moveXDelta_ = 0;
     private float moveYDelta_ = 0;
+    private boolean paused_ = false;
 
     public Route route_;
     private Stage stage_;
@@ -40,11 +37,22 @@ public class Actor extends Sprite {
     public void setRoute(Route r){
         route_ = r;
     }
-    public void moveAlongRoute(){
-        if (route_ == null)
-            return;
+    public void move(){
+        if (!paused_ && route_ != null) {
+            route_.updateTruckPosition(this);
+            this.setX(this.getX() + moveXDelta_);
+            this.setY(this.getY() + moveYDelta_);
 
-        route_.updateTruckPosition(this);
+            //once we get within some epsilon, we stop trying to move there
+            if (Math.abs(this.getY() - movingTowardsY_) < .5f)
+                this.setY(movingTowardsY_);
+            if (Math.abs(this.getX() - movingTowardsX_) < .5f)
+                this.setX(movingTowardsX_);
+
+            //Gdx.app.log("ATag", "DELTAXY: " + moveXDelta_ + "," +
+            // moveYDelta_);
+            //Gdx.app.log("ATag", "XY: " + this.getX() + "," + this.getY());
+        }
     }
 
     // TODO(Kailin): return whether actor was tapped on
@@ -70,17 +78,7 @@ public class Actor extends Sprite {
     }
 
     public void update(){
-        this.setX(this.getX() + moveXDelta_);
-        this.setY(this.getY() + moveYDelta_);
-
-        //once we get within some epsilon, we stop trying to move there
-        if (Math.abs(this.getY() - movingTowardsY_) < .5f)
-            this.setY(movingTowardsY_);
-        if (Math.abs(this.getX() - movingTowardsX_) < .5f)
-            this.setX(movingTowardsX_);
-
-        Gdx.app.log("ATag", "DELTAXY: " + moveXDelta_ + "," + moveYDelta_);
-        Gdx.app.log("ATag", "XY: " + this.getX() + "," + this.getY());
+        move();
     }
 
     public void setMoveTo(float x, float y) {
@@ -100,14 +98,19 @@ public class Actor extends Sprite {
             moveYDelta_ /= length;
         }
 
-        Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," + moveYDelta_ + " LEN: " + length);
+        //Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," +
+        //        moveYDelta_ + " LEN: " + length);
         moveXDelta_ *= Settings.DEFAULT_MOVEMENT;
         moveYDelta_ *= Settings.DEFAULT_MOVEMENT;
     }
 
+    public void setPaused(boolean paused) {
+        paused_ = paused;
+    }
     // return true if Edit Route Button is tapped
-    public boolean isEditRoute() { return actorInfo_.isEditRoute(); }
     public boolean isSaveRoute() { return actorInfo_.isSaveRoute(); }
+    public boolean isEditRoute() { return actorInfo_.isEditRoute(); }
+    public boolean isSnapRoute() { return actorInfo_.isSnapRoute(); }
     public boolean isCancelEdit() { return actorInfo_.isCancelEdit(); }
     public boolean isStartedMoving() { return (movingTowardsX_ != -1 || movingTowardsY_ != -1); }
 

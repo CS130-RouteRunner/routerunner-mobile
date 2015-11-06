@@ -18,6 +18,7 @@ public class RouteEditMode implements TapMode {
     Actor selectedActor_;
     TapHandler tapHandler_;
     Route newRoute_;
+    Route oldRoute_;
     CoordinateConverter coordinateConverter_;
     SnapToRoads snapToRoads_;
 
@@ -33,6 +34,9 @@ public class RouteEditMode implements TapMode {
     public void SetSelectedActor(Actor a) {
         selectedActor_ = a;
     }
+    public void SetRoute(Route r) {
+        this.oldRoute_ = r;
+    }
 
     public void Tap(float x, float y, int count) {
         Gdx.app.log("RETag", "Inside Route Edit Mode\n");
@@ -41,8 +45,8 @@ public class RouteEditMode implements TapMode {
 
 
         // TODO(Julian/Patrick): change this to a confirm route button or something
-        Gdx.app.log("RETag", "saveRoute is " + selectedActor_.isSaveRoute());
-        if(selectedActor_.isSaveRoute()){
+        Gdx.app.log("RETag", "saveRoute is " + selectedActor_.isSnapRoute());
+        if(selectedActor_.isSnapRoute()){
             //when we have touched the base, then set the route and re-enter normal mode
 
             Gdx.app.log("RETag", "old route: ");
@@ -62,13 +66,14 @@ public class RouteEditMode implements TapMode {
                 newRoute_.addWayPoint(pixel.x, pixel.y);
             }
 
-            selectedActor_.setRoute(newRoute_);
             Gdx.app.log("RETag", "new route: ");
-            selectedActor_.route_.printWaypoints();
+            newRoute_.printWaypoints();
             // update the waypoint sprites
             tapHandler_.gameMaster_.setWaypoints(newRoute_.wayPoints_);
-            // switch to Normal Mode
-            tapHandler_.curMode_ = tapHandler_.normalMode_;
+            // switch to Route Confirm Mode
+            tapHandler_.curMode_ = tapHandler_.routeConfirmMode_;
+            tapHandler_.routeConfirmMode_.SetSelectedActor(selectedActor_);
+            tapHandler_.routeConfirmMode_.SetRoute(newRoute_);
         } else {
             Vector3 touchPos = new Vector3();
             touchPos.set(x, y, 0);

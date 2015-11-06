@@ -20,17 +20,22 @@ public class ActorInfo {
     private Skin skin_;
     private InputProcessor preProcessor_;
     private TextureAtlas atlas_;
+    private static ButtonType lastClicked_;
     private static boolean editRoute_;
+    private static boolean snapRoute_;
     private static boolean saveRoute_;
     private static boolean cancelEdit_;
     private Button buttonEditRoute_;
+    private Button buttonSnapRoute_;
     private Button buttonSaveRoute_;
     private Button buttonCancelEdit_;
     private TapHandler tapHandler_;
 
     public ActorInfo(Stage stage, TapHandler tapHandler){
         stage_ = stage;
+        lastClicked_ = ButtonType.NONE;
         editRoute_ = false;
+        snapRoute_ = false;
         saveRoute_ = false;
         cancelEdit_ = true;
         tapHandler_ = tapHandler;
@@ -43,11 +48,14 @@ public class ActorInfo {
 
         buttonEditRoute_ = new TextButton("Edit Route", skin_);
         buttonCancelEdit_ = new TextButton("Cancel", skin_);
+        buttonSnapRoute_ = new TextButton("Snap Route", skin_);
         buttonSaveRoute_ = new TextButton("Save Route", skin_);
 
         buttonEditRoute_.setBounds(Settings.BUTTON_X-Settings.BUTTON_WIDTH, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
         buttonCancelEdit_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
-        buttonSaveRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
+        buttonSnapRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y, Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
+        buttonSaveRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y,
+                Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
     }
 
     // below two functions may refactor with InputMultiplexer
@@ -65,37 +73,41 @@ public class ActorInfo {
         //updateInputProcessor(stage_);
         Gdx.app.log("AIdisplay", "Enter display()\n");
         editRoute_ = false;
+        snapRoute_ = false;
         saveRoute_ = false;
         cancelEdit_ = false;
 
         buttonEditRoute_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                editRoute_ = true;
-                saveRoute_ = false;
-                cancelEdit_ = false;
+                lastClicked_ = ButtonType.EDIT_ROUTE;
                 Gdx.app.log("AIdisplay", "Edit\n");
                 tapHandler_.Tap(x, y, 1);
                 buttonEditRoute_.remove();
-                stage_.addActor(buttonSaveRoute_);
+                stage_.addActor(buttonSnapRoute_);
 
             }
         });
         buttonCancelEdit_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                editRoute_ = false;
-                saveRoute_ = false;
-                cancelEdit_ = true;
+                lastClicked_ = ButtonType.CANCEL_EDIT;
                 Gdx.app.log("AIdisplay", "Cancel Edit\n");
                 tapHandler_.Tap(x, y, 1);
                 hide();
 
             }
         });
+        buttonSnapRoute_.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                lastClicked_ = ButtonType.SNAP_ROUTE;
+                Gdx.app.log("AIdisplay", "Snap\n");
+                tapHandler_.Tap(x, y, 1);
+                buttonSnapRoute_.remove();
+                stage_.addActor(buttonSaveRoute_);
+            }
+        });
         buttonSaveRoute_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                editRoute_ = false;
-                saveRoute_ = true;
-                cancelEdit_ = false;
+                lastClicked_ = ButtonType.SAVE_ROUTE;
                 Gdx.app.log("AIdisplay", "Save\n");
                 tapHandler_.Tap(x, y, 1);
                 hide();
@@ -110,16 +122,24 @@ public class ActorInfo {
     public void hide(){
         if(buttonEditRoute_ != null && buttonEditRoute_.isVisible())
             buttonEditRoute_.remove();
-        if(buttonSaveRoute_ != null && buttonSaveRoute_.isVisible())
-            buttonSaveRoute_.remove();
+        if(buttonSnapRoute_ != null && buttonSnapRoute_.isVisible())
+            buttonSnapRoute_.remove();
         if(buttonCancelEdit_ != null && buttonCancelEdit_.isVisible())
             buttonCancelEdit_.remove();
+        if(buttonSaveRoute_ != null && buttonSaveRoute_.isVisible())
+            buttonSaveRoute_.remove();
         //restoreInputProcessor();
     }
 
-    public boolean isEditRoute() { return editRoute_; }
+    public boolean isEditRoute() { return lastClicked_.equals(ButtonType.EDIT_ROUTE); }
 
-    public boolean isSaveRoute() { return saveRoute_; }
+    public boolean isSnapRoute() { return lastClicked_.equals(ButtonType.SNAP_ROUTE); }
 
-    public boolean isCancelEdit() { return cancelEdit_; }
+    public boolean isCancelEdit() {
+        return lastClicked_.equals(ButtonType.CANCEL_EDIT);
+    }
+
+    public boolean isSaveRoute() {
+        return lastClicked_.equals(ButtonType.SAVE_ROUTE);
+    }
 }

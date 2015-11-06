@@ -22,7 +22,7 @@ public class ActorSelectedMode implements TapMode {
     public void SetSelectedActor(Actor a) {
         selectedActor_ = a;
     }
-
+    public void SetRoute(Route r) {}
     public void Tap(float x, float y, int count) {
         // TODO(Evan): check if user tapped on the route edit button
         Gdx.app.log("ASTag", "Tapped Truck inside AS\n");
@@ -30,7 +30,7 @@ public class ActorSelectedMode implements TapMode {
             Gdx.app.log("ASTag", "Entering Route Edit Mode\n");
             tapHandler_.routeEditMode_.SetSelectedActor(this.selectedActor_);
 
-            this.selectedActor_.route_.clearWaypoints();
+            this.selectedActor_.setPaused(true);
             tapHandler_.gameMaster_.clearWaypoints();
             tapHandler_.curMode_ = tapHandler_.routeEditMode_;
             tapHandler_.curMode_.Init();

@@ -41,14 +41,12 @@ public class Route {
             currWayPointIndex_++;
             currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
-            Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
+            //Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
         }
         else if (!truck.isStartedMoving()){
             //WE HAVENT STARTED MOVING YET, set the first waypoint
             truck.setMoveTo(currWayPoint.x, currWayPoint.y);
         }
-
-        truck.update();
     }
 
     public void addWayPoint(float x, float y){

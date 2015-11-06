@@ -1,6 +1,7 @@
 package com.cs130.routerunner.TapHandler;
 
 import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.Routes.Route;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -13,4 +14,5 @@ public interface TapMode {
     void Init();
     void Tap(float x, float y, int count);
     void SetSelectedActor(Actor a);
+    void SetRoute(Route r);
 }

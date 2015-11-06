@@ -143,7 +143,7 @@ public class GameMaster implements Screen{
     public void update(float delta) {
         // detect collisions for actors
         for (Actor truck: trucks_) {
-            truck.moveAlongRoute();
+            truck.update();
         }
 
     }
