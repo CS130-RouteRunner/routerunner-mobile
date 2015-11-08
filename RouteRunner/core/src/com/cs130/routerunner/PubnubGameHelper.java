@@ -91,7 +91,8 @@ public class PubnubGameHelper {
                 System.out.println(error.toString());
             }
         };
-        pubnub_.history(this.channel_, timeToken, -1, 100, true, callback);
+        // Return 100 messages newer than this timetoken
+        pubnub_.history(this.channel_, timeToken, 100, true, callback);
     }
 
 }

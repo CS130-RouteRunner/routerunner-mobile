@@ -196,7 +196,7 @@ public class GameMaster implements Screen{
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
 
         pubnub_.publishMessage("hi");
-        long now = (new Date().getTime()) * 10000;
+        long now = (new Date().getTime() - (5*60*1000)) * 10000;
         pubnub_.history(now);
     }
 
