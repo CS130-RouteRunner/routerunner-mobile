@@ -62,7 +62,6 @@ public class Actor extends Sprite {
         }
     }
 
-    // TODO(Kailin): return whether actor was tapped on
     public boolean tryToTap(float x, float y) {
         if (x >= (this.getX()-this.getWidth()/2) && x <= (this.getX()+this.getWidth()/2) &&
                 y >= (this.getY()-this.getHeight()/2) && y <= (this.getY()+this.getHeight()/2))
@@ -71,13 +70,11 @@ public class Actor extends Sprite {
             return false;
     }
 
-    // TODO(Kailin/Evan): fill this method out
     public void displayInfo() {
         // display "edit route" button
         actorInfo_.display();
     }
 
-    // TODO(Kailin/Evan): fill this method out
     public void hideInfo() {
         // clean up any displayed buttons / info
         // namely, hide or destroy "edit route" button

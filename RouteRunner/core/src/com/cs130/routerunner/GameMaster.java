@@ -3,11 +3,13 @@ package com.cs130.routerunner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,9 +28,9 @@ public class GameMaster implements Screen{
     private RouteRunner game_;
     private MapCamera camera_;
     private TapHandler tapHandler_;
-    private SpriteBatch batch_;
     private Sprite mapSprite_;
     private Stage stage_;
+    private ShapeRenderer shapeRenderer_;
 
     private ArrayList<Actor> trucks_;
     private Route route_;
@@ -41,7 +43,6 @@ public class GameMaster implements Screen{
     public GameMaster(RouteRunner game) {
 
         camera_ = new MapCamera();
-
 
         //create self reference
         this.game_ = game;
@@ -100,18 +101,40 @@ public class GameMaster implements Screen{
             drawSpriteCentered(truck, truck.getX(), truck.getY());
         }
 
-        for (Vector3 waypoint: waypoints_) {
-            drawSpriteCentered(waypointSprite_, waypoint.x, waypoint.y);
-        }
+//        for (Vector3 waypoint: waypoints_) {
+//            drawSpriteCentered(waypointSprite_, waypoint.x, waypoint.y);
+//        }
 
         drawSpriteCentered(baseSprite_, base_.getX(), base_.getY());
         stage_.getBatch().end();
+
+        // need to match shaperender's projection matrix with spritebatch's
+        shapeRenderer_.setProjectionMatrix(stage_.getBatch().getProjectionMatrix());
+
+        Vector3 previous = null;
+        if (!waypoints_.isEmpty())
+            previous = waypoints_.get(0);
+
+        Gdx.gl.glLineWidth(20);
+        for (Vector3 waypoint : waypoints_) {
+            shapeRenderer_.setColor(Color.FOREST);
+            shapeRenderer_.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer_.rectLine(previous.x, previous.y, waypoint.x, waypoint.y, 15);
+            shapeRenderer_.end();
+
+            shapeRenderer_.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer_.circle(waypoint.x, waypoint.y, 7);
+            shapeRenderer_.end();
+
+            previous = waypoint;
+        }
 
         stage_.draw();
     }
 
     @Override
     public void show() {
+        shapeRenderer_ = new ShapeRenderer();
     }
 
     @Override
@@ -121,6 +144,7 @@ public class GameMaster implements Screen{
 
     @Override
     public void dispose() {
+        shapeRenderer_.dispose();
         stage_.dispose();
     }
 
