@@ -11,8 +11,12 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
+        String channel = intent.getStringExtra("lobby-id");
+        System.out.println("Initialized: " + username + " " + channel);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new RouteRunner(), config);
+		initialize(new RouteRunner(username, channel), config);
 	}
 
 // prevents back from returning to menu (using some exit button instead would be better)

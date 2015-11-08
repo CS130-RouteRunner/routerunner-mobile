@@ -83,8 +83,6 @@ public class PubnubHelper {
         pubnub_.unsubscribe(channel);
     }
 
-
-
     /**
      * Publishes a message to a PubNub channel.
      */
@@ -128,6 +126,5 @@ public class PubnubHelper {
     public String getUUID() {
         return pubnub_.getUUID();
     }
-
 
 }
