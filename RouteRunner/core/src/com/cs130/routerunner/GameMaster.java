@@ -17,6 +17,8 @@ import com.cs130.routerunner.Routes.*;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -41,10 +43,10 @@ public class GameMaster implements Screen{
     private Sprite waypointSprite_;
     private ArrayList<Vector3> waypoints_;
 
-    private PubnubGameHelper pubnub_;
+    private MessageCenter messageCenter_;
 
-    public GameMaster(RouteRunner game, PubnubGameHelper pubnub) {
-        this.pubnub_ = pubnub;
+    public GameMaster(RouteRunner game, MessageCenter messageCenter) {
+        this.messageCenter_ = messageCenter;
 
         camera_ = new MapCamera();
 
@@ -195,9 +197,10 @@ public class GameMaster implements Screen{
 
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
 
-        pubnub_.publishMessage("hi");
-        long now = (new Date().getTime() - (5*60*1000)) * 10000;
-        pubnub_.history(now);
+        JSONObject dummy = new JSONObject();
+        messageCenter_.sendMessage(dummy);
+        long now = (new Date().getTime() - (2*60*1000)) * 10000;
+        messageCenter_.getMessages(now);
     }
 
     public boolean mouseMoved (int screenX, int screenY){

@@ -16,7 +16,7 @@ public class AndroidLauncher extends AndroidApplication {
         String channel = intent.getStringExtra("lobby-id");
         System.out.println("Initialized: " + username + " " + channel);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new RouteRunner(username, channel), config);
+		initialize(new RouteRunner(new PubnubHelper(username, channel)), config);
 	}
 
 // prevents back from returning to menu (using some exit button instead would be better)

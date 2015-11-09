@@ -47,8 +47,7 @@ public class LobbyActivity extends Activity {
         channel_title.setText(channel);
 
         // Connect to PubNub
-        pubnubHelper_ = new PubnubHelper(this.username_);
-        pubnubHelper_.subscribeChannel(this.channel_);
+        pubnubHelper_ = new PubnubHelper(this.username_, this.channel_);
         subscribePresence(channel);
 
         // Get players

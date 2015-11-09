@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
         this.listView_.setEmptyView(findViewById(R.id.emptyLobbyItem));
 
         // Connect to PubNub
-        pubnubHelper_ = new PubnubHelper(this.username_);
+        pubnubHelper_ = new PubnubHelper(this.username_, null);
 
         // Populate lobby list
         populateLobbies();
