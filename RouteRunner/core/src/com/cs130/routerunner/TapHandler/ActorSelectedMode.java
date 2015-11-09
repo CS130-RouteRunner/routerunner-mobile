@@ -40,6 +40,7 @@ public class ActorSelectedMode implements TapMode {
             // clean up any display stuff (ie "EditRouteButton")
             tapHandler_.curMode_ = tapHandler_.normalMode_;
             tapHandler_.gameMaster_.clearWaypoints();
+            tapHandler_.gameMaster_.getPlayerButtonInfo().display();
             //selectedActor_.hideInfo();
         }
 
