@@ -9,6 +9,7 @@ import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -22,11 +23,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class PubnubHelper implements MessageCenter {
     private Pubnub pubnub_;
     private String channel_;
-    private long lastSyncTime_;
-    private List<Message> messageList_;
+    private ArrayList<Message> messageList_;
     private Callback getMessagesCallback_;
-    private List<Message> messages = new ArrayList<>();
-    private final Lock  messageListLock_ = new ReentrantLock(false);
+    private long lastSyncTime_;
+    private Lock messageListLock_;
 
     /**
      * Constructor
@@ -37,6 +37,8 @@ public class PubnubHelper implements MessageCenter {
         this.pubnub_ = new Pubnub(Settings.PUBNUB_PUBLISH_KEY, Settings.PUBNUB_SUBSCRIBE_KEY);
         this.pubnub_.setUUID(username);
         this.messageList_ = new ArrayList<Message>();
+        this.messageListLock_ = new ReentrantLock(false);
+
         if (channel != null) {
             this.channel_ = channel;
             subscribeChannel(channel);
@@ -47,7 +49,7 @@ public class PubnubHelper implements MessageCenter {
                 try {
                     System.out.println("This is the response: " + response.toString());
                     JSONArray jarr = (JSONArray) response;
-
+                    ArrayList<Message> messages = new ArrayList<Message>();
                     JSONArray data = (JSONArray) jarr.get(0);
                     lastSyncTime_ = Long.parseLong(jarr.getString(2));
                     for (int idx = 0; idx < data.length(); idx++) {

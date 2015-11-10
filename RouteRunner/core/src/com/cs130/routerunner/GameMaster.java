@@ -37,6 +37,7 @@ public class GameMaster implements Screen{
     private Player opponentPlayer_;
 
     private PlayerButtonInfo playerButtonInfo_;
+
     private ArrayList<Actor> trucks_;
     private ArrayList<Missile> missiles_;
     private Rectangle base_;
