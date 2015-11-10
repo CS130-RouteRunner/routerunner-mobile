@@ -1,5 +1,6 @@
 package com.cs130.routerunner.android;
 
+import com.cs130.routerunner.Message;
 import com.cs130.routerunner.MessageCenter;
 import com.cs130.routerunner.Settings;
 import com.pubnub.api.Callback;
@@ -7,6 +8,7 @@ import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +22,7 @@ import java.util.Random;
 public class PubnubHelper implements MessageCenter {
     private Pubnub pubnub_;
     private String channel_;
+    private long lastSyncTime_;
 
     /**
      * Instantiate PubNub object with username as UUID
@@ -103,11 +106,7 @@ public class PubnubHelper implements MessageCenter {
         }
     }
 
-    public String getUUID() {
-        return pubnub_.getUUID();
-    }
-
-    public void sendMessage(JSONObject message) {
+    public void sendMessage(Message message) {
         Callback callback = new Callback() {
             public void successCallback(String channel, Object response) {
                 System.out.println(response.toString());
@@ -117,28 +116,34 @@ public class PubnubHelper implements MessageCenter {
             }
         };
 
-        JSONObject json = new JSONObject();
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            char c = chars[random.nextInt(chars.length)];
-            sb.append(c);
-        }
-        try {
-            json.put("data", sb.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JSONObject json = message.toJSON();
         pubnub_.publish(this.channel_, json, callback);
     }
 
-    public List<JSONObject> getMessages(long timeToken) {
+
+    public List<Message> getMessages(long timeToken) {
         System.out.println(timeToken);
+        final List<Message> messages = new ArrayList<>();
         Callback callback = new Callback() {
             public void successCallback(String channel, Object response) {
-                System.out.println(response.toString());
-                System.out.println("Successful call!");
+                try {
+                    System.out.println(response.toString());
+                    JSONArray jarr = (JSONArray) response;
+
+                    JSONArray data = (JSONArray) jarr.get(0);
+                    long oldestTimeToken = Long.parseLong(jarr.getString(1));
+                    long newestTimeToken = Long.parseLong(jarr.getString(2));
+                    lastSyncTime_ = newestTimeToken;
+                    for (int idx = 0; idx < data.length(); idx++) {
+                        JSONObject m = (JSONObject) data.get(idx);
+                        if (!m.getString("uid").equals(getUUID())) {
+                            messages.add(new Message(m));
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+
             }
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error.toString());
@@ -147,35 +152,14 @@ public class PubnubHelper implements MessageCenter {
         // Return 100 messages newer than this timetoken
         pubnub_.history(this.channel_, timeToken, 100, true, callback);
 
-        return new ArrayList<JSONObject>();
+        return messages;
     }
 
-    /**
-     * Publishes a message to a PubNub channel.
-     */
-    public void publishMessage(String channel) {
-        Callback callback = new Callback() {
-            public void successCallback(String channel, Object response) {
-                System.out.println(response.toString());
-            }
-            public void errorCallback(String channel, PubnubError error) {
-                System.out.println(error.toString());
-            }
-        };
-        JSONObject json = new JSONObject();
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            char c = chars[random.nextInt(chars.length)];
-            sb.append(c);
-        }
-        try {
-            json.put("data", sb.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        pubnub_.publish(channel, json, callback);
+    public long getLastSyncTime() {
+        return lastSyncTime_;
     }
 
+    public String getUUID() {
+        return pubnub_.getUUID();
+    }
 }

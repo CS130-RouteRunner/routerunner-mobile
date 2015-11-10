@@ -35,6 +35,7 @@ public class GameMaster implements Screen{
     private Stage stage_;
     private ShapeRenderer shapeRenderer_;
 
+
     private ArrayList<Actor> trucks_;
     private Route route_;
     private Rectangle base_;
@@ -197,10 +198,19 @@ public class GameMaster implements Screen{
 
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
 
+        // TEST FOR PUBNUB HELPER
         JSONObject dummy = new JSONObject();
-        messageCenter_.sendMessage(dummy);
+        dummy.put("type", "purchase");
+        dummy.put("uid", "123456789");
+        JSONObject payload = new JSONObject();
+        payload.put("item", "truck");
+        dummy.put("data", payload);
+        Message toSend = new Message(dummy);
+        messageCenter_.sendMessage(toSend);
+
         long now = (new Date().getTime() - (2*60*1000)) * 10000;
         messageCenter_.getMessages(now);
+        Gdx.app.log("GMTag", Long.toString(messageCenter_.getLastSyncTime()));
     }
 
     public boolean mouseMoved (int screenX, int screenY){

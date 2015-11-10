@@ -1,5 +1,6 @@
 package com.cs130.routerunner;
 
+import com.cs130.routerunner.Message;
 import com.pubnub.api.Callback;
 
 import org.json.JSONObject;
@@ -39,21 +40,27 @@ public interface MessageCenter {
 
     /**
      * Send message to channel.
-     * @param message - JSONObject to send
+     * @param message - Message to send
      */
-    void sendMessage(JSONObject message);
+    void sendMessage(Message message);
 
     /**
      * Returns a list of messages newer than timeToken.
-     * @param timeToken - timeToken to chec against
-     * @return list of JSONObjects
+     * @param timeToken - timeToken to check against
+     * @return list of Message
      */
-    List<JSONObject> getMessages(long timeToken);
+    List<Message> getMessages(long timeToken);
 
     /**
      * Returns the uuid associated with this Pubnub instance.
      * @return uuid
      */
     String getUUID();
+
+    /**
+     * Returns the newest timestamp of the last messages that we have received.
+     * @return timestamp
+     */
+    long getLastSyncTime();
 
 }
