@@ -242,6 +242,9 @@ public class GameMaster implements Screen{
 
     public void syncGame() {
         // TEST FOR PUBNUB HELPER
+        JSONObject dummy = new JSONObject();
+        dummy.put("type", "purchase");
+        dummy.put("uid", messageCenter_.getUUID());
         JSONObject payload = new JSONObject();
         payload.put("item", "truck");
         Message toSend = messageCenter_.createPurchaseMessage("12345",
