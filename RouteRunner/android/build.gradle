@@ -111,9 +111,8 @@ idea {
     }
 }
 dependencies {
-<<<<<<< HEAD
+    compile 'org.mockito:mockito-core:1.9.5'
+    compile 'com.google.dexmaker:dexmaker:1.2'
+    compile 'com.google.dexmaker:dexmaker-mockito:1.2'
 }
-=======
-    compile 'org.mockito:mockito-all:1.9.5'
-}
->>>>>>> f1310329958830a2d2e78a7c8dea2324c4d16ae6
+
