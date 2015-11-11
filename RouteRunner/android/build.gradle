@@ -111,5 +111,5 @@ idea {
     }
 }
 dependencies {
-    compile 'org.powermock:powermock-api-easymock:1.6.2'
+    compile 'org.mockito:mockito-all:1.9.5'
 }

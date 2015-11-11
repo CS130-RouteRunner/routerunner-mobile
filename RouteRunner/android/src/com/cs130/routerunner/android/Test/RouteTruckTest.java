@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.Actor;
 import com.cs130.routerunner.Routes.Route;
 import com.cs130.routerunner.TapHandler.TapHandler;
-import org.powermock.api.easymock.PowerMock;
 
+import org.mockito.Mockito;
 /**
  * Created by Roger on 11/9/2015.
  */
@@ -17,7 +17,8 @@ public class RouteTruckTest extends AndroidTestCase {
     public void test() throws Exception {
 
 //        Route route = new Route();
-          Actor truck = PowerMock.createMock(Actor.class);
+          //Actor truck = PowerMock.createMock(Actor.class);
+        Actor truck = Mockito.mock(Actor.class);
 
 //        Mockito.when(truck.getX()).thenReturn(5f);
 //        Mockito.when(truck.getY()).thenReturn(5f);
