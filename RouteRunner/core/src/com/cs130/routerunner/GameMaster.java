@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -201,7 +202,7 @@ public class GameMaster implements Screen{
         // TEST FOR PUBNUB HELPER
         JSONObject dummy = new JSONObject();
         dummy.put("type", "purchase");
-        dummy.put("uid", "123456789");
+        dummy.put("uid", messageCenter_.getUUID());
         JSONObject payload = new JSONObject();
         payload.put("item", "truck");
         dummy.put("data", payload);
@@ -209,7 +210,11 @@ public class GameMaster implements Screen{
         messageCenter_.sendMessage(toSend);
 
         long now = (new Date().getTime() - (2*60*1000)) * 10000;
-        messageCenter_.getMessages(now);
+        List<Message> result = messageCenter_.getMessages(now);
+        Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
+        for(Message m: result) {
+            Gdx.app.log("GMTag", m.toString());
+        }
         Gdx.app.log("GMTag", Long.toString(messageCenter_.getLastSyncTime()));
     }
 
@@ -244,6 +249,6 @@ public class GameMaster implements Screen{
     //draws using the stage batch but automatically centers all sprites
     //if just drawing a point or regular texture, using stage_.getBatch().draw() is fine
     public void drawSpriteCentered (Sprite sprite, float x, float y){
-        stage_.getBatch().draw(sprite, x - sprite.getWidth()/2, y - sprite.getHeight()/2);
+        stage_.getBatch().draw(sprite, x - sprite.getWidth() / 2, y - sprite.getHeight() / 2);
     }
 }

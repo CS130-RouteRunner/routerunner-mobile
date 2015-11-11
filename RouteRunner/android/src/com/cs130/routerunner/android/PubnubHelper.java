@@ -23,6 +23,7 @@ public class PubnubHelper implements MessageCenter {
     private Pubnub pubnub_;
     private String channel_;
     private long lastSyncTime_;
+    private List<Message> l;
 
     /**
      * Instantiate PubNub object with username as UUID
@@ -32,6 +33,7 @@ public class PubnubHelper implements MessageCenter {
     public PubnubHelper(String username, String channel) {
         this.pubnub_ = new Pubnub(Settings.PUBNUB_PUBLISH_KEY, Settings.PUBNUB_SUBSCRIBE_KEY);
         this.pubnub_.setUUID(username);
+        l = new ArrayList<Message>();
         if (channel != null) {
             this.channel_ = channel;
             subscribeChannel(channel);
@@ -136,10 +138,15 @@ public class PubnubHelper implements MessageCenter {
                     lastSyncTime_ = newestTimeToken;
                     for (int idx = 0; idx < data.length(); idx++) {
                         JSONObject m = (JSONObject) data.get(idx);
+                        System.out.println("------Curr message--------");
+                        System.out.println(m.toString());
                         if (!m.getString("uid").equals(getUUID())) {
                             messages.add(new Message(m));
+                            System.out.println("Size: " + String.valueOf(messages.size()));
                         }
                     }
+                    l.addAll(messages);
+                    System.out.println("Size of l: " + String.valueOf(l.size()));
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }
@@ -151,8 +158,12 @@ public class PubnubHelper implements MessageCenter {
         };
         // Return 100 messages newer than this timetoken
         pubnub_.history(this.channel_, timeToken, 100, true, callback);
-
-        return messages;
+        System.out.println("-----------------");
+        for(Message m: l)
+        {
+            System.out.println(m.toString());
+        }
+        return l;
     }
 
     public long getLastSyncTime() {

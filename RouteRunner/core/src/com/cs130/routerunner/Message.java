@@ -68,4 +68,8 @@ public class Message {
     public String getUid() { return uid_; }
     public String getItem() { return item_; }
     public List<LatLngPoint> getCoords() { return coords_; }
+    public String toString() {
+        String s = "uid:" + uid_ + ";type:" + type_ + ";item:" + item_;
+        return s;
+    }
 }
