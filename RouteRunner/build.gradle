@@ -47,7 +47,6 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
-        compile 'org.powermock:powermock-api-easymock:1.6.2'
     }
 }
 
@@ -59,7 +58,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.google.maps:google-maps-services:$mapsVersion"
-        compile "com.pubnub:pubnub-android:$pubnubVersion"
+	compile "com.pubnub:pubnub-android:$pubnubVersion"
     }
 }
 
