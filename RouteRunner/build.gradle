@@ -53,12 +53,16 @@ project(":android") {
 project(":core") {
     apply plugin: "java"
 
-
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.google.maps:google-maps-services:$mapsVersion"
+<<<<<<< HEAD
 	compile "com.pubnub:pubnub-android:$pubnubVersion"
+=======
+	    compile "com.pubnub:pubnub-android:$pubnubVersion"
+        compile 'org.json:json:20141113'
+>>>>>>> f1310329958830a2d2e78a7c8dea2324c4d16ae6
     }
 }
 

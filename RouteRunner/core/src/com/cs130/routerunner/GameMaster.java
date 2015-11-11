@@ -18,6 +18,7 @@ import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -40,7 +41,10 @@ public class GameMaster implements Screen{
     private Sprite waypointSprite_;
     private ArrayList<Vector3> waypoints_;
 
-    public GameMaster(RouteRunner game) {
+    private PubnubGameHelper pubnub_;
+
+    public GameMaster(RouteRunner game, PubnubGameHelper pubnub) {
+        this.pubnub_ = pubnub;
 
         camera_ = new MapCamera();
 
@@ -194,6 +198,10 @@ public class GameMaster implements Screen{
         //tap again to draw another route for the car
 
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
+
+        pubnub_.publishMessage("hi");
+        long now = (new Date().getTime() - (5*60*1000)) * 10000;
+        pubnub_.history(now);
     }
 
     public boolean mouseMoved (int screenX, int screenY){
