@@ -41,6 +41,14 @@ public class RouteEditMode implements TapMode {
         // we have entered setting a waypoint mode, so push this waypoint to
         // the actor.
 
+        //make the first waypoint be the truck's current position
+        if (newRoute_.wayPoints_.size() == 0){
+            Vector3 touchPos = new Vector3();
+            touchPos.set(selectedActor_.getX(), selectedActor_.getY(), 0);
+            newRoute_.addWayPoint(selectedActor_.getX(), selectedActor_.getY());
+            tapHandler_.gameMaster_.addWaypoint(touchPos);
+        }
+
 
         // TODO(Julian/Patrick): change this to a confirm route button or something
         Gdx.app.log("RETag", "saveRoute is " + selectedActor_.isSnapRoute());
@@ -72,7 +80,7 @@ public class RouteEditMode implements TapMode {
             tapHandler_.curMode_ = tapHandler_.routeConfirmMode_;
             tapHandler_.routeConfirmMode_.SetSelectedActor(selectedActor_);
             tapHandler_.routeConfirmMode_.SetRoute(newRoute_);
-        } else {
+        }else {
             Vector3 touchPos = new Vector3();
             touchPos.set(x, y, 0);
 

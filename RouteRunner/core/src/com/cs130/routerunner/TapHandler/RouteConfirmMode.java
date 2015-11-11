@@ -36,6 +36,7 @@ public class RouteConfirmMode implements TapMode {
         selectedActor_.setPaused(false);
         Gdx.app.log("RCTag", "unpaused truck");
         tapHandler_.curMode_ = tapHandler_.normalMode_;
+        tapHandler_.gameMaster_.getPlayerButtonInfo().display();
         tapHandler_.gameMaster_.clearWaypoints();
 
     }

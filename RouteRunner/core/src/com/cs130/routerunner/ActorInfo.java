@@ -51,10 +51,6 @@ public class ActorInfo {
                 Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
         buttonCancelSave_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y,
                 Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
-    }
-
-    public void display(){
-        Gdx.app.log("AIdisplay", "Enter display()\n");
 
         buttonEditRoute_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -101,6 +97,10 @@ public class ActorInfo {
                 hide();
             }
         });
+    }
+
+    public void display(){
+        Gdx.app.log("AIdisplay", "Enter display()\n");
 
         stage_.addActor(buttonEditRoute_);
         stage_.addActor(buttonCancelEdit_);
