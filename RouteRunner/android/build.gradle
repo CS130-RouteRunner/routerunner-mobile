@@ -111,4 +111,5 @@ idea {
     }
 }
 dependencies {
+    compile 'org.powermock:powermock-api-easymock:1.6.2'
 }
