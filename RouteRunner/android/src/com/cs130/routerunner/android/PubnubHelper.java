@@ -15,6 +15,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by graceychin on 11/1/15.
@@ -24,6 +26,8 @@ public class PubnubHelper implements MessageCenter {
     private String channel_;
     private long lastSyncTime_;
     private List<Message> l;
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
+
 
     /**
      * Instantiate PubNub object with username as UUID
@@ -129,7 +133,7 @@ public class PubnubHelper implements MessageCenter {
         Callback callback = new Callback() {
             public void successCallback(String channel, Object response) {
                 try {
-                    System.out.println(response.toString());
+                    System.out.println("This is the response: " + response.toString());
                     JSONArray jarr = (JSONArray) response;
 
                     JSONArray data = (JSONArray) jarr.get(0);
@@ -140,24 +144,33 @@ public class PubnubHelper implements MessageCenter {
                         JSONObject m = (JSONObject) data.get(idx);
                         System.out.println("------Curr message--------");
                         System.out.println(m.toString());
-                        if (!m.getString("uid").equals(getUUID())) {
+//                        if (!m.getString("uid").equals(getUUID())) {
                             messages.add(new Message(m));
                             System.out.println("Size: " + String.valueOf(messages.size()));
-                        }
+//                        }
                     }
                     l.addAll(messages);
                     System.out.println("Size of l: " + String.valueOf(l.size()));
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }
-
+                countDownLatch.countDown();
             }
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error.toString());
+                countDownLatch.countDown();
             }
         };
         // Return 100 messages newer than this timetoken
         pubnub_.history(this.channel_, timeToken, 100, true, callback);
+        try {
+            countDownLatch.await(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        // re-initialize countdown latch for each call to getMessages
+        countDownLatch = new CountDownLatch(1);
+
         System.out.println("-----------------");
         for(Message m: l)
         {
