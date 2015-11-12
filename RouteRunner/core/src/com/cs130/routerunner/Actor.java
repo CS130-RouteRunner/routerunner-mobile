@@ -22,6 +22,10 @@ public class Actor extends Sprite {
     private TapHandler tapHandler_;
     private ActorInfo actorInfo_;
 
+
+    public Actor(){
+        route_ = new Route();
+    }
     public Actor(Sprite sprite, Stage stage, TapHandler tapHandler){
         super(sprite);
         stage_ = stage;
@@ -106,8 +110,8 @@ public class Actor extends Sprite {
             moveYDelta_ /= length;
         }
 
-        Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," +
-               moveYDelta_ + " LEN: " + length);
+/*        Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," +
+               moveYDelta_ + " LEN: " + length);*/
         moveXDelta_ *= Settings.DEFAULT_MOVEMENT;
         moveYDelta_ *= Settings.DEFAULT_MOVEMENT;
     }
@@ -123,4 +127,6 @@ public class Actor extends Sprite {
     public boolean isCancelSave() { return actorInfo_.isCancelSave(); }
     public boolean hasStartedNewRoute() { return this.hasStartedNewRoute_; }
 
+    public float getMoveXDelta() {return moveXDelta_;}
+    public float getMoveYDelta() {return moveYDelta_;}
 }
