@@ -70,6 +70,8 @@ public class PlayerButtonInfo {
     public void hide(){
         if(buttonBuyTruck_ != null)
             buttonBuyTruck_.remove();
+        if(buttonBuyMissile_ != null)
+            buttonBuyMissile_.remove();
     }
 
     //returns whether or not the last player dock button clicked

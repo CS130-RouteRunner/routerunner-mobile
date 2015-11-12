@@ -52,6 +52,10 @@ public class NormalMode implements TapMode {
             Gdx.app.log("TapTag", "Tapped to Buy a Truck " + x + " " + y + "\n");
             tapHandler_.gameMaster_.buyTruck();
         }
+        else if (tappedBuyMissile(x, y)) {
+            Gdx.app.log("TapTag", "Tapped to Buy a Missile " + x + " " + y + "\n");
+            tapHandler_.gameMaster_.buyMissile();
+        }
         else {
             // do nothing for now.
             // TODO():need to implement other buttons (ie buy truck) later
@@ -81,5 +85,9 @@ public class NormalMode implements TapMode {
     }
     private boolean tappedBuyTruck(float x, float y) {
         return tapHandler_.gameMaster_.getLocalPlayerButtonInfo().isBuyTruck();
+    }
+
+    private boolean tappedBuyMissile(float x, float y) {
+        return tapHandler_.gameMaster_.getPlayerButtonInfo().isBuyMissile();
     }
 }

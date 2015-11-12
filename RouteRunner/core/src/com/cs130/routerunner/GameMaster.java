@@ -35,6 +35,9 @@ public class GameMaster implements Screen{
     private Player localPlayer_;
     private Player opponentPlayer_;
 
+    private PlayerButtonInfo playerButtonInfo_;
+    private ArrayList<Actor> trucks_;
+    private ArrayList<Missile> missiles_;
     private Rectangle base_;
     private Sprite baseSprite_;
 
@@ -78,6 +81,9 @@ public class GameMaster implements Screen{
         localPlayer_.setPlayerButtonInfo(playerButtonInfo);
         opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
 
+        //setup missile arraylist
+        missiles_ = new ArrayList<Missile>();
+
         //create first (example) truck
 
         Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, 50);
@@ -112,6 +118,10 @@ public class GameMaster implements Screen{
         mapSprite_.draw(stage_.getBatch());
         for (Actor truck: localPlayer_.getTruckList()) {
             drawSpriteCentered(truck, truck.getX(), truck.getY());
+        }
+
+        for (Missile missile: missiles_) {
+            drawSpriteCentered(missile, missile.getX(), missile.getY());
         }
 
 //        for (Vector3 waypoint: waypoints_) {
@@ -189,7 +199,10 @@ public class GameMaster implements Screen{
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
         }
-
+        for (Missile missile: missiles_) {
+            Gdx.app.debug("GameMaster", "Calling update on missile");
+            missile.update();
+        }
     }
 
     public void handleTap(float x, float y, int count) {
@@ -241,6 +254,8 @@ public class GameMaster implements Screen{
 
     public ArrayList<Actor> getTrucks() { return localPlayer_.getTruckList(); }
 
+    public ArrayList<Missile> getMissiles() { return missiles_; }
+
 
     //TODO(juliany): clean this up to use routes or soemthing.
     public void setWaypoints(ArrayList<Vector3> waypoints) {
@@ -289,5 +304,14 @@ public class GameMaster implements Screen{
 
     public Player getOpponentPlayer(){
         return opponentPlayer_;
+    }
+
+    public boolean buyMissile(){
+        Missile missile = new Missile(new Sprite(new Texture("missile.png")), stage_, tapHandler_);
+        missile.setX(35f);
+        missile.setY(35f);
+        missiles_.add(missile);
+        Gdx.app.log("BoughtMissile", "Bought Missile!");
+        return true;
     }
 }
