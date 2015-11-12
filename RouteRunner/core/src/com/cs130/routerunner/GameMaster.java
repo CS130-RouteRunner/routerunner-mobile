@@ -85,6 +85,9 @@ public class GameMaster implements Screen{
         //setup missile arraylist
         missiles_ = new ArrayList<Missile>();
 
+        //setup missile arraylist
+        missiles_ = new ArrayList<Missile>();
+
         //create first (example) truck
 
         Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, 50);
@@ -325,5 +328,4 @@ public class GameMaster implements Screen{
         Gdx.app.log("BoughtMissile", "Bought Missile!");
         return missile;
     }
-
 }
