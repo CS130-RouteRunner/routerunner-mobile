@@ -58,6 +58,12 @@ public interface MessageCenter {
     String getUUID();
 
     /**
+     * Returns the channel this Pubnub instance is subscribed to.
+     * @return channel
+     */
+    String getChannel();
+
+    /**
      * Returns the newest timestamp of the last messages that we have received.
      * @return timestamp
      */

@@ -23,8 +23,8 @@ public class PubnubHelper implements MessageCenter {
     private Pubnub pubnub_;
     private String channel_;
     private long lastSyncTime_;
-    private List<Message> messageList;
-    private CountDownLatch countDownLatch = new CountDownLatch(1);
+    private List<Message> messageList_;
+    private CountDownLatch countDownLatch_ = new CountDownLatch(1);
 
 
     /**
@@ -35,7 +35,7 @@ public class PubnubHelper implements MessageCenter {
     public PubnubHelper(String username, String channel) {
         this.pubnub_ = new Pubnub(Settings.PUBNUB_PUBLISH_KEY, Settings.PUBNUB_SUBSCRIBE_KEY);
         this.pubnub_.setUUID(username);
-        messageList = new ArrayList<Message>();
+        this.messageList_ = new ArrayList<Message>();
         if (channel != null) {
             this.channel_ = channel;
             subscribeChannel(channel);
@@ -143,31 +143,31 @@ public class PubnubHelper implements MessageCenter {
                             System.out.println("Size: " + String.valueOf(messages.size()));
                         }
                     }
-                    // Clear the messageList before adding new ones
-                    messageList.clear();
-                    messageList.addAll(messages);
-                    System.out.println("Size of messageList: " + String.valueOf(messageList.size()));
+                    // Clear the messageList_ before adding new ones
+                    messageList_.clear();
+                    messageList_.addAll(messages);
+                    System.out.println("Size of messageList_: " + String.valueOf(messageList_.size()));
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }
-                countDownLatch.countDown();
+                countDownLatch_.countDown();
             }
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error.toString());
-                countDownLatch.countDown();
+                countDownLatch_.countDown();
             }
         };
         // Return 100 messages newer than this timetoken
         pubnub_.history(this.channel_, timeToken, 100, true, callback);
         try {
-            countDownLatch.await(5, TimeUnit.SECONDS);
+            countDownLatch_.await(5, TimeUnit.SECONDS);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         // re-initialize countdown latch for each call to getMessages
-        countDownLatch = new CountDownLatch(1);
+        countDownLatch_ = new CountDownLatch(1);
 
-        return messageList;
+        return messageList_;
     }
 
     /**
@@ -184,6 +184,14 @@ public class PubnubHelper implements MessageCenter {
      */
     public String getUUID() {
         return pubnub_.getUUID();
+    }
+
+    /**
+     * Returns the channel this Pubnub instance is subscribed to.
+     * @return channel
+     */
+    public String getChannel() {
+        return this.channel_;
     }
 
     /**
@@ -205,7 +213,7 @@ public class PubnubHelper implements MessageCenter {
     }
 
     /**
-     * Creates a Message of type 'purchase'
+     * Creates a Message of type 'route'
      * @param uuid - uuid associated with Pubnub instance
      * @param data
      * @return
