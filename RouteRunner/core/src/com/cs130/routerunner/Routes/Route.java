@@ -24,12 +24,12 @@ public class Route {
     //methods
     //updates what the given truck's next way point should be
     //if so, then update to the next waypoint/reset/initialize appropriately
-    public void updateWaypoint(Actor truck){
+    public boolean updateWaypoint(Actor truck){
         if (wayPoints_ == null || wayPoints_.size() == 0) {
-            Gdx.app.debug("Route", "waypoints is null or empty");
-            return;
+//            Gdx.app.debug("Route", "waypoints is null or empty");
+            return false;
         }
-        Gdx.app.debug("Route", "Cur waypoint index is: " + currWayPointIndex_);
+//        Gdx.app.debug("Route", "Cur waypoint index is: " + currWayPointIndex_);
         Vector3 currWayPoint = wayPoints_.get(currWayPointIndex_);
 
         if (Math.abs(truck.getX() - currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ == wayPoints_.size()-1){
@@ -38,6 +38,7 @@ public class Route {
             truck.setX(0f);
             truck.setY(0f);
             truck.setMovementVectorToNextWaypoint(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
+            return true;
         }
         else if (Math.abs(truck.getX()- currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ < (wayPoints_.size()-1)) {
             //WE JUST GOT TO A WAYPT, NOW SET NEXT ONE
@@ -45,11 +46,14 @@ public class Route {
             currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMovementVectorToNextWaypoint(currWayPoint.x, currWayPoint.y);
             //Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
+            return true;
         }
         else if (!truck.hasStartedNewRoute()){
             //WE HAVENT STARTED MOVING YET, set the first waypoint
             truck.setMovementVectorToNextWaypoint(currWayPoint.x, currWayPoint.y);
+            return true;
         }
+        return false;
     }
 
     public void updateSelf(Route newRoute) {
@@ -71,5 +75,8 @@ public class Route {
             Gdx.app.log("RETag", v.x + ", " + v.y);
         }
         Gdx.app.log("RETag", "<<<<end waypoints");
+    }
+    public int getCurrWayPointIndex(){
+        return this.currWayPointIndex_;
     }
 }

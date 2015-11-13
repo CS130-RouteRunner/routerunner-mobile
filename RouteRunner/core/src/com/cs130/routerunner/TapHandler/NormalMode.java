@@ -2,6 +2,7 @@ package com.cs130.routerunner.TapHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.PlayerButtonInfo;
 import com.cs130.routerunner.Routes.*;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ public class NormalMode implements TapMode {
     public void SetSelectedActor(Actor a) {
         // do nothing, normal mode doesn't have a selected actor
     }
-
     /*
      check if the tap collides with any buttons
      check if the tap collides with any actors
@@ -45,22 +45,22 @@ public class NormalMode implements TapMode {
             tapHandler_.actorSelectedMode_.SetSelectedActor(actorSelected);
             tapHandler_.curMode_ = tapHandler_.actorSelectedMode_;
             tapHandler_.gameMaster_.setWaypoints(actorSelected.route_.wayPoints_);
+            tapHandler_.gameMaster_.getPlayerButtonInfo().hide();
             // Display Edit Route Button
             //tapHandler_.curMode_.Tap(x, y, count);
-        } else {
+        }
+        else if (tappedBuyTruck(x, y)) { //check if we tapped the "buy truck" button
+            Gdx.app.log("TapTag", "Tapped to Buy a Truck " + x + " " + y + "\n");
+            tapHandler_.gameMaster_.buyTruck();
+        }
+        else {
             // do nothing for now.
             // TODO():need to implement other buttons (ie buy truck) later
             tapHandler_.gameMaster_.clearWaypoints();
         }
 
         // We will need to refactor this somewhere else later.
-        // TODO(Roger Lau): change route / actor relationship so that actor
-        // owns a route.
-        //temporarily all we do is when there is a tap, we start creating route and enter route creation mode
-        //RouteFactory routeFactory = tapHandler_.gameMaster_.getRouteFactory();
-        //routeFactory.startCreatingRoute();
 
-        //tapHandler_.curMode_ = tapHandler_.routeEditMode_;
     }
 
     /*
@@ -79,5 +79,8 @@ public class NormalMode implements TapMode {
             }
         }
         return false;
+    }
+    private boolean tappedBuyTruck(float x, float y) {
+        return tapHandler_.gameMaster_.getPlayerButtonInfo().isBuyTruck();
     }
 }

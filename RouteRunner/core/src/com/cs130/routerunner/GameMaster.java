@@ -36,9 +36,8 @@ public class GameMaster implements Screen{
     private Stage stage_;
     private ShapeRenderer shapeRenderer_;
 
-
+    private PlayerButtonInfo playerButtonInfo_;
     private ArrayList<Actor> trucks_;
-    private Route route_;
     private Rectangle base_;
     private Sprite baseSprite_;
 
@@ -87,6 +86,10 @@ public class GameMaster implements Screen{
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
+
+        //create the "dock" (PlayerButtonInfo)
+        playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
+        playerButtonInfo_.display();
 
     }
 
@@ -246,5 +249,18 @@ public class GameMaster implements Screen{
     //if just drawing a point or regular texture, using stage_.getBatch().draw() is fine
     public void drawSpriteCentered (Sprite sprite, float x, float y){
         stage_.getBatch().draw(sprite, x - sprite.getWidth() / 2, y - sprite.getHeight() / 2);
+    }
+
+    public PlayerButtonInfo getPlayerButtonInfo(){
+        return playerButtonInfo_;
+    }
+    public boolean buyTruck(){
+        //TODO (rlau): when money is done, check if we can afford
+        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_);
+        truck.setX(35f);
+        truck.setY(35f);
+        trucks_.add(truck);
+        Gdx.app.log("BoughtTruck", "Bought truck! Now: " + trucks_.size() + " trucks!");
+        return true;
     }
 }
