@@ -63,4 +63,19 @@ public interface MessageCenter {
      */
     long getLastSyncTime();
 
+    /**
+     * Creates a Message of type 'purchase'
+     * @param uuid - uuid associated with Pubnub instance
+     * @param data - payload
+     * @return
+     */
+    Message createPurchaseMessage(String uuid, JSONObject data);
+
+    /**
+     * Creates a Message of type 'purchase'
+     * @param uuid - uuid associated with Pubnub instance
+     * @param data
+     * @return
+     */
+    Message createRouteMessage(String uuid, JSONObject data);
 }

@@ -9,12 +9,10 @@ import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -25,19 +23,19 @@ public class PubnubHelper implements MessageCenter {
     private Pubnub pubnub_;
     private String channel_;
     private long lastSyncTime_;
-    private List<Message> l;
+    private List<Message> messageList;
     private CountDownLatch countDownLatch = new CountDownLatch(1);
 
 
     /**
-     * Instantiate PubNub object with username as UUID
-     *   Then subscribe to the current channel with presence.
-     *   Finally, populate the listview with past messages from history
+     * Constructor
+     * @param username
+     * @param channel - channel to subscribe to if exists
      */
     public PubnubHelper(String username, String channel) {
         this.pubnub_ = new Pubnub(Settings.PUBNUB_PUBLISH_KEY, Settings.PUBNUB_SUBSCRIBE_KEY);
         this.pubnub_.setUUID(username);
-        l = new ArrayList<Message>();
+        messageList = new ArrayList<Message>();
         if (channel != null) {
             this.channel_ = channel;
             subscribeChannel(channel);
@@ -53,31 +51,8 @@ public class PubnubHelper implements MessageCenter {
         Callback subscribeCallback = new Callback() {
             @Override
             public void successCallback(String channel, Object response) {
-                System.out.println(response.toString());
-//                if (message instanceof JSONObject) {
-//                    try {
-//                        // Will need this for chat, multiplayer msgs
-//                        JSONObject jmessage = (JSONObject) message;
-//                        String messageType = jmessage.getString(Message.TYPE);
-//                        String username = jmessage.getString(Message.USER);
-//                        String messageData = jmessage.getString(Message.MESSAGE);
-//                        long time = jmessage.getLong(Message.TIME);
-//                        if (username.equals(pubnub_.getUUID())) return; // ignore own msgs
-//                        if (messageType.equals("chat")) {
-//                            Message msg = new Message(username, messageData, time);
-//
-//                            // Do application-logic
-//                        }
-//                    } catch (Exception e) {
-//                        System.out.println(e.toString());
-//                    }
-//                }
+                // System.out.println(response.toString());
             }
-
-            //@Override
-            //public void connectCallback(String channel, Object message) {
-            //    getPlayers();
-            //}
 
             @Override
             public void errorCallback(String channel, PubnubError error) {
@@ -94,16 +69,27 @@ public class PubnubHelper implements MessageCenter {
     }
 
     /**
-     * Unsubscribe a PubNub channel.
+     * Unsubscribe from the channel.
+     * @param channel - lobby id to leave
      */
     public void unsubscribeChannel(String channel) {
         pubnub_.unsubscribe(channel);
     }
 
+    /**
+     * Retrieves who's currently in the channel.
+     * @param channel - lobby id
+     * @param hereCallback - callback
+     */
     public void hereNow(String channel, Callback hereCallback) {
         pubnub_.hereNow(channel, hereCallback);
     }
 
+    /**
+     * Subscribe to presence events for channel.
+     * @param channel - lobby id
+     * @param presenceCallback - callback
+     */
     public void presence(String channel, Callback presenceCallback) {
         try {
             pubnub_.presence(channel, presenceCallback);
@@ -112,10 +98,14 @@ public class PubnubHelper implements MessageCenter {
         }
     }
 
+    /**
+     * Send message to channel.
+     * @param message - Message to send
+     */
     public void sendMessage(Message message) {
         Callback callback = new Callback() {
             public void successCallback(String channel, Object response) {
-                System.out.println(response.toString());
+                //System.out.println(response.toString());
             }
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error.toString());
@@ -127,6 +117,11 @@ public class PubnubHelper implements MessageCenter {
     }
 
 
+    /**
+     * Returns a list of messages newer than timeToken.
+     * @param timeToken - timeToken to check against
+     * @return list of Message
+     */
     public List<Message> getMessages(long timeToken) {
         System.out.println(timeToken);
         final List<Message> messages = new ArrayList<>();
@@ -138,19 +133,20 @@ public class PubnubHelper implements MessageCenter {
 
                     JSONArray data = (JSONArray) jarr.get(0);
                     long oldestTimeToken = Long.parseLong(jarr.getString(1));
-                    long newestTimeToken = Long.parseLong(jarr.getString(2));
-                    lastSyncTime_ = newestTimeToken;
+                    lastSyncTime_ = Long.parseLong(jarr.getString(2));
                     for (int idx = 0; idx < data.length(); idx++) {
                         JSONObject m = (JSONObject) data.get(idx);
                         System.out.println("------Curr message--------");
                         System.out.println(m.toString());
-//                        if (!m.getString("uid").equals(getUUID())) {
+                        if (!m.getString("uid").equals(getUUID())) {
                             messages.add(new Message(m));
                             System.out.println("Size: " + String.valueOf(messages.size()));
-//                        }
+                        }
                     }
-                    l.addAll(messages);
-                    System.out.println("Size of l: " + String.valueOf(l.size()));
+                    // Clear the messageList before adding new ones
+                    messageList.clear();
+                    messageList.addAll(messages);
+                    System.out.println("Size of messageList: " + String.valueOf(messageList.size()));
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }
@@ -171,19 +167,58 @@ public class PubnubHelper implements MessageCenter {
         // re-initialize countdown latch for each call to getMessages
         countDownLatch = new CountDownLatch(1);
 
-        System.out.println("-----------------");
-        for(Message m: l)
-        {
-            System.out.println(m.toString());
-        }
-        return l;
+        return messageList;
     }
 
+    /**
+     * Returns the newest timestamp of the last messages that we have received.
+     * @return timestamp
+     */
     public long getLastSyncTime() {
         return lastSyncTime_;
     }
 
+    /**
+     * Returns the uuid associated with this Pubnub instance.
+     * @return uuid
+     */
     public String getUUID() {
         return pubnub_.getUUID();
+    }
+
+    /**
+     * Creates a Message of type 'purchase'
+     * @param uuid - uuid associated with Pubnub instance
+     * @param data - payload
+     * @return
+     */
+    public Message createPurchaseMessage(String uuid, JSONObject data) {
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("type", "purchase");
+            msg.put("uid", uuid);
+            msg.put("data", data);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return new Message(msg);
+    }
+
+    /**
+     * Creates a Message of type 'purchase'
+     * @param uuid - uuid associated with Pubnub instance
+     * @param data
+     * @return
+     */
+    public Message createRouteMessage(String uuid, JSONObject data) {
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("type", "route");
+            msg.put("uid", uuid);
+            msg.put("data", data);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return new Message(msg);
     }
 }

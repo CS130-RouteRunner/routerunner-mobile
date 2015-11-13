@@ -200,22 +200,18 @@ public class GameMaster implements Screen{
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
 
         // TEST FOR PUBNUB HELPER
-        JSONObject dummy = new JSONObject();
-        dummy.put("type", "purchase");
-        dummy.put("uid", messageCenter_.getUUID());
         JSONObject payload = new JSONObject();
         payload.put("item", "truck");
-        dummy.put("data", payload);
-        Message toSend = new Message(dummy);
+        Message toSend = messageCenter_.createPurchaseMessage("12345", payload);
         messageCenter_.sendMessage(toSend);
 
         long now = (new Date().getTime() - (2*60*1000)) * 10000;
         List<Message> result = messageCenter_.getMessages(now);
         Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
         for(Message m: result) {
-            Gdx.app.log("GMTag", m.toString());
+            Gdx.app.log("MessageTag", m.toString());
         }
-        Gdx.app.log("GMTag", Long.toString(messageCenter_.getLastSyncTime()));
+        Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
     }
 
     public boolean mouseMoved (int screenX, int screenY){
