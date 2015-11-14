@@ -17,8 +17,11 @@ import com.cs130.routerunner.Routes.*;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -41,10 +44,10 @@ public class GameMaster implements Screen{
     private Sprite waypointSprite_;
     private ArrayList<Vector3> waypoints_;
 
-    private PubnubGameHelper pubnub_;
+    private MessageCenter messageCenter_;
 
-    public GameMaster(RouteRunner game, PubnubGameHelper pubnub) {
-        this.pubnub_ = pubnub;
+    public GameMaster(RouteRunner game, MessageCenter messageCenter) {
+        this.messageCenter_ = messageCenter;
 
         camera_ = new MapCamera();
 
@@ -199,9 +202,19 @@ public class GameMaster implements Screen{
 
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
 
-        pubnub_.publishMessage("hi");
-        long now = (new Date().getTime() - (5*60*1000)) * 10000;
-        pubnub_.history(now);
+        // TEST FOR PUBNUB HELPER
+        JSONObject payload = new JSONObject();
+        payload.put("item", "truck");
+        Message toSend = messageCenter_.createPurchaseMessage("12345", payload);
+        messageCenter_.sendMessage(toSend);
+
+        long now = (new Date().getTime() - (2*60*1000)) * 10000;
+        List<Message> result = messageCenter_.getMessages(now);
+        Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
+        for(Message m: result) {
+            Gdx.app.log("MessageTag", m.toString());
+        }
+        Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
     }
 
     public boolean mouseMoved (int screenX, int screenY){

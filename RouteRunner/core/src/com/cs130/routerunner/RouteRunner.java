@@ -12,20 +12,16 @@ public class RouteRunner extends Game {
 
 	public SpriteBatch batch;
 	Texture img;
-    private String username_;
-    private PubnubGameHelper pubnub_;
-    private String channel_;
+    private MessageCenter messageCenter_;
 
-	public RouteRunner(String username, String channel) {
-        this.username_ = username;
-        this.channel_ = channel;
-        this.pubnub_ = new PubnubGameHelper(username, channel);
+	public RouteRunner(MessageCenter messageCenter) {
+		this.messageCenter_ = messageCenter;
     }
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new GameMaster(this, this.pubnub_));
+		setScreen(new GameMaster(this, this.messageCenter_));
 	}
 
 	@Override
