@@ -62,10 +62,12 @@ public class PubnubHelperTest extends InstrumentationTestCase {
         assertEquals(expectedRouteType, routeMessage.getType());
         assertEquals(expecteduuid, routeMessage.getUid());
         assertNull(routeMessage.getItem());
-        List<LatLngPoint> resultRoute= routeMessage.getCoords();
+        List<LatLngPoint> resultRoute = routeMessage.getCoords();
         assertEquals(expectedRouteList.size(), resultRoute.size());
         for (int i = 0; i < expectedRouteList.size(); i++) {
             assertEquals(expectedRouteList.get(i).toString(), resultRoute.get(i).toString());
         }
+
+        // TODO: Finish PubnubHelper tests
     }
 }

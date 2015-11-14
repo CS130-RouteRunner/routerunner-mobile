@@ -68,8 +68,19 @@ public class Message {
     public String getUid() { return uid_; }
     public String getItem() { return item_; }
     public List<LatLngPoint> getCoords() { return coords_; }
+
     public String toString() {
-        String s = "uid:" + uid_ + ";type:" + type_ + ";item:" + item_;
-        return s;
+        String data;
+        if (type_.equals("purchase")) {
+            data = "{item:" + item_ + "}";
+        } else {
+            String coords = "";
+            for (int i = 0; i < coords_.size() - 1; i++) {
+                coords += (coords_.get(i).toString()) + ";";
+            }
+            coords += coords_.get(coords_.size() - 1).toString();
+            data = "{coords:" + coords + "}";
+        }
+        return "uid:" + uid_ + ";type:" + type_ + ";data:" + data;
     }
 }
