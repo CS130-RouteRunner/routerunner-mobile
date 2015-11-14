@@ -15,6 +15,10 @@ public class Message {
     private String uid_;
     private List<LatLngPoint> coords_;
 
+    /**
+     * Constructs a Message object based on the JSONObject passed in
+     * @param obj - data to construct the Message with
+     */
     public Message(JSONObject obj) {
         try {
             type_ = obj.getString("type");
@@ -43,6 +47,10 @@ public class Message {
         }
     }
 
+    /**
+     * JSONifies a Message object.
+     * @return
+     */
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put("uid", uid_);
@@ -64,11 +72,34 @@ public class Message {
         return json;
     }
 
+    /**
+     * Gets type of Message.
+     * @return
+     */
     public String getType() { return type_; }
+
+    /**
+     * Gets uid of Message.
+     * @return
+     */
     public String getUid() { return uid_; }
+
+    /**
+     * Gets item of Message.
+     * @return
+     */
     public String getItem() { return item_; }
+
+    /**
+     * Gets coordinates of Message.
+     * @return
+     */
     public List<LatLngPoint> getCoords() { return coords_; }
 
+    /**
+     * Stringifies a Message object
+     * @return
+     */
     public String toString() {
         String data;
         if (type_.equals("purchase")) {

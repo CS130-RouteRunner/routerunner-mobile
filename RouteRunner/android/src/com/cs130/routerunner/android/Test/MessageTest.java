@@ -35,6 +35,18 @@ public class MessageTest extends InstrumentationTestCase {
         String expectedPurchaseString = "uid:" + expecteduuid + ";type:" + expectedPurchaseType +
                 ";data:" + "{" + expectedPurchaseKey + ":" + expectedPurchaseValue + "}";
         assertEquals(expectedPurchaseString, resultPurchase.toString());
+        JSONObject resultJSON = resultPurchase.toJSON();
+        for (int i = 0; i < resultJSON.names().length(); i++) {
+            String key = resultJSON.names().getString(i);
+            if (key.equals("data")) {
+                JSONObject data = (JSONObject) resultJSON.get(key);
+                String dataKey = data.names().getString(0);
+                assertEquals(expectedPurchaseKey, dataKey);
+                assertEquals(expectedPurchaseValue, data.get(dataKey));
+            } else {
+                assertEquals(expectedPurchase.get(key), resultJSON.get(key));
+            }
+        }
     }
 
     public void checkRouteMessage() throws Exception {
@@ -69,6 +81,18 @@ public class MessageTest extends InstrumentationTestCase {
         String expectedString = "uid:" + expecteduuid + ";type:" + expectedRouteType +
                 ";data:" + "{" + expectedRouteKey + ":" + expectedRouteString + "}";
         assertEquals(expectedString, resultRoute.toString());
+        JSONObject resultJSON = resultRoute.toJSON();
+        for (int i = 0; i < resultJSON.names().length(); i++) {
+            String key = resultJSON.names().getString(i);
+            if (key.equals("data")) {
+                JSONObject data = (JSONObject) resultJSON.get(key);
+                String dataKey = data.names().getString(0);
+                assertEquals(expectedRouteKey, dataKey);
+                assertEquals(expectedRouteString, data.get(dataKey));
+            } else {
+                assertEquals(expectedRoute.get(key), resultJSON.get(key));
+            }
+        }
     }
 
     public void test() throws Exception {
