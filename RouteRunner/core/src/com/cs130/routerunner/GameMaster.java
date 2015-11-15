@@ -253,6 +253,14 @@ public class GameMaster implements Screen{
             }
         }
         Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
+        for (Message m : result) {
+            if (m.getType().equals("purchase")) {
+                Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_);
+                truck.setX(35f);
+                truck.setY(35f);
+                localPlayer_.addTruck(truck);
+            }
+        }
     }
 
     public boolean mouseMoved (int screenX, int screenY){
@@ -277,6 +285,9 @@ public class GameMaster implements Screen{
         this.waypoints_.add(waypoint);
     }
 
+    public boolean baseContains(float x, float y){
+        return base_.contains(x, y);
+    }
 
     public void clearWaypoints() {
         this.waypoints_.clear();
