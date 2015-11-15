@@ -244,8 +244,7 @@ public class GameMaster implements Screen{
                 payload);
         messageCenter_.sendMessage(toSend);
 
-        long now = (new Date().getTime() - (2*60*1000)) * 10000;
-        List<Message> result = messageCenter_.getMessages(now);
+        List<Message> result = messageCenter_.getMessages(messageCenter_.getLastSyncTime());
         Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
         for(Message m: result) {
             Gdx.app.log("MessageTag", m.toString());
@@ -310,7 +309,12 @@ public class GameMaster implements Screen{
             truck.setY(35f);
             localPlayer_.addTruck(truck);
             Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
-            return true;
+ 	    // Send message to other client
+            JSONObject payload = new JSONObject();
+            payload.put("item", "truck");
+            Message toSend = messageCenter_.createPurchaseMessage(messageCenter_.getUUID(), payload);
+            messageCenter_.sendMessage(toSend);             
+		 return true;
         } else
             return false;
     }
