@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
@@ -202,6 +203,14 @@ public class GameMaster implements Screen{
         for (Missile missile: missiles_) {
             Gdx.app.debug("GameMaster", "Calling update on missile");
             missile.update();
+            if (missile.getTargetTruck()!= null) {
+                float tolerance = Settings.MISSILE_MOVEMENT / Settings.EPSILON * Gdx.graphics.getDeltaTime();
+                if (Math.abs(missile.getX() - missile.getTargetTruck().getX()) < tolerance
+                         && Math.abs(missile.getY() - missile.getTargetTruck().getY()) < tolerance) {
+                    localPlayer_.getTruckList().remove(missile.getTargetTruck());
+                    missiles_.remove(missile);
+                }
+            }
         }
     }
 
@@ -211,7 +220,7 @@ public class GameMaster implements Screen{
         Vector3 touchPos = new Vector3();
         touchPos.set(x, y, 0);
         camera_.unproject(touchPos);
-        Gdx.app.log("GMTag", "transformed: " + touchPos.x + ", "+  touchPos.y);
+        Gdx.app.log("GMTag", "transformed: " + touchPos.x + ", " + touchPos.y);
 
         // the user has tapped, and we need to do stuff depending on what
         // mode we're in (ie creating a route)
@@ -237,9 +246,11 @@ public class GameMaster implements Screen{
 
         long now = (new Date().getTime() - (2*60*1000)) * 10000;
         List<Message> result = messageCenter_.getMessages(now);
-        Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
-        for(Message m: result) {
-            Gdx.app.log("MessageTag", m.toString());
+        if (result != null) {
+            Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
+            for (Message m : result) {
+                Gdx.app.log("MessageTag", m.toString());
+            }
         }
         Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
     }
@@ -306,12 +317,13 @@ public class GameMaster implements Screen{
         return opponentPlayer_;
     }
 
-    public boolean buyMissile(){
+    public Missile buyMissile(){
         Missile missile = new Missile(new Sprite(new Texture("missile.png")), stage_, tapHandler_);
         missile.setX(35f);
         missile.setY(35f);
         missiles_.add(missile);
         Gdx.app.log("BoughtMissile", "Bought Missile!");
-        return true;
+        return missile;
     }
+
 }

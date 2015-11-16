@@ -2,9 +2,13 @@ package com.cs130.routerunner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.Routes.Route;
 import com.cs130.routerunner.TapHandler.TapHandler;
+
+import java.util.ArrayList;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -15,7 +19,9 @@ public class Actor extends Sprite {
     private boolean hasStartedNewRoute_ = false;
     private float moveXDelta_ = 0;
     private float moveYDelta_ = 0;
+    private Vector2 destination_ = new Vector2(-1,-1);
     private boolean paused_ = false;
+    private float speed_ = Settings.DEFAULT_MOVEMENT;
 
     public Route route_;
     private Stage stage_;
@@ -25,6 +31,9 @@ public class Actor extends Sprite {
 
     public Actor(){
         route_ = new Route();
+    }
+    public Actor(Sprite sprite, Stage stage, TapHandler tapHandler) {
+        this(sprite, stage, tapHandler, 0);
     }
     public Actor(Sprite sprite, Stage stage, TapHandler tapHandler, int initialMoney){
         super(sprite);
@@ -113,9 +122,12 @@ public class Actor extends Sprite {
 
 /*        Gdx.app.log("RTag", "DELTAXY IN CALC: " + moveXDelta_ + "," +
                moveYDelta_ + " LEN: " + length);*/
-        moveXDelta_ *= Settings.DEFAULT_MOVEMENT;
-        moveYDelta_ *= Settings.DEFAULT_MOVEMENT;
+        moveXDelta_ *= speed_;
+        moveYDelta_ *= speed_;
     }
+
+    protected void setSpeed(float speed) {speed_ = speed;}
+    protected boolean isPaused() {return paused_;}
 
     public void setPaused(boolean paused) {
         paused_ = paused;

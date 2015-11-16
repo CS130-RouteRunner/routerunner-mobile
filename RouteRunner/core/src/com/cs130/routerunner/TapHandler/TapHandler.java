@@ -20,6 +20,7 @@ public class TapHandler {
     TapMode normalMode_ = new NormalMode(this);
     TapMode actorSelectedMode_ = new ActorSelectedMode(this);
     TapMode routeConfirmMode_ = new RouteConfirmMode(this);
+    TapMode missileMode_ = new MissileMode(this);
     TapMode curMode_ = normalMode_;
 
     public TapHandler(GameMaster gameMaster) {

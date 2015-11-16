@@ -15,8 +15,6 @@ public class Settings {
     public static final float BUTTON_HEIGHT = 100f;
     public static final float BUTTON_X = 1780 - BUTTON_WIDTH;
     public static final float BUTTON_Y = 1060 - BUTTON_HEIGHT;
-    public static final float MISSILE_X = 1730;
-    public static final float MISSILE_Y = 35f;
 
     // Pixel Conversion stuff
     public static final float WORLD_CENTER_LAT = 34.0553f;
@@ -31,6 +29,7 @@ public class Settings {
 
     // Actor (truck) default movement speed
     public static final float DEFAULT_MOVEMENT = 0.5f;
+    public static final float MISSILE_MOVEMENT = 5.0f;
 
     //Our "float equals" epsilon
     public static final float EPSILON = 0.1f;
