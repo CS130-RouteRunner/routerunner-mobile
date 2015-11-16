@@ -89,6 +89,7 @@ public class LobbyActivity extends Activity {
                                 }
 
                                 if (action.equals("state-change")) {
+                                    System.out.println("state is changed!");
                                     enterGame();
                                 }
 
@@ -162,6 +163,7 @@ public class LobbyActivity extends Activity {
      */
     public void startGame(View view) {
         ProgressDialog progress;
+        pubnubHelper_.setState();
         progress = ProgressDialog.show(this, "Waiting for other players", "Please wait", true, true);
     }
 
@@ -170,7 +172,6 @@ public class LobbyActivity extends Activity {
         routeRunner.putExtra("username", pubnubHelper_.getUUID());
         routeRunner.putExtra("playerNum", 0);
         routeRunner.putExtra("lobby-id", channel_);
-
         startActivity(routeRunner);
     }
 
