@@ -328,4 +328,5 @@ public class GameMaster implements Screen{
         Gdx.app.log("BoughtMissile", "Bought Missile!");
         return missile;
     }
+
 }
