@@ -246,16 +246,15 @@ public class GameMaster implements Screen{
 
         long now = (new Date().getTime() - (2*60*1000)) * 10000;
         List<Message> result = messageCenter_.getMessages(now);
-        if (result != null) {
-            Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
-            for (Message m : result) {
-                Gdx.app.log("MessageTag", m.toString());
-            }
+        Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
+        for(Message m: result) {
+            Gdx.app.log("MessageTag", m.toString());
         }
         Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
         for (Message m : result) {
             if (m.getType().equals("purchase")) {
-                Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_);
+                Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_,
+                        Settings.INITIAL_TRUCK_MONEY);
                 truck.setX(35f);
                 truck.setY(35f);
                 localPlayer_.addTruck(truck);

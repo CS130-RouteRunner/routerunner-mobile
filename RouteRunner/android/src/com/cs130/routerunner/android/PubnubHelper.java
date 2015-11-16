@@ -38,7 +38,7 @@ public class PubnubHelper implements MessageCenter {
         this.pubnub_.setUUID(username);
         this.messageList_ = new ArrayList<Message>();
         this.messageListLock_ = new ReentrantLock(false);
-
+	this.lastSyncTime_ = 0L;
         if (channel != null) {
             this.channel_ = channel;
             subscribeChannel(channel);
@@ -51,7 +51,9 @@ public class PubnubHelper implements MessageCenter {
                     JSONArray jarr = (JSONArray) response;
                     ArrayList<Message> messages = new ArrayList<Message>();
                     JSONArray data = (JSONArray) jarr.get(0);
-                    lastSyncTime_ = Long.parseLong(jarr.getString(2));
+                    long oldestTimeToken = Long.parseLong(jarr.getString(1));
+                    long newestTimeToken = Long.parseLong(jarr.getString(2));
+                    lastSyncTime_ = newestTimeToken > lastSyncTime_ ? newestTimeToken : lastSyncTime_;
                     for (int idx = 0; idx < data.length(); idx++) {
                         JSONObject m = (JSONObject) data.get(idx);
                         System.out.println("------Curr message--------");
