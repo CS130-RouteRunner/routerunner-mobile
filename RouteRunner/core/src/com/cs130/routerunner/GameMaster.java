@@ -76,26 +76,15 @@ public class GameMaster implements Screen{
         Gdx.input.setInputProcessor(inputMultiplexer);
 
         //create the "dock" (PlayerButtonInfo)
-        PlayerButtonInfo playerButtonInfo = new PlayerButtonInfo(stage_, tapHandler_);
-        playerButtonInfo.display();
+        playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
+        playerButtonInfo_.display();
 
         localPlayer_ = new Player(Settings.INITIAL_MONEY);
-        localPlayer_.setPlayerButtonInfo(playerButtonInfo);
+        localPlayer_.setPlayerButtonInfo(playerButtonInfo_);
         opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
 
         //setup missile arraylist
         missiles_ = new ArrayList<Missile>();
-
-        //setup missile arraylist
-        missiles_ = new ArrayList<Missile>();
-
-        //create first (example) truck
-
-        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, 50);
-        truck.setX(35f);
-        truck.setY(35f);
-
-        localPlayer_.addTruck(truck);
 
         //create base sprite and logical box
         baseSprite_ = new Sprite(new Texture("base.png"));
@@ -105,12 +94,7 @@ public class GameMaster implements Screen{
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
 
-        //create the "dock" (PlayerButtonInfo)
-        playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
-        playerButtonInfo_.display();
 
-        localPlayer_ = new Player(Settings.INITIAL_MONEY);
-        opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
     }
 
     @Override
@@ -135,10 +119,6 @@ public class GameMaster implements Screen{
         for (Missile missile: missiles_) {
             drawSpriteCentered(missile, missile.getX(), missile.getY());
         }
-
-//        for (Vector3 waypoint: waypoints_) {
-//            drawSpriteCentered(waypointSprite_, waypoint.x, waypoint.y);
-//        }
 
         drawSpriteCentered(baseSprite_, base_.getX(), base_.getY());
         stage_.getBatch().end();
