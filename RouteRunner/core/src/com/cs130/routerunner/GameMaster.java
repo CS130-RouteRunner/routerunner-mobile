@@ -256,7 +256,7 @@ public class GameMaster implements Screen{
                         Settings.INITIAL_TRUCK_MONEY);
                 truck.setX(35f);
                 truck.setY(35f);
-                localPlayer_.addTruck(truck);
+                localPlayer_.addOpponentActor(m.getItemId(), truck);
             }
         }
     }
@@ -312,6 +312,7 @@ public class GameMaster implements Screen{
  	    // Send message to other client
             JSONObject payload = new JSONObject();
             payload.put("item", "truck");
+            payload.put("id", localPlayer_.getTruckList().size() - 1);
             Message toSend = messageCenter_.createPurchaseMessage(messageCenter_.getUUID(), payload);
             messageCenter_.sendMessage(toSend);             
 		 return true;

@@ -4,6 +4,7 @@ import com.cs130.routerunner.Actors.Base;
 import com.cs130.routerunner.Actors.Truck;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Patrick on 11/15/2015.
@@ -19,6 +20,7 @@ public class Player {
         truckList_ = new ArrayList<Truck>();
         //TODO: change to real player base position
         base_ = new Base(500, 500);
+	opponentActorList_ = new HashMap<Integer, Actor>();
     }
 
     public Base getBase(){ return base_;};
@@ -50,6 +52,9 @@ public class Player {
         truckList_ = newTruckList;
     }
 
-    public PlayerButtonInfo getPlayerButtonInfo(){ return playerButtonInfo_;}
+    public PlayerButtonInfo getPlayerButtonInfo() { return playerButtonInfo_; }
 
+    public Actor getOpponentActor(int id) { return opponentActorList_.get(id); }
+
+    public void addOpponentActor(Integer i, Actor a) { opponentActorList_.put(i, a); }
 }
