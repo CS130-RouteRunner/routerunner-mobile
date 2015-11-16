@@ -218,7 +218,11 @@ public class GameMaster implements Screen{
                 float tolerance = Settings.MISSILE_MOVEMENT / Settings.EPSILON * Gdx.graphics.getDeltaTime();
                 if (Math.abs(missile.getX() - missile.getTargetTruck().getX()) < tolerance
                          && Math.abs(missile.getY() - missile.getTargetTruck().getY()) < tolerance) {
-                    localPlayer_.getTruckList().remove(missile.getTargetTruck());
+                    // TODO(Grace): fix this to be opponentPlayer when we
+                    // update the game to only allow targeting on opponent
+                    // trucks
+                    localPlayer_.getTruckList().remove(missile.getTargetTruck
+                            ());
                     missiles_.remove(missile);
                 }
             }
