@@ -49,7 +49,7 @@ public class PubnubHelper implements MessageCenter {
                 try {
                     System.out.println("This is the response: " + response.toString());
                     JSONArray jarr = (JSONArray) response;
-                    ArrayList<Message> messages = new ArrayList<Message>();
+
                     JSONArray data = (JSONArray) jarr.get(0);
                     lastSyncTime_ = Long.parseLong(jarr.getString(2));
                     for (int idx = 0; idx < data.length(); idx++) {
