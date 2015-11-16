@@ -7,13 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.cs130.routerunner.Routes.*;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
 
@@ -38,7 +35,6 @@ public class GameMaster implements Screen{
     private Player localPlayer_;
     private Player opponentPlayer_;
 
-    private PlayerButtonInfo playerButtonInfo_;
     private Rectangle base_;
     private Sprite baseSprite_;
 
@@ -71,7 +67,12 @@ public class GameMaster implements Screen{
         inputMultiplexer.addProcessor(1, new GestureDetector(new GestureHandler((this))));
         Gdx.input.setInputProcessor(inputMultiplexer);
 
+        //create the "dock" (PlayerButtonInfo)
+        PlayerButtonInfo playerButtonInfo = new PlayerButtonInfo(stage_, tapHandler_);
+        playerButtonInfo.display();
+
         localPlayer_ = new Player(Settings.INITIAL_MONEY);
+        localPlayer_.setPlayerButtonInfo(playerButtonInfo);
         opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
 
         //create first (example) truck
@@ -89,10 +90,6 @@ public class GameMaster implements Screen{
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
-
-        //create the "dock" (PlayerButtonInfo)
-        playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
-        playerButtonInfo_.display();
     }
 
     @Override
@@ -253,17 +250,22 @@ public class GameMaster implements Screen{
         stage_.getBatch().draw(sprite, x - sprite.getWidth() / 2, y - sprite.getHeight() / 2);
     }
 
-    public PlayerButtonInfo getPlayerButtonInfo(){
-        return playerButtonInfo_;
+    public PlayerButtonInfo getLocalPlayerButtonInfo(){
+        return localPlayer_.getPlayerButtonInfo();
     }
     public boolean buyTruck() {
-        //TODO (rlau): when money is done, check if we can afford
-        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY);
-        truck.setX(35f);
-        truck.setY(35f);
-        localPlayer_.addTruck(truck);
-        Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
-        return true;
+        //check if we can afford
+        if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
+            Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY);
+            truck.setX(35f);
+            truck.setY(35f);
+            localPlayer_.addTruck(truck);
+            Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
+            return true;
+        }
+        else
+            return false;
+
     }
 
     public Player getLocalPlayer(){

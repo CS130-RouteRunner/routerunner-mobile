@@ -2,7 +2,6 @@ package com.cs130.routerunner.TapHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.cs130.routerunner.Actor;
-import com.cs130.routerunner.PlayerButtonInfo;
 import com.cs130.routerunner.Routes.*;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class NormalMode implements TapMode {
             tapHandler_.actorSelectedMode_.SetSelectedActor(actorSelected);
             tapHandler_.curMode_ = tapHandler_.actorSelectedMode_;
             tapHandler_.gameMaster_.setWaypoints(actorSelected.route_.wayPoints_);
-            tapHandler_.gameMaster_.getPlayerButtonInfo().hide();
+            tapHandler_.gameMaster_.getLocalPlayerButtonInfo().hide();
             // Display Edit Route Button
             //tapHandler_.curMode_.Tap(x, y, count);
         }
@@ -81,6 +80,6 @@ public class NormalMode implements TapMode {
         return false;
     }
     private boolean tappedBuyTruck(float x, float y) {
-        return tapHandler_.gameMaster_.getPlayerButtonInfo().isBuyTruck();
+        return tapHandler_.gameMaster_.getLocalPlayerButtonInfo().isBuyTruck();
     }
 }

@@ -7,15 +7,20 @@ import java.util.ArrayList;
  */
 public class Player {
     private int money_;
-    private ArrayList<Actor> truckList;
+    private ArrayList<Actor> truckList_;
+    public PlayerButtonInfo playerButtonInfo_;
 
     public Player(int initialAmount){
         money_ = initialAmount;
-        truckList = new ArrayList<Actor>();
+        truckList_ = new ArrayList<Actor>();
     }
 
     public int getMoney(){
         return money_;
+    }
+
+    public void setPlayerButtonInfo(PlayerButtonInfo pbi){
+        playerButtonInfo_ = pbi;
     }
 
     public void addMoney(int amount){
@@ -23,14 +28,17 @@ public class Player {
     }
 
     public void addTruck(Actor truck){
-        truckList.add(truck);
+        truckList_.add(truck);
     }
 
     public ArrayList<Actor> getTruckList(){
-        return truckList;
+        return truckList_;
     }
 
     public void setTruckList(ArrayList<Actor> newTruckList){
-        truckList = newTruckList;
+        truckList_ = newTruckList;
     }
+
+    public PlayerButtonInfo getPlayerButtonInfo(){ return playerButtonInfo_;}
+
 }

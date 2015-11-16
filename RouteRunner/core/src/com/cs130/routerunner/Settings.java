@@ -43,6 +43,8 @@ public class Settings {
     public static final String MATCHMAKING_URL = "/api/matchmaking/";
     public static final String CREATE_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "new";
 
-    public static final int INITIAL_MONEY = 100;
+    //money & cost related
+    public static final int INITIAL_MONEY = 100000;
     public static final int INITIAL_TRUCK_MONEY = 50;
+    public static final int BUY_TRUCK_COST = 100;
 }

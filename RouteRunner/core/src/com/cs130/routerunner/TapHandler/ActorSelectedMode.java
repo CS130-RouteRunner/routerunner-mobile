@@ -1,11 +1,8 @@
 package com.cs130.routerunner.TapHandler;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
 import com.cs130.routerunner.Actor;
 import com.cs130.routerunner.Routes.Route;
-
-import java.util.ArrayList;
 
 /**
  * Created by julianyang on 10/27/15.
@@ -40,7 +37,7 @@ public class ActorSelectedMode implements TapMode {
             // clean up any display stuff (ie "EditRouteButton")
             tapHandler_.curMode_ = tapHandler_.normalMode_;
             tapHandler_.gameMaster_.clearWaypoints();
-            tapHandler_.gameMaster_.getPlayerButtonInfo().display();
+            tapHandler_.gameMaster_.getLocalPlayerButtonInfo().display();
             //selectedActor_.hideInfo();
         }
 
