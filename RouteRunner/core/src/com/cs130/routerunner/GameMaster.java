@@ -39,7 +39,6 @@ public class GameMaster implements Screen{
     private Player opponentPlayer_;
 
     private PlayerButtonInfo playerButtonInfo_;
-    private ArrayList<Actor> trucks_;
     private Rectangle base_;
     private Sprite baseSprite_;
 
@@ -72,8 +71,8 @@ public class GameMaster implements Screen{
         inputMultiplexer.addProcessor(1, new GestureDetector(new GestureHandler((this))));
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        // TODO(rlau): create actor creation method
-        trucks_ = new ArrayList<Actor>();
+        localPlayer_ = new Player(Settings.INITIAL_MONEY);
+        opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
 
         //create first (example) truck
 
@@ -81,7 +80,7 @@ public class GameMaster implements Screen{
         truck.setX(35f);
         truck.setY(35f);
 
-        trucks_.add(truck);
+        localPlayer_.addTruck(truck);
 
         //create base sprite and logical box
         baseSprite_ = new Sprite(new Texture("base.png"));
@@ -94,9 +93,6 @@ public class GameMaster implements Screen{
         //create the "dock" (PlayerButtonInfo)
         playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
         playerButtonInfo_.display();
-
-        localPlayer_ = new Player(Settings.INITIAL_MONEY);
-        opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
     }
 
     @Override
@@ -114,7 +110,7 @@ public class GameMaster implements Screen{
 
         stage_.getBatch().begin();
         mapSprite_.draw(stage_.getBatch());
-        for (Actor truck: trucks_) {
+        for (Actor truck: localPlayer_.getTruckList()) {
             drawSpriteCentered(truck, truck.getX(), truck.getY());
         }
 
@@ -183,7 +179,7 @@ public class GameMaster implements Screen{
     // the main game logic goes here
     public void update(float delta) {
         // detect collisions for actors
-        for (Actor truck: trucks_) {
+        for (Actor truck: localPlayer_.getTruckList()) {
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
         }
@@ -231,7 +227,7 @@ public class GameMaster implements Screen{
         return camera_;
     }
 
-    public ArrayList<Actor> getTrucks() { return trucks_; }
+    public ArrayList<Actor> getTrucks() { return localPlayer_.getTruckList(); }
 
 
     //TODO(juliany): clean this up to use routes or soemthing.
@@ -265,8 +261,8 @@ public class GameMaster implements Screen{
         Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY);
         truck.setX(35f);
         truck.setY(35f);
-        trucks_.add(truck);
-        Gdx.app.log("BoughtTruck", "Bought truck! Now: " + trucks_.size() + " trucks!");
+        localPlayer_.addTruck(truck);
+        Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
         return true;
     }
 

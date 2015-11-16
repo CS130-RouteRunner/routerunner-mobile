@@ -41,6 +41,11 @@ public class Route {
             truck.setX(0f);
             truck.setY(0f);
             truck.setMovementVectorToNextWaypoint(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
+            //Add money to player
+            TapHandler h = truck.getTapHandler();
+            GameMaster m = h.getGameMaster();
+            Player l = m.getLocalPlayer();
+            l.addMoney(truck.getAmount());
             return true;
         }
         else if (Math.abs(truck.getX()- currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ < (wayPoints_.size()-1)) {
@@ -49,11 +54,6 @@ public class Route {
             currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMovementVectorToNextWaypoint(currWayPoint.x, currWayPoint.y);
             //Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
-            //Add money to player
-            TapHandler h = truck.getTapHandler();
-            GameMaster m = h.getGameMaster();
-            Player l = m.getLocalPlayer();
-            l.addMoney(truck.getAmount());
             return true;
         }
         else if (!truck.hasStartedNewRoute()){
