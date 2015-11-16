@@ -29,6 +29,7 @@ public class Settings {
 
     // Actor (truck) default movement speed
     public static final float DEFAULT_MOVEMENT = 0.5f;
+    public static final float MISSILE_MOVEMENT = 5.0f;
 
     //Our "float equals" epsilon
     public static final float EPSILON = 0.1f;

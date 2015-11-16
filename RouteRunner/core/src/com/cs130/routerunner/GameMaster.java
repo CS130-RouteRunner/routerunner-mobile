@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
@@ -35,6 +36,10 @@ public class GameMaster implements Screen{
     private Player localPlayer_;
     private Player opponentPlayer_;
 
+    private PlayerButtonInfo playerButtonInfo_;
+
+    private ArrayList<Actor> trucks_;
+    private ArrayList<Missile> missiles_;
     private Rectangle base_;
     private Sprite baseSprite_;
 
@@ -78,6 +83,12 @@ public class GameMaster implements Screen{
         localPlayer_.setPlayerButtonInfo(playerButtonInfo);
         opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
 
+        //setup missile arraylist
+        missiles_ = new ArrayList<Missile>();
+
+        //setup missile arraylist
+        missiles_ = new ArrayList<Missile>();
+
         //create first (example) truck
 
         Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, 50);
@@ -93,6 +104,13 @@ public class GameMaster implements Screen{
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
+
+        //create the "dock" (PlayerButtonInfo)
+        playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
+        playerButtonInfo_.display();
+
+        localPlayer_ = new Player(Settings.INITIAL_MONEY);
+        opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
     }
 
     @Override
@@ -112,6 +130,10 @@ public class GameMaster implements Screen{
         mapSprite_.draw(stage_.getBatch());
         for (Actor truck: localPlayer_.getTruckList()) {
             drawSpriteCentered(truck, truck.getX(), truck.getY());
+        }
+
+        for (Missile missile: missiles_) {
+            drawSpriteCentered(missile, missile.getX(), missile.getY());
         }
 
 //        for (Vector3 waypoint: waypoints_) {
@@ -189,7 +211,22 @@ public class GameMaster implements Screen{
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
         }
-
+        for (Missile missile: missiles_) {
+            Gdx.app.debug("GameMaster", "Calling update on missile");
+            missile.update();
+            if (missile.getTargetTruck()!= null) {
+                float tolerance = Settings.MISSILE_MOVEMENT / Settings.EPSILON * Gdx.graphics.getDeltaTime();
+                if (Math.abs(missile.getX() - missile.getTargetTruck().getX()) < tolerance
+                         && Math.abs(missile.getY() - missile.getTargetTruck().getY()) < tolerance) {
+                    // TODO(Grace): fix this to be opponentPlayer when we
+                    // update the game to only allow targeting on opponent
+                    // trucks
+                    localPlayer_.getTruckList().remove(missile.getTargetTruck
+                            ());
+                    missiles_.remove(missile);
+                }
+            }
+        }
     }
 
     public void handleTap(float x, float y, int count) {
@@ -198,7 +235,7 @@ public class GameMaster implements Screen{
         Vector3 touchPos = new Vector3();
         touchPos.set(x, y, 0);
         camera_.unproject(touchPos);
-        Gdx.app.log("GMTag", "transformed: " + touchPos.x + ", "+  touchPos.y);
+        Gdx.app.log("GMTag", "transformed: " + touchPos.x + ", " + touchPos.y);
 
         // the user has tapped, and we need to do stuff depending on what
         // mode we're in (ie creating a route)
@@ -210,12 +247,13 @@ public class GameMaster implements Screen{
         //tap again to draw another route for the car
 
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
-
-
     }
 
     public void syncGame() {
         // TEST FOR PUBNUB HELPER
+        JSONObject dummy = new JSONObject();
+        dummy.put("type", "purchase");
+        dummy.put("uid", messageCenter_.getUUID());
         JSONObject payload = new JSONObject();
         payload.put("item", "truck");
         Message toSend = messageCenter_.createPurchaseMessage("12345",
@@ -224,9 +262,11 @@ public class GameMaster implements Screen{
 
         long now = (new Date().getTime() - (2*60*1000)) * 10000;
         List<Message> result = messageCenter_.getMessages(now);
-        Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
-        for(Message m: result) {
-            Gdx.app.log("MessageTag", m.toString());
+        if (result != null) {
+            Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
+            for (Message m : result) {
+                Gdx.app.log("MessageTag", m.toString());
+            }
         }
         Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
     }
@@ -240,6 +280,8 @@ public class GameMaster implements Screen{
     }
 
     public ArrayList<Actor> getTrucks() { return localPlayer_.getTruckList(); }
+
+    public ArrayList<Missile> getMissiles() { return missiles_; }
 
 
     //TODO(juliany): clean this up to use routes or soemthing.
@@ -277,10 +319,17 @@ public class GameMaster implements Screen{
             localPlayer_.addTruck(truck);
             Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
             return true;
-        }
-        else
+        } else
             return false;
+    }
 
+    public Missile buyMissile(){
+        Missile missile = new Missile(new Sprite(new Texture("missile.png")), stage_, tapHandler_);
+        missile.setX(35f);
+        missile.setY(35f);
+        missiles_.add(missile);
+        Gdx.app.log("BoughtMissile", "Bought Missile!");
+        return missile;
     }
 
     public Player getLocalPlayer(){
