@@ -29,11 +29,8 @@ public class Actor extends Sprite {
     private ActorInfo actorInfo_;
     private int amountCarrying_;
 
-    public Actor(){
+    public Actor() {
         route_ = new Route();
-    }
-    public Actor(Sprite sprite, Stage stage, TapHandler tapHandler) {
-        this(sprite, stage, tapHandler, 0);
     }
     public Actor(Sprite sprite, Stage stage, TapHandler tapHandler, int initialMoney){
         super(sprite);

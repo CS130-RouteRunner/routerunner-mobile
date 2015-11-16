@@ -12,6 +12,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.cs130.routerunner.Routes.*;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
 
@@ -95,7 +96,7 @@ public class GameMaster implements Screen{
         truck.setX(35f);
         truck.setY(35f);
 
-        localPlayer_.addTruck(truck);
+        trucks_.add(truck);
 
         //create base sprite and logical box
         baseSprite_ = new Sprite(new Texture("base.png"));
@@ -317,9 +318,9 @@ public class GameMaster implements Screen{
             localPlayer_.addTruck(truck);
             Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
             return true;
-        }
-        else
+        } else
             return false;
+    }
 
     public Missile buyMissile(){
         Missile missile = new Missile(new Sprite(new Texture("missile.png")), stage_, tapHandler_);
