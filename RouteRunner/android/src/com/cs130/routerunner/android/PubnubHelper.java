@@ -236,4 +236,24 @@ public class PubnubHelper implements MessageCenter {
         }
         return new Message(msg);
     }
+
+    public void setState()  {
+        Callback callback = new Callback() {
+            public void successCallback(String channel, Object response) {
+                System.out.println(response.toString());
+            }
+            public void errorCallback(String channel, PubnubError error) {
+                System.out.println(error.toString());
+            }
+        };
+
+        JSONObject jso = new JSONObject();
+        try {
+            jso.put("started_game", true);
+        } catch (Exception e)
+        {
+            System.out.println(e.toString());
+        }
+        pubnub_.setState(channel_, pubnub_.getUUID(), jso, callback);
+    }
 }
