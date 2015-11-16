@@ -104,6 +104,13 @@ public class GameMaster implements Screen{
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
+
+        //create the "dock" (PlayerButtonInfo)
+        playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
+        playerButtonInfo_.display();
+
+        localPlayer_ = new Player(Settings.INITIAL_MONEY);
+        opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
     }
 
     @Override
@@ -314,16 +321,6 @@ public class GameMaster implements Screen{
         else
             return false;
 
-    }
-
-    public Player getLocalPlayer(){
-        return localPlayer_;
-    }
-
-    public Player getOpponentPlayer(){
-        return opponentPlayer_;
-    }
-
     public Missile buyMissile(){
         Missile missile = new Missile(new Sprite(new Texture("missile.png")), stage_, tapHandler_);
         missile.setX(35f);
@@ -333,4 +330,11 @@ public class GameMaster implements Screen{
         return missile;
     }
 
+    public Player getLocalPlayer(){
+        return localPlayer_;
+    }
+
+    public Player getOpponentPlayer(){
+        return opponentPlayer_;
+    }
 }

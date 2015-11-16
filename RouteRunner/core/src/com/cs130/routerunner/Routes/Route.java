@@ -54,6 +54,11 @@ public class Route {
             currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMovementVectorToNextWaypoint(currWayPoint.x, currWayPoint.y);
             //Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
+            //Add money to player
+            TapHandler h = truck.getTapHandler();
+            GameMaster m = h.getGameMaster();
+            Player l = m.getLocalPlayer();
+            l.addMoney(truck.getAmount());
             return true;
         }
         else if (!truck.hasStartedNewRoute()){
