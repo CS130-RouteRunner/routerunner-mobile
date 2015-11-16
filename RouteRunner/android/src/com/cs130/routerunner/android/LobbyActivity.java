@@ -1,14 +1,18 @@
 package com.cs130.routerunner.android;
 
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cs130.routerunner.Settings;
+import com.cs130.routerunner.android.Test.StartGameDialogFragment;
 import com.pubnub.api.*;
 import org.json.*;
 
@@ -88,6 +92,10 @@ public class LobbyActivity extends Activity {
                                     }
                                 }
 
+                                if (action.equals("state-change")) {
+                                    enterGame();
+                                }
+
                             }
                         });
                     } catch (Exception e) {
@@ -157,9 +165,15 @@ public class LobbyActivity extends Activity {
      * Starts the Routerunner game, e.g. opens up LibGDX engine
      */
     public void startGame(View view) {
+        ProgressDialog progress;
+        progress = ProgressDialog.show(this, "Waiting for other players", "Please wait", true, true);
+    }
+
+    public void enterGame() {
         Intent routeRunner = new Intent(this, AndroidLauncher.class);
         routeRunner.putExtra("username", pubnubHelper_.getUUID());
         routeRunner.putExtra("lobby-id", channel_);
+
         startActivity(routeRunner);
     }
 
