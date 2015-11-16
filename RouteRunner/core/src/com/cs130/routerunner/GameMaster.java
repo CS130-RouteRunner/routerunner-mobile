@@ -43,7 +43,10 @@ public class GameMaster implements Screen{
 
     private MessageCenter messageCenter_;
 
+    private int framesSinceLastSync_;
+
     public GameMaster(RouteRunner game, MessageCenter messageCenter) {
+        framesSinceLastSync_ = 0;
         this.messageCenter_ = messageCenter;
 
         camera_ = new MapCamera();
@@ -176,12 +179,19 @@ public class GameMaster implements Screen{
     // the main game logic goes here
     public void update(float delta) {
         // detect collisions for actors
+        if (framesSinceLastSync_ % Settings.FRAMES_BETWEEN_SYNC == 0) {
+            syncGame();
+            framesSinceLastSync_ = 0;
+        }
+        framesSinceLastSync_++;
+
         for (Actor truck: localPlayer_.getTruckList()) {
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
         }
 
     }
+
     public void handleTap(float x, float y, int count) {
         // adjust android coordinates to libgdx coordinates
         Gdx.app.log("GMTag", x + " " + y + "\n");
@@ -201,10 +211,15 @@ public class GameMaster implements Screen{
 
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
 
+
+    }
+
+    public void syncGame() {
         // TEST FOR PUBNUB HELPER
         JSONObject payload = new JSONObject();
         payload.put("item", "truck");
-        Message toSend = messageCenter_.createPurchaseMessage("12345", payload);
+        Message toSend = messageCenter_.createPurchaseMessage("12345",
+                payload);
         messageCenter_.sendMessage(toSend);
 
         long now = (new Date().getTime() - (2*60*1000)) * 10000;
