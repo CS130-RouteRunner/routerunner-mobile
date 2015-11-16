@@ -63,13 +63,8 @@ public class Actor extends Sprite {
                 this.setY(movingTowardsY_);
             if (Math.abs(this.getX() - movingTowardsX_) < .5f)
                 this.setX(movingTowardsX_);
-
-            //Gdx.app.log("ATag", "DELTAXY: " + moveXDelta_ + "," +
-            // moveYDelta_);
-            //Gdx.app.log("ATag", "XY: " + this.getX() + "," + this.getY());
         } else {
-            Gdx.app.log("ActorMove", "truck is not moving; pause: " + paused_
-                    + " route_ is : " + route_ );
+            // actor not moving
         }
     }
 

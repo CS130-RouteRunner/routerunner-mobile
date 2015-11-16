@@ -243,8 +243,6 @@ public class GameMaster implements Screen{
         //tap again to draw another route for the car
 
         tapHandler_.Tap(touchPos.x, touchPos.y, count);
-
-
     }
 
     public void syncGame() {
