@@ -13,6 +13,7 @@ public class Player {
     private int money_;
     private ArrayList<Truck> truckList_;
     private Base base_;
+    private HashMap<Integer, Truck> opponentActorList_;
     public PlayerButtonInfo playerButtonInfo_;
 
     public Player(int initialAmount){

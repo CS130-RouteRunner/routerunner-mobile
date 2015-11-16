@@ -311,9 +311,10 @@ public class GameMaster implements Screen{
             payload.put("item", "truck");
             payload.put("id", localPlayer_.getTruckList().size() - 1);
             Message toSend = messageCenter_.createPurchaseMessage(messageCenter_.getUUID(), payload);
-            messageCenter_.sendMessage(toSend);             
-		 return true;
-        } else
+            messageCenter_.sendMessage(toSend);            
+	    return true;
+        }
+        else
             return false;
     }
 
