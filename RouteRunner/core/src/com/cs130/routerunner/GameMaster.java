@@ -38,8 +38,6 @@ public class GameMaster implements Screen{
     private ShapeRenderer shapeRenderer_;
     private Player localPlayer_;
     private Player opponentPlayer_;
-
-    private PlayerButtonInfo playerButtonInfo_;
     private ArrayList<Missile> missiles_;
     private Batch hudBatch_;
     private Rectangle base_;
@@ -79,11 +77,11 @@ public class GameMaster implements Screen{
         Gdx.input.setInputProcessor(inputMultiplexer);
 
         //create the "dock" (PlayerButtonInfo)
-        playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
-        playerButtonInfo_.display();
+        PlayerButtonInfo playerButtonInfo = new PlayerButtonInfo(stage_, tapHandler_);
+        playerButtonInfo.display();
 
         localPlayer_ = new Player(Settings.INITIAL_MONEY);
-        localPlayer_.setPlayerButtonInfo(playerButtonInfo_);
+        localPlayer_.setPlayerButtonInfo(playerButtonInfo);
         opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
 
         //setup missile arraylist
@@ -96,7 +94,7 @@ public class GameMaster implements Screen{
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
-        
+
         font_ = new BitmapFont();
         font_.getData().setScale(5f, 5f);
         hudBatch_ = new SpriteBatch();
