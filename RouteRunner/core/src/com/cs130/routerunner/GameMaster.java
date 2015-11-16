@@ -86,6 +86,10 @@ public class GameMaster implements Screen{
         //setup missile arraylist
         missiles_ = new ArrayList<Missile>();
 
+        //create base sprite and logical box
+        baseSprite_ = new Sprite(new Texture("base.png"));
+        base_ = new Rectangle(500, 500, 500, 500);
+
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
@@ -235,26 +239,30 @@ public class GameMaster implements Screen{
 
     public void syncGame() {
         List<Message> result = messageCenter_.getMessages(messageCenter_.getLastSyncTime());
-        Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
-        for(Message m: result) {
-            Gdx.app.log("MessageTag", m.toString());
-        }
         Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
-        for (Message m : result) {
-            // Gdx.app.log("MessageTag", m.toString());
-            if (m.getType().equals("purchase")) {
-                Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_,
-                        Settings.INITIAL_TRUCK_MONEY);
-                truck.setX(35f);
-                truck.setY(35f);
-                localPlayer_.addOpponentActor(m.getItemId(), truck);
- 	        } else if (m.getType().equals("route")) {
-                // Gdx.app.log("MessageRoute", "This is a route!");
-                List<LatLngPoint> points = m.getCoords();
-                for (LatLngPoint p : points) {
-                    Gdx.app.log("MessageRoute", p.toString());
-                }            
-	        }
+        if (result != null && !result.isEmpty()) {
+            Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
+            for (Message m : result) {
+                Gdx.app.log("MessageTag", m.toString());
+                if (m.getType().equals("purchase")) {
+                    Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_,
+                            Settings.INITIAL_TRUCK_MONEY);
+                    truck.setX(35f);
+                    truck.setY(35f);
+
+                    // TODO: Fix this
+                    localPlayer_.addTruck(truck);
+                    //localPlayer_.addOpponentActor(m.getItemId(), truck);
+                } else if (m.getType().equals("route")) {
+                    // Gdx.app.log("MessageRoute", "This is a route!");
+                    List<LatLngPoint> points = m.getCoords();
+                    if (points != null && !points.isEmpty()) {
+                        for (LatLngPoint p : points) {
+                            Gdx.app.log("MessageRoute", p.toString());
+                        }
+                    }
+                }
+            }
         }
     }
 

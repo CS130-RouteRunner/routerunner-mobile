@@ -38,7 +38,7 @@ public class PubnubHelper implements MessageCenter {
         this.pubnub_.setUUID(username);
         this.messageList_ = new ArrayList<Message>();
         this.messageListLock_ = new ReentrantLock(false);
-	this.lastSyncTime_ = 0L;
+        this.lastSyncTime_ = 0L;
         if (channel != null) {
             this.channel_ = channel;
             subscribeChannel(channel);
