@@ -16,13 +16,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.Actors.Missile;
 import com.cs130.routerunner.Actors.Truck;
+import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -234,16 +234,6 @@ public class GameMaster implements Screen{
     }
 
     public void syncGame() {
-        // TEST FOR PUBNUB HELPER
-        JSONObject dummy = new JSONObject();
-        dummy.put("type", "purchase");
-        dummy.put("uid", messageCenter_.getUUID());
-        JSONObject payload = new JSONObject();
-        payload.put("item", "truck");
-        Message toSend = messageCenter_.createPurchaseMessage("12345",
-                payload);
-        messageCenter_.sendMessage(toSend);
-
         List<Message> result = messageCenter_.getMessages(messageCenter_.getLastSyncTime());
         Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
         for(Message m: result) {
@@ -251,13 +241,20 @@ public class GameMaster implements Screen{
         }
         Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
         for (Message m : result) {
+            // Gdx.app.log("MessageTag", m.toString());
             if (m.getType().equals("purchase")) {
                 Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_,
                         Settings.INITIAL_TRUCK_MONEY);
                 truck.setX(35f);
                 truck.setY(35f);
                 localPlayer_.addOpponentActor(m.getItemId(), truck);
-            }
+ 	        } else if (m.getType().equals("route")) {
+                // Gdx.app.log("MessageRoute", "This is a route!");
+                List<LatLngPoint> points = m.getCoords();
+                for (LatLngPoint p : points) {
+                    Gdx.app.log("MessageRoute", p.toString());
+                }            
+	        }
         }
     }
 
@@ -335,5 +332,13 @@ public class GameMaster implements Screen{
 
     public Player getOpponentPlayer(){
         return opponentPlayer_;
+    }
+
+    public MessageCenter getMessageCenter() {
+        return this.messageCenter_;
+    }
+
+    public ArrayList<Vector3> getWayPoints() {
+        return this.waypoints_;
     }
 }

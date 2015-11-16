@@ -141,7 +141,7 @@ public class PubnubHelper implements MessageCenter {
     public void sendMessage(Message message) {
         Callback callback = new Callback() {
             public void successCallback(String channel, Object response) {
-                //System.out.println(response.toString());
+                // System.out.println("Sent: " + response.toString());
             }
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error.toString());
