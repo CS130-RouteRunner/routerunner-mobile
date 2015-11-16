@@ -21,17 +21,18 @@ public class Actor extends Sprite {
     private Stage stage_;
     private TapHandler tapHandler_;
     private ActorInfo actorInfo_;
-
+    private int amountCarrying_;
 
     public Actor(){
         route_ = new Route();
     }
-    public Actor(Sprite sprite, Stage stage, TapHandler tapHandler){
+    public Actor(Sprite sprite, Stage stage, TapHandler tapHandler, int initialMoney){
         super(sprite);
         stage_ = stage;
         tapHandler_ = tapHandler;
         actorInfo_ = new ActorInfo(stage_, tapHandler_);
         route_ = new Route();
+        amountCarrying_ = initialMoney;
     }
 
     @Override
@@ -129,4 +130,12 @@ public class Actor extends Sprite {
 
     public float getMoveXDelta() {return moveXDelta_;}
     public float getMoveYDelta() {return moveYDelta_;}
+
+    public TapHandler getTapHandler(){
+        return tapHandler_;
+    }
+
+    public int getAmount(){
+        return amountCarrying_;
+    }
 }

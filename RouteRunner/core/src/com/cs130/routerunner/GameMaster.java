@@ -35,6 +35,8 @@ public class GameMaster implements Screen{
     private Sprite mapSprite_;
     private Stage stage_;
     private ShapeRenderer shapeRenderer_;
+    private Player localPlayer_;
+    private Player opponentPlayer_;
 
     private PlayerButtonInfo playerButtonInfo_;
     private ArrayList<Actor> trucks_;
@@ -74,9 +76,11 @@ public class GameMaster implements Screen{
         trucks_ = new ArrayList<Actor>();
 
         //create first (example) truck
-        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_);
+
+        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, 50);
         truck.setX(35f);
         truck.setY(35f);
+
         trucks_.add(truck);
 
         //create base sprite and logical box
@@ -91,6 +95,8 @@ public class GameMaster implements Screen{
         playerButtonInfo_ = new PlayerButtonInfo(stage_, tapHandler_);
         playerButtonInfo_.display();
 
+        localPlayer_ = new Player(Settings.INITIAL_MONEY);
+        opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
     }
 
     @Override
@@ -254,13 +260,21 @@ public class GameMaster implements Screen{
     public PlayerButtonInfo getPlayerButtonInfo(){
         return playerButtonInfo_;
     }
-    public boolean buyTruck(){
+    public boolean buyTruck() {
         //TODO (rlau): when money is done, check if we can afford
-        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_);
+        Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY);
         truck.setX(35f);
         truck.setY(35f);
         trucks_.add(truck);
         Gdx.app.log("BoughtTruck", "Bought truck! Now: " + trucks_.size() + " trucks!");
         return true;
+    }
+
+    public Player getLocalPlayer(){
+        return localPlayer_;
+    }
+
+    public Player getOpponentPlayer(){
+        return opponentPlayer_;
     }
 }

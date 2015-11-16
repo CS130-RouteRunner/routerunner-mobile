@@ -29,4 +29,8 @@ public class TapHandler {
     public void Tap(float x, float y, int count) {
         curMode_.Tap(x, y, count);
     }
+
+    public GameMaster getGameMaster(){
+        return gameMaster_;
+    }
 }

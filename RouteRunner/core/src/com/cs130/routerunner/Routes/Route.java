@@ -3,7 +3,10 @@ package com.cs130.routerunner.Routes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.GameMaster;
 import com.cs130.routerunner.Settings;
+import com.cs130.routerunner.Player;
+import com.cs130.routerunner.TapHandler.TapHandler;
 
 import java.util.ArrayList;
 
@@ -46,6 +49,11 @@ public class Route {
             currWayPoint = wayPoints_.get(currWayPointIndex_);
             truck.setMovementVectorToNextWaypoint(currWayPoint.x, currWayPoint.y);
             //Gdx.app.log("RETag", "HIT WAYPOINT, MOVING ON!");
+            //Add money to player
+            TapHandler h = truck.getTapHandler();
+            GameMaster m = h.getGameMaster();
+            Player l = m.getLocalPlayer();
+            l.addMoney(truck.getAmount());
             return true;
         }
         else if (!truck.hasStartedNewRoute()){
