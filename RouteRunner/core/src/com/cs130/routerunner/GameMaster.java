@@ -6,7 +6,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
@@ -37,9 +40,8 @@ public class GameMaster implements Screen{
     private Player opponentPlayer_;
 
     private PlayerButtonInfo playerButtonInfo_;
-
-    private ArrayList<Actor> trucks_;
     private ArrayList<Missile> missiles_;
+    private Batch hudBatch_;
     private Rectangle base_;
     private Sprite baseSprite_;
 
@@ -49,6 +51,7 @@ public class GameMaster implements Screen{
     private MessageCenter messageCenter_;
 
     private int framesSinceLastSync_;
+    private BitmapFont font_;
 
     public GameMaster(RouteRunner game, MessageCenter messageCenter) {
         framesSinceLastSync_ = 0;
@@ -93,8 +96,10 @@ public class GameMaster implements Screen{
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
-
-
+        
+        font_ = new BitmapFont();
+        font_.getData().setScale(5f, 5f);
+        hudBatch_ = new SpriteBatch();
     }
 
     @Override
@@ -121,7 +126,13 @@ public class GameMaster implements Screen{
         }
 
         drawSpriteCentered(baseSprite_, base_.getX(), base_.getY());
+        //TODO: rlau (draw opponent money)
         stage_.getBatch().end();
+
+        //draw how much money the player has
+        hudBatch_.begin();
+        font_.draw(hudBatch_, "Money: " + localPlayer_.getMoney(), 40, 1020);
+        hudBatch_.end();
 
         // need to match shaperender's projection matrix with spritebatch's
         shapeRenderer_.setProjectionMatrix(stage_.getBatch().getProjectionMatrix());
@@ -293,6 +304,7 @@ public class GameMaster implements Screen{
     public boolean buyTruck() {
         //check if we can afford
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
+            localPlayer_.subtractMoney(Settings.BUY_TRUCK_COST);
             Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY);
             truck.setX(35f);
             truck.setY(35f);

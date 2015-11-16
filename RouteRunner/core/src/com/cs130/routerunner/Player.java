@@ -27,6 +27,10 @@ public class Player {
         money_ += amount;
     }
 
+    public void subtractMoney(int amount){
+        money_ -= amount;
+    }
+
     public void addTruck(Actor truck){
         truckList_.add(truck);
     }
