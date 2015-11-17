@@ -266,11 +266,8 @@ public class GameMaster implements Screen{
                     truck.setX(35f);
                     truck.setY(35f);
 
-                    // TODO: Fix this
                     opponentPlayer_.addTruck(truck);
-                    //localPlayer_.addOpponentActor(m.getItemId(), truck);
                 } else if (m.getType().equals("route")) {
-                    // Gdx.app.log("MessageRoute", "This is a route!");
                     Truck truck = opponentPlayer_.getTruckList().get(m.getItemId());
                     List<LatLngPoint> points = m.getCoords();
                     Route r = new Route();
@@ -331,7 +328,7 @@ public class GameMaster implements Screen{
             truck.setX(35f);
             truck.setY(35f);
             Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
- 	    // Send message to other client
+ 	        // Send message to other client
             JSONObject payload = new JSONObject();
             payload.put("item", "truck");
             payload.put("id", localPlayer_.getTruckID());
@@ -339,7 +336,7 @@ public class GameMaster implements Screen{
             localPlayer_.addTruck(truck);
             Message toSend = messageCenter_.createPurchaseMessage(messageCenter_.getUUID(), payload);
             messageCenter_.sendMessage(toSend);            
-	    return true;
+	        return true;
         }
         else
             return false;
