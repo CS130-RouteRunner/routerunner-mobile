@@ -16,7 +16,10 @@ public class Player {
     private HashMap<Integer, Truck> opponentActorList_;
     public PlayerButtonInfo playerButtonInfo_;
 
+    private int truckID_;
+
     public Player(int initialAmount){
+        truckID_ = 0;
         money_ = initialAmount;
         truckList_ = new ArrayList<Truck>();
         //TODO: change to real player base position
@@ -55,7 +58,10 @@ public class Player {
 
     public PlayerButtonInfo getPlayerButtonInfo() { return playerButtonInfo_; }
 
-    public Actor getOpponentActor(int id) { return opponentActorList_.get(id); }
+    public int getTruckID() { return truckID_; }
 
-    public void addOpponentActor(Integer i, Actor a) { opponentActorList_.put(i, a); }
+    public void incTruckID_() { this.truckID_++; }
+    //public Actor getOpponentActor(int id) { return opponentActorList_.get(id); }
+
+    //public void addOpponentActor(Integer i, Actor a) { opponentActorList_.put(i, a); }
 }

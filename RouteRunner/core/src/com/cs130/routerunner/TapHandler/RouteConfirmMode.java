@@ -59,7 +59,11 @@ public class RouteConfirmMode implements TapMode {
             }
             coords += coordinateConverter_.px2ll(waypoints.get(waypoints.size()-1));
             data.put("coords", coords);
-            data.put("id", 12345);
+            ArrayList<Actor> trucks = tapHandler_.gameMaster_.getLocalPlayer().getTruckList();
+            int id = trucks.indexOf(selectedActor_);
+            data.put("id", id);
+            Gdx.app.log("RCTag", "selected truck id :" + Integer.toString(id));
+
             Message toSend = messageCenter_.createRouteMessage(messageCenter_.getUUID(), data);
             messageCenter_.sendMessage(toSend);
         } else if (selectedActor_.isCancelSave()) {
