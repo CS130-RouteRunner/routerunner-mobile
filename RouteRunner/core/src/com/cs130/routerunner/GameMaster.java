@@ -261,7 +261,7 @@ public class GameMaster implements Screen{
             for (Message m : result) {
                 Gdx.app.log("MessageTag", m.toString());
                 if (m.getType().equals("purchase")) {
-                    Truck truck = new Truck(new Sprite(new Texture("bus.png")), stage_, tapHandler_,
+                    Truck truck = new Truck(new Sprite(new Texture("truck.png")), stage_, tapHandler_,
                             Settings.INITIAL_TRUCK_MONEY, opponentPlayer_);
                     truck.setX(35f);
                     truck.setY(35f);
@@ -327,7 +327,7 @@ public class GameMaster implements Screen{
         //check if we can afford
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
             localPlayer_.subtractMoney(Settings.BUY_TRUCK_COST);
-            Truck truck = new Truck(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY, localPlayer_);
+            Truck truck = new Truck(new Sprite(new Texture("truck.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY, localPlayer_);
             truck.setX(35f);
             truck.setY(35f);
             Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
