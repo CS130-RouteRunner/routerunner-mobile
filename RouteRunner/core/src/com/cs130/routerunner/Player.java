@@ -1,5 +1,6 @@
 package com.cs130.routerunner;
 
+import com.cs130.routerunner.Actors.Base;
 import com.cs130.routerunner.Actors.Truck;
 
 import java.util.ArrayList;
@@ -10,13 +11,17 @@ import java.util.ArrayList;
 public class Player {
     private int money_;
     private ArrayList<Truck> truckList_;
+    private Base base_;
     public PlayerButtonInfo playerButtonInfo_;
 
     public Player(int initialAmount){
         money_ = initialAmount;
         truckList_ = new ArrayList<Truck>();
+        //TODO: change to real player base position
+        base_ = new Base(500, 500);
     }
 
+    public Base getBase(){ return base_;};
     public int getMoney(){
         return money_;
     }

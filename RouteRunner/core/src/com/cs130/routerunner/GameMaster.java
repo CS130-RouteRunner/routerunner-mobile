@@ -41,8 +41,6 @@ public class GameMaster implements Screen{
     private Player opponentPlayer_;
     private ArrayList<Missile> missiles_;
     private Batch hudBatch_;
-    private Rectangle base_;
-    private Sprite baseSprite_;
 
     private Sprite waypointSprite_;
     private ArrayList<Vector3> waypoints_;
@@ -88,10 +86,6 @@ public class GameMaster implements Screen{
         //setup missile arraylist
         missiles_ = new ArrayList<Missile>();
 
-        //create base sprite and logical box
-        baseSprite_ = new Sprite(new Texture("base.png"));
-        base_ = new Rectangle(500, 500, 500, 500);
-
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
@@ -124,7 +118,7 @@ public class GameMaster implements Screen{
             drawSpriteCentered(missile, missile.getX(), missile.getY());
         }
 
-        drawSpriteCentered(baseSprite_, base_.getX(), base_.getY());
+        drawSpriteCentered(localPlayer_.getBase().getSprite(), localPlayer_.getBase().getX(), localPlayer_.getBase().getY());
         //TODO: rlau (draw opponent money)
         stage_.getBatch().end();
 
@@ -283,9 +277,6 @@ public class GameMaster implements Screen{
         this.waypoints_.add(waypoint);
     }
 
-    public boolean baseContains(float x, float y){
-        return base_.contains(x, y);
-    }
 
     public void clearWaypoints() {
         this.waypoints_.clear();
