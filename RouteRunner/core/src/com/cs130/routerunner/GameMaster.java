@@ -104,6 +104,8 @@ public class GameMaster implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage_.getBatch().setProjectionMatrix(camera_.getCamera().combined);
+        // need to match shaperender's projection matrix with spritebatch's
+        shapeRenderer_.setProjectionMatrix(stage_.getBatch().getProjectionMatrix());
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -112,9 +114,10 @@ public class GameMaster implements Screen{
         mapSprite_.draw(stage_.getBatch());
         for (Truck truck: localPlayer_.getTruckList()) {
             drawSpriteCentered(truck, truck.getX(), truck.getY());
+            //if(truck.isEditRoute())
         }
 
-        for (Missile missile: missiles_) {
+        for (Missile missile : missiles_) {
             drawSpriteCentered(missile, missile.getX(), missile.getY());
         }
 
@@ -126,9 +129,6 @@ public class GameMaster implements Screen{
         hudBatch_.begin();
         font_.draw(hudBatch_, "Money: " + localPlayer_.getMoney(), 40, 1020);
         hudBatch_.end();
-
-        // need to match shaperender's projection matrix with spritebatch's
-        shapeRenderer_.setProjectionMatrix(stage_.getBatch().getProjectionMatrix());
 
         Vector3 previous = null;
         if (!waypoints_.isEmpty())
@@ -146,6 +146,15 @@ public class GameMaster implements Screen{
             shapeRenderer_.end();
 
             previous = waypoint;
+        }
+
+        for (Truck truck : localPlayer_.getTruckList()) {
+            if (truck.isEditRoute()) {
+                if (waypoints_.isEmpty())
+                    showRadius(shapeRenderer_, new Vector3(truck.getX(), truck.getY(), 0));
+                else
+                    showRadius(shapeRenderer_, waypoints_.get(waypoints_.size() - 1));
+            }
         }
 
         stage_.draw();
@@ -320,5 +329,19 @@ public class GameMaster implements Screen{
 
     public Player getOpponentPlayer(){
         return opponentPlayer_;
+    }
+
+    public void showRadius(ShapeRenderer shapeRenderer, Vector3 point){
+        Gdx.app.log("GMshowRadius", "Enter showRadius()\n");
+        //shapeRenderer_ = new ShapeRenderer();
+        // need to match shaperender's projection matrix with spritebatch's
+        //shapeRenderer_.setProjectionMatrix(stage_.getBatch().getProjectionMatrix());
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.setColor(0, 1, 0, 0.2f);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(point.x, point.y, Settings.NEXT_POINT_RADIUS);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 }

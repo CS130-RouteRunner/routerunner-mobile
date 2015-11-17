@@ -7,6 +7,7 @@ import com.cs130.routerunner.CoordinateConverter.CoordinateConverter;
 import com.cs130.routerunner.CoordinateConverter.CoordinateConverterAdapter;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
 import com.cs130.routerunner.Routes.*;
+import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.SnapToRoads.SnapToRoads;
 
 import java.util.ArrayList;
@@ -83,6 +84,22 @@ public class RouteEditMode implements TapMode {
         }else {
             Vector3 touchPos = new Vector3();
             touchPos.set(x, y, 0);
+
+            Vector3 previous = new Vector3();
+            if(!newRoute_.wayPoints_.isEmpty())
+                previous = newRoute_.wayPoints_.get(newRoute_.wayPoints_.size() - 1);
+            else
+                previous = new Vector3(selectedActor_.getX(), selectedActor_.getY(), 0);
+            double distance = Math.sqrt(Math.pow(x-previous.x,2)+Math.pow(y-previous.y,2));
+            //check if the point is inside the range
+            if(distance > Settings.NEXT_POINT_RADIUS){
+                Gdx.app.log("ReTag", "Tap outside valid range: " + touchPos.x + ", " +
+                        touchPos.y);
+                Gdx.app.log("ReTag", "Radius: "+Settings.NEXT_POINT_RADIUS);
+                Gdx.app.log("ReTag", "Distance: "+distance);
+                selectedActor_.showAlert("Please choose a point inside the green range");
+                return;
+            }
 
             // TODO(Julian/Patrick): collect all the points into an array. And
             //if we want to edit routes, get old truck route if exists and populate array

@@ -1,6 +1,7 @@
 package com.cs130.routerunner.Actors;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -121,5 +122,8 @@ public abstract class Actor extends Sprite {
         actorInfo_.hide();
     }
 
+    public void showAlert(String string){
+        actorInfo_.showAlert(string);
+    }
 
 }

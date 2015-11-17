@@ -2,13 +2,18 @@ package com.cs130.routerunner.Actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.cs130.routerunner.ButtonType;
 import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.TapHandler.TapHandler;
@@ -29,6 +34,7 @@ public class ActorInfo {
     private Button buttonCancelEdit_;
     private Button buttonCancelSave_;
     private TapHandler tapHandler_;
+    private ShapeRenderer shapeRenderer_;
 
     public ActorInfo(Stage stage, TapHandler tapHandler){
         stage_ = stage;
@@ -103,7 +109,6 @@ public class ActorInfo {
 
     public void display(){
         Gdx.app.log("AIdisplay", "Enter display()\n");
-
         stage_.addActor(buttonEditRoute_);
         stage_.addActor(buttonCancelEdit_);
     }
@@ -119,6 +124,35 @@ public class ActorInfo {
             buttonSaveRoute_.remove();
         if(buttonCancelSave_ != null && buttonCancelSave_.isVisible())
             buttonCancelSave_.remove();
+    }
+
+    public void showAlert(String alertString){
+        Label label = new Label(alertString, skin_);
+        label.setWrap(true);
+        label.setFontScale(1.6f);
+        label.setAlignment(Align.center);
+
+        final Dialog dialog = new Dialog("", skin_) {
+            @Override
+            public float getPrefWidth() { return 600f; }
+
+            @Override
+            public float getPrefHeight() { return 200f; }
+        };
+        dialog.getContentTable().add(label);
+
+        TextButton dbutton = new TextButton("OK", skin_);
+        dbutton.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) {
+                dialog.remove();
+            }
+        });
+        dialog.button(dbutton, true);
+        dialog.button(dbutton, false);
+        dialog.invalidateHierarchy();
+        dialog.invalidate();
+        dialog.layout();
+        dialog.show(stage_);
     }
 
     public boolean isEditRoute() { return lastClicked_.equals(ButtonType.EDIT_ROUTE); }
