@@ -3,13 +3,13 @@ package com.cs130.routerunner.TapHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.cs130.routerunner.Actors.Actor;
+import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.CoordinateConverter.CoordinateConverter;
 import com.cs130.routerunner.CoordinateConverter.CoordinateConverterAdapter;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
 import com.cs130.routerunner.Message;
 import com.cs130.routerunner.MessageCenter;
 import com.cs130.routerunner.Routes.Route;
-import com.google.maps.model.LatLng;
 
 import org.json.JSONObject;
 
@@ -59,7 +59,7 @@ public class RouteConfirmMode implements TapMode {
             }
             coords += coordinateConverter_.px2ll(waypoints.get(waypoints.size()-1));
             data.put("coords", coords);
-            ArrayList<Actor> trucks = tapHandler_.gameMaster_.getLocalPlayer().getTruckList();
+            ArrayList<Truck> trucks = tapHandler_.gameMaster_.getLocalPlayer().getTruckList();
             int id = trucks.indexOf(selectedActor_);
             data.put("id", id);
             Gdx.app.log("RCTag", "selected truck id :" + Integer.toString(id));

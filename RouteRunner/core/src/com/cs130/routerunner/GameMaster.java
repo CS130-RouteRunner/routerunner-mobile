@@ -93,10 +93,6 @@ public class GameMaster implements Screen{
         //setup missile arraylist
         missiles_ = new ArrayList<Missile>();
 
-        //create base sprite and logical box
-        baseSprite_ = new Sprite(new Texture("base.png"));
-        base_ = new Rectangle(500, 500, 500, 500);
-
         //create waypoint sprites
         waypointSprite_ = new Sprite(new Texture("waypoint2.png"));
         waypoints_ = new ArrayList<Vector3>();
@@ -126,7 +122,7 @@ public class GameMaster implements Screen{
         }
 
         // add rendering for opponent actor trucks
-        for (Actor truck: opponentPlayer_.getTruckList()) {
+        for (Truck truck: opponentPlayer_.getTruckList()) {
             drawSpriteCentered(truck, truck.getX(), truck.getY());
         }
 
@@ -215,7 +211,7 @@ public class GameMaster implements Screen{
             truck.update();
         }
 
-        for (Actor truck: opponentPlayer_.getTruckList()) {
+        for (Truck truck: opponentPlayer_.getTruckList()) {
             Gdx.app.debug("GameMaster", "Calling update on opponent truck");
             truck.update();
         }
@@ -230,8 +226,7 @@ public class GameMaster implements Screen{
                     // TODO(Grace): fix this to be opponentPlayer when we
                     // update the game to only allow targeting on opponent
                     // trucks
-                    localPlayer_.getTruckList().remove(missile.getTargetTruck
-                            ());
+                    localPlayer_.getTruckList().remove(missile.getTargetTruck());
                     missiles_.remove(missile);
                 }
             }
@@ -266,8 +261,8 @@ public class GameMaster implements Screen{
             for (Message m : result) {
                 Gdx.app.log("MessageTag", m.toString());
                 if (m.getType().equals("purchase")) {
-                    Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_,
-                            Settings.INITIAL_TRUCK_MONEY);
+                    Truck truck = new Truck(new Sprite(new Texture("bus.png")), stage_, tapHandler_,
+                            Settings.INITIAL_TRUCK_MONEY, opponentPlayer_);
                     truck.setX(35f);
                     truck.setY(35f);
 
@@ -276,7 +271,7 @@ public class GameMaster implements Screen{
                     //localPlayer_.addOpponentActor(m.getItemId(), truck);
                 } else if (m.getType().equals("route")) {
                     // Gdx.app.log("MessageRoute", "This is a route!");
-                    Actor truck = opponentPlayer_.getTruckList().get(m.getItemId());
+                    Truck truck = opponentPlayer_.getTruckList().get(m.getItemId());
                     List<LatLngPoint> points = m.getCoords();
                     Route r = new Route();
 
@@ -313,10 +308,6 @@ public class GameMaster implements Screen{
 
     public void addWaypoint(Vector3 waypoint) {
         this.waypoints_.add(waypoint);
-    }
-
-    public boolean baseContains(float x, float y){
-        return base_.contains(x, y);
     }
 
     public void clearWaypoints() {

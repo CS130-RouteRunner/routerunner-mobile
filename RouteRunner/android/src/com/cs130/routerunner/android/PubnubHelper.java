@@ -47,7 +47,6 @@ public class PubnubHelper implements MessageCenter {
         this.getMessagesCallback_ = new Callback() {
             public void successCallback(String channel, Object response) {
                 try {
-                    System.out.println("This is the response: " + response.toString());
                     JSONArray jarr = (JSONArray) response;
                     ArrayList<Message> messages = new ArrayList<Message>();
                     JSONArray data = (JSONArray) jarr.get(0);
@@ -56,18 +55,17 @@ public class PubnubHelper implements MessageCenter {
                     lastSyncTime_ = newestTimeToken > lastSyncTime_ ? newestTimeToken : lastSyncTime_;
                     for (int idx = 0; idx < data.length(); idx++) {
                         JSONObject m = (JSONObject) data.get(idx);
-                        System.out.println("------Curr message--------");
-                        System.out.println(m.toString());
+                        // System.out.println("------Curr message--------");
+                        // System.out.println(m.toString());
                         if (!m.getString("uid").equals(getUUID())) {
                             messages.add(new Message(m));
-                            System.out.println("Size: " + String.valueOf(messages.size()));
                         }
                     }
                     // Clear the messageList_ before adding new ones
                     messageListLock_.lock();
                     messageList_.addAll(messages);
                     messageListLock_.unlock();
-                    System.out.println("Size of messageList_: " + String.valueOf(messageList_.size()));
+                    // System.out.println("Size of messageList_: " + String.valueOf(messageList_.size()));
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }
