@@ -25,5 +25,7 @@ public class Base {
     public Sprite getSprite(){
         return baseSprite_;
     }
-
+    public boolean overlaps(Rectangle r){
+        return base_.overlaps(r);
+    }
 }

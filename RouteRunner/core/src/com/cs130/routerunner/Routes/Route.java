@@ -38,15 +38,14 @@ public class Route {
 
         if (Math.abs(truck.getX() - currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ == wayPoints_.size()-1){
             //WE JUST FINISHED THE WHOLE ROUTE, RESET
+            //Add money to player
+            truck.checkIntersectingBase();
+
             currWayPointIndex_ = 0;
             truck.setX(0f);
             truck.setY(0f);
             truck.setMovementVectorToNextWaypoint(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
-            //Add money to player
-            TapHandler h = truck.getTapHandler();
-            GameMaster m = h.getGameMaster();
-            //Player l = m.getLocalPlayer();
-            //l.addMoney(truck.getAmount());
+
             return true;
         }
         else if (Math.abs(truck.getX()- currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ < (wayPoints_.size()-1)) {

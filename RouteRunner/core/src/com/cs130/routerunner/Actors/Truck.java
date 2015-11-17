@@ -2,6 +2,7 @@ package com.cs130.routerunner.Actors;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.cs130.routerunner.Player;
 import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.TapHandler.TapHandler;
 
@@ -10,20 +11,22 @@ import com.cs130.routerunner.TapHandler.TapHandler;
  */
 public class Truck extends Actor {
     private int amountCarrying_;
+    private Player player_;
 
     public Truck(){
         super();
     }
 
-    public Truck (Sprite sprite, Stage stage, TapHandler tapHandler){
-        this(sprite, stage, tapHandler, 0);
+    public Truck (Sprite sprite, Stage stage, TapHandler tapHandler, Player player){
+        this(sprite, stage, tapHandler, 0, player);
     }
 
-    public Truck (Sprite sprite, Stage stage, TapHandler tapHandler, int initialMoney){
+    public Truck (Sprite sprite, Stage stage, TapHandler tapHandler, int initialMoney, Player player){
         super(sprite, stage, tapHandler);
         setSpeed(Settings.DEFAULT_MOVEMENT);
         actorInfo_ = new ActorInfo(stage, tapHandler);
         amountCarrying_ = initialMoney;
+        player_ = player;
     }
 
     public void move() {
@@ -42,6 +45,13 @@ public class Truck extends Actor {
         }
     }
 
+    //check if we are intersecting our player's base
+    //if yes, then add money to the player
+    //if no, then do not
+    public void checkIntersectingBase(){
+        if (player_.getBase().overlaps(this.getBoundingRectangle()))
+            player_.addMoney(this.getAmount());
+    }
 
     public int getAmount(){
         return amountCarrying_;

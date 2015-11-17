@@ -295,7 +295,7 @@ public class GameMaster implements Screen{
         //check if we can afford
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
             localPlayer_.subtractMoney(Settings.BUY_TRUCK_COST);
-            Truck truck = new Truck(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY);
+            Truck truck = new Truck(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY, localPlayer_);
             truck.setX(35f);
             truck.setY(35f);
             localPlayer_.addTruck(truck);
