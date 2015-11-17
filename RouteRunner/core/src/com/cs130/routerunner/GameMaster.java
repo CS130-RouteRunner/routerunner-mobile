@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.cs130.routerunner.Actors.Missile;
 import com.cs130.routerunner.Actors.Truck;
+import com.cs130.routerunner.CoordinateConverter.CoordinateConverter;
+import com.cs130.routerunner.CoordinateConverter.CoordinateConverterAdapter;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
 import com.cs130.routerunner.Routes.Route;
 import com.cs130.routerunner.TapHandler.TapHandler;
@@ -51,11 +53,15 @@ public class GameMaster implements Screen{
     private int framesSinceLastSync_;
     private BitmapFont font_;
 
+    private CoordinateConverter coordConverter_;
+
     public GameMaster(RouteRunner game, MessageCenter messageCenter) {
         framesSinceLastSync_ = 0;
         this.messageCenter_ = messageCenter;
 
         camera_ = new MapCamera();
+
+        coordConverter_ = new CoordinateConverterAdapter();
 
         //create self reference
         this.game_ = game;
@@ -273,10 +279,12 @@ public class GameMaster implements Screen{
                     Actor truck = opponentPlayer_.getTruckList().get(m.getItemId());
                     List<LatLngPoint> points = m.getCoords();
                     Route r = new Route();
+
                     if (points != null && !points.isEmpty()) {
                         for (LatLngPoint p : points) {
                             Gdx.app.log("MessageRoute", p.toString());
-                            r.addWayPoint(p.lat, p.lng);
+                            Vector3 v = coordConverter_.ll2px(p.lat, p.lng);
+                            r.addWayPoint(v.x, v.y);
                         }
                     }
                     truck.setRoute(r);
