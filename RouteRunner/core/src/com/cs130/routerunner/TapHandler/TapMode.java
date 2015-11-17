@@ -1,6 +1,6 @@
 package com.cs130.routerunner.TapHandler;
 
-import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.Actors.Actor;
 import com.cs130.routerunner.Routes.Route;
 
 /**

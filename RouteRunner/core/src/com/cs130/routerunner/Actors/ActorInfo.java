@@ -1,4 +1,4 @@
-package com.cs130.routerunner;
+package com.cs130.routerunner.Actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs130.routerunner.ButtonType;
+import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.TapHandler.TapHandler;
 
 import java.util.EventListener;

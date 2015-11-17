@@ -2,7 +2,8 @@ package com.cs130.routerunner.Routes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
-import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.Actors.Actor;
+import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.GameMaster;
 import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.Player;
@@ -27,7 +28,7 @@ public class Route {
     //methods
     //updates what the given truck's next way point should be
     //if so, then update to the next waypoint/reset/initialize appropriately
-    public boolean updateWaypoint(Actor truck){
+    public boolean updateWaypoint(Truck truck){
         if (wayPoints_ == null || wayPoints_.size() == 0) {
 //            Gdx.app.debug("Route", "waypoints is null or empty");
             return false;
@@ -44,8 +45,8 @@ public class Route {
             //Add money to player
             TapHandler h = truck.getTapHandler();
             GameMaster m = h.getGameMaster();
-            Player l = m.getLocalPlayer();
-            l.addMoney(truck.getAmount());
+            //Player l = m.getLocalPlayer();
+            //l.addMoney(truck.getAmount());
             return true;
         }
         else if (Math.abs(truck.getX()- currWayPoint.x) < Settings.EPSILON && Math.abs(truck.getY() - currWayPoint.y) < Settings.EPSILON && currWayPointIndex_ < (wayPoints_.size()-1)) {

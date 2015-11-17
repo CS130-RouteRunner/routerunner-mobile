@@ -2,9 +2,8 @@ package com.cs130.routerunner.android.Test;
 
 import android.test.InstrumentationTestCase;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.Actors.Actor;
+import com.cs130.routerunner.Actors.Truck;
 
 /**
  * Created by Roger on 11/11/2015.
@@ -13,7 +12,7 @@ public class ActorTest extends InstrumentationTestCase {
 
     public void test() {
 
-        Actor truck = new Actor();
+        Truck truck = new Truck();
         truck.setX(0f);
         truck.setY(0f);
         //should move towards 0,1 at a speed of 0.5, so move delts should be 0,0.5

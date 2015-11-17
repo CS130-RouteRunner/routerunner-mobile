@@ -2,9 +2,6 @@ package com.cs130.routerunner.android.Test;
 
 import android.test.InstrumentationTestCase;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.cs130.routerunner.Actor;
 import com.cs130.routerunner.Routes.Route;
 
 /**

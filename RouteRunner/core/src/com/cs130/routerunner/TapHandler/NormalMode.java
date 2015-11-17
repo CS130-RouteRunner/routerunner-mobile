@@ -1,9 +1,8 @@
 package com.cs130.routerunner.TapHandler;
 
 import com.badlogic.gdx.Gdx;
-import com.cs130.routerunner.Actor;
-import com.cs130.routerunner.Missile;
-import com.cs130.routerunner.PlayerButtonInfo;
+import com.cs130.routerunner.Actors.*;
+import com.cs130.routerunner.Actors.Missile;
 import com.cs130.routerunner.Routes.*;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
  */
 public class NormalMode implements TapMode {
     TapHandler tapHandler_;
-    ArrayList<Actor> trucks_ = null;
+    ArrayList<Truck> trucks_ = null;
     Actor actorSelected = null;
 
     public NormalMode(TapHandler tapHandler) {
@@ -56,6 +55,7 @@ public class NormalMode implements TapMode {
         }
         else if (tappedBuyMissile(x, y)) {
             Gdx.app.log("TapTag", "Tapped to Buy a Missile " + x + " " + y + "\n");
+            //Missile m = tapHandler_.gameMaster_.buyMissile();
             Missile m = tapHandler_.gameMaster_.buyMissile();
             tapHandler_.gameMaster_.getLocalPlayerButtonInfo().hide();
             tapHandler_.curMode_ = tapHandler_.missileMode_;
@@ -79,7 +79,7 @@ public class NormalMode implements TapMode {
     private boolean tappedTruck(float x, float y) {
         trucks_ = tapHandler_.gameMaster_.getTrucks();
 
-        for (Actor truck: trucks_) {
+        for (Truck truck: trucks_) {
             if (truck.tryToTap(x, y)) {
                 Gdx.app.log("TruckTag", "Tapped Truck");
                 Gdx.app.log("TruckTag", truck.getX() + " " + truck.getY() + " " + x + " " + y + "\n");

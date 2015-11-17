@@ -1,13 +1,14 @@
-package com.cs130.routerunner;
+package com.cs130.routerunner.Actors;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.TapHandler.TapHandler;
 
 /**
  * Created by graceychin on 11/12/15.
  */
-public class Missile extends Actor{
+public class Missile extends Actor {
     private Actor targetTruck_;
 
     public Missile() {super();}

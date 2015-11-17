@@ -13,8 +13,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.cs130.routerunner.Actors.Missile;
+import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
 
@@ -115,7 +116,7 @@ public class GameMaster implements Screen{
 
         stage_.getBatch().begin();
         mapSprite_.draw(stage_.getBatch());
-        for (Actor truck: localPlayer_.getTruckList()) {
+        for (Truck truck: localPlayer_.getTruckList()) {
             drawSpriteCentered(truck, truck.getX(), truck.getY());
         }
 
@@ -196,7 +197,7 @@ public class GameMaster implements Screen{
         }
         framesSinceLastSync_++;
 
-        for (Actor truck: localPlayer_.getTruckList()) {
+        for (Truck truck: localPlayer_.getTruckList()) {
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
         }
@@ -268,7 +269,7 @@ public class GameMaster implements Screen{
         return camera_;
     }
 
-    public ArrayList<Actor> getTrucks() { return localPlayer_.getTruckList(); }
+    public ArrayList<Truck> getTrucks() { return localPlayer_.getTruckList(); }
 
     public ArrayList<Missile> getMissiles() { return missiles_; }
 
@@ -303,7 +304,7 @@ public class GameMaster implements Screen{
         //check if we can afford
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
             localPlayer_.subtractMoney(Settings.BUY_TRUCK_COST);
-            Actor truck = new Actor(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY);
+            Truck truck = new Truck(new Sprite(new Texture("bus.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY);
             truck.setX(35f);
             truck.setY(35f);
             localPlayer_.addTruck(truck);

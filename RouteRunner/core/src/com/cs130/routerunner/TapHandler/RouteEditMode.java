@@ -2,7 +2,7 @@ package com.cs130.routerunner.TapHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
-import com.cs130.routerunner.Actor;
+import com.cs130.routerunner.Actors.Actor;
 import com.cs130.routerunner.CoordinateConverter.CoordinateConverter;
 import com.cs130.routerunner.CoordinateConverter.CoordinateConverterAdapter;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;

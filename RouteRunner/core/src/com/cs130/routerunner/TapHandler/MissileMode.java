@@ -1,8 +1,9 @@
 package com.cs130.routerunner.TapHandler;
 
 import com.badlogic.gdx.Gdx;
-import com.cs130.routerunner.Actor;
-import com.cs130.routerunner.Missile;
+import com.cs130.routerunner.Actors.Actor;
+import com.cs130.routerunner.Actors.Missile;
+import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.Routes.Route;
 
 import java.util.ArrayList;
@@ -45,9 +46,9 @@ public class MissileMode implements TapMode {
     * Change actorSelected to tapped truck coordinates
     */
     private boolean tappedTruck(float x, float y) {
-        ArrayList<Actor> trucks_ = tapHandler_.gameMaster_.getTrucks();
+        ArrayList<Truck> trucks_ = tapHandler_.gameMaster_.getTrucks();
 
-        for (Actor truck: trucks_) {
+        for (Truck truck: trucks_) {
             if (truck.tryToTap(x, y)) {
                 Gdx.app.log("TruckTag", "Tapped Truck");
                 Gdx.app.log("TruckTag", truck.getX() + " " + truck.getY() + " " + x + " " + y + "\n");

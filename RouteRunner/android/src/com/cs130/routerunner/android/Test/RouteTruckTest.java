@@ -1,13 +1,10 @@
 package com.cs130.routerunner.android.Test;
 
-import android.test.AndroidTestCase;
 import android.test.InstrumentationTestCase;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.cs130.routerunner.Actor;
+
+import com.cs130.routerunner.Actors.Actor;
+import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.Routes.Route;
-import com.cs130.routerunner.TapHandler.TapHandler;
 
 import org.mockito.Mockito;
 /**
@@ -22,7 +19,7 @@ public class RouteTruckTest extends InstrumentationTestCase {
     public void test() throws Exception {
 
         Route route = new Route();
-        Actor truck = Mockito.mock(Actor.class);
+        Truck truck = Mockito.mock(Truck.class);
 
         Mockito.when(truck.hasStartedNewRoute()).thenReturn(false);
         Mockito.when(truck.getX()).thenReturn(5f);

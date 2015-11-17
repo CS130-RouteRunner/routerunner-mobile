@@ -1,5 +1,7 @@
 package com.cs130.routerunner;
 
+import com.cs130.routerunner.Actors.Truck;
+
 import java.util.ArrayList;
 
 /**
@@ -7,12 +9,12 @@ import java.util.ArrayList;
  */
 public class Player {
     private int money_;
-    private ArrayList<Actor> truckList_;
+    private ArrayList<Truck> truckList_;
     public PlayerButtonInfo playerButtonInfo_;
 
     public Player(int initialAmount){
         money_ = initialAmount;
-        truckList_ = new ArrayList<Actor>();
+        truckList_ = new ArrayList<Truck>();
     }
 
     public int getMoney(){
@@ -31,15 +33,15 @@ public class Player {
         money_ -= amount;
     }
 
-    public void addTruck(Actor truck){
+    public void addTruck(Truck truck){
         truckList_.add(truck);
     }
 
-    public ArrayList<Actor> getTruckList(){
+    public ArrayList<Truck> getTruckList(){
         return truckList_;
     }
 
-    public void setTruckList(ArrayList<Actor> newTruckList){
+    public void setTruckList(ArrayList<Truck> newTruckList){
         truckList_ = newTruckList;
     }
 
