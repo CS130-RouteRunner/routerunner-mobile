@@ -9,7 +9,7 @@ import com.cs130.routerunner.TapHandler.TapHandler;
  * Created by graceychin on 11/12/15.
  */
 public class Missile extends Actor {
-    private Actor targetTruck_;
+    private Truck targetTruck_;
 
     public Missile() {super();}
 
@@ -27,6 +27,6 @@ public class Missile extends Actor {
         }
     }
 
-    public void setTargetTruck(Actor t) {targetTruck_ = t;}
-    public Actor getTargetTruck() {return targetTruck_;}
+    public void setTargetTruck(Truck t) {targetTruck_ = t;}
+    public Truck getTargetTruck() {return targetTruck_;}
 }
