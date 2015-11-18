@@ -148,14 +148,8 @@ public class GameMaster implements Screen{
             previous = waypoint;
         }
 
-        for (Truck truck : localPlayer_.getTruckList()) {
-            if (truck.isEditRoute()) {
-                if (waypoints_.isEmpty())
-                    showRadius(shapeRenderer_, new Vector3(truck.getX(), truck.getY(), 0));
-                else
-                    showRadius(shapeRenderer_, waypoints_.get(waypoints_.size() - 1));
-            }
-        }
+        if(!waypoints_.isEmpty())
+            showRadius(shapeRenderer_, waypoints_.get(waypoints_.size() - 1));
 
         stage_.draw();
     }
@@ -333,9 +327,6 @@ public class GameMaster implements Screen{
 
     public void showRadius(ShapeRenderer shapeRenderer, Vector3 point){
         Gdx.app.log("GMshowRadius", "Enter showRadius()\n");
-        //shapeRenderer_ = new ShapeRenderer();
-        // need to match shaperender's projection matrix with spritebatch's
-        //shapeRenderer_.setProjectionMatrix(stage_.getBatch().getProjectionMatrix());
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.setColor(0, 1, 0, 0.2f);

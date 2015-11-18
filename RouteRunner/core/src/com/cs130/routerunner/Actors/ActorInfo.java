@@ -124,6 +124,7 @@ public class ActorInfo {
             buttonSaveRoute_.remove();
         if(buttonCancelSave_ != null && buttonCancelSave_.isVisible())
             buttonCancelSave_.remove();
+        lastClicked_ = ButtonType.NONE;
     }
 
     public void showAlert(String alertString){
@@ -148,7 +149,6 @@ public class ActorInfo {
             }
         });
         dialog.button(dbutton, true);
-        dialog.button(dbutton, false);
         dialog.invalidateHierarchy();
         dialog.invalidate();
         dialog.layout();
