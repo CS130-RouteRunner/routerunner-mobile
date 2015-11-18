@@ -55,10 +55,17 @@ public class Settings {
 
     // Spawn points
     public static final int SPAWN_POINT[][] = {{100, 100}, {1510, 1833}};
-
+    public static final String SPAWN_PNG[] = {"factory_blue.png",
+            "factory_red.png"};
     // Delivery points
-    public static final int DELIVERY_POINT[][] = {{1082, 1143},{1082, 1143}};
+    public static final int DELIVERY_POINT[][] = {{1082, 1143},{1120, 986}};
+    public static final String DELIVERY_PNG[] = {
+            "house_blue.png", "house_red.png"};
+
+    public static final String TRUCK_PNG[] = {"truck_blue.png", "truck_red" +
+            ".png"};
 
     // Setting flag for synchronized start game
     public static final boolean DEV_FLAG = false;
+
 }

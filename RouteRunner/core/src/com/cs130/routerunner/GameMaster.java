@@ -52,12 +52,14 @@ public class GameMaster implements Screen{
     private MessageCenter messageCenter_;
 
     private int framesSinceLastSync_;
+    private int localPlayerNum_;
+    private int opponentPlayerNum_;
     private BitmapFont font_;
 
     private CoordinateConverter coordConverter_;
 
     public GameMaster(RouteRunner game, MessageCenter messageCenter,
-                      int localPlayerNum_) {
+                      int localPlayerNum) {
         framesSinceLastSync_ = 0;
         this.messageCenter_ = messageCenter;
 
@@ -88,10 +90,12 @@ public class GameMaster implements Screen{
         PlayerButtonInfo playerButtonInfo = new PlayerButtonInfo(stage_, tapHandler_);
         playerButtonInfo.display();
 
-        localPlayer_ = new Player(Settings.INITIAL_MONEY, localPlayerNum_);
+        localPlayer_ = new Player(Settings.INITIAL_MONEY, localPlayerNum);
+        this.localPlayerNum_ = localPlayerNum;
         localPlayer_.setPlayerButtonInfo(playerButtonInfo);
+        this.opponentPlayerNum_ = 1 - localPlayerNum;
         opponentPlayer_ = new Player(Settings.INITIAL_MONEY,
-                1 - localPlayerNum_);
+                opponentPlayerNum_);
         players_ = new ArrayList<Player>();
         players_.add(localPlayer_);
         players_.add(opponentPlayer_);
@@ -131,15 +135,17 @@ public class GameMaster implements Screen{
         }
 
         for (Player player : players_) {
-            for (Truck truck : player.getTruckList()) {
-                drawSpriteCentered(truck, truck.getX(), truck.getY());
-            }
             Box spawnPoint = player.getSpawnPoint();
             drawSpriteCentered(spawnPoint.getSprite(), spawnPoint.getX(),
                     spawnPoint.getY());
+
             Box deliveryPoint = player.getDeliveryPoint();
             drawSpriteCentered(deliveryPoint.getSprite(), deliveryPoint.getX(),
                     deliveryPoint.getY());
+
+            for (Truck truck : player.getTruckList()) {
+                drawSpriteCentered(truck, truck.getX(), truck.getY());
+            }
         }
         for (Missile missile: missiles_) {
             drawSpriteCentered(missile, missile.getX(), missile.getY());
@@ -272,10 +278,12 @@ public class GameMaster implements Screen{
             for (Message m : result) {
                 Gdx.app.log("MessageTag", m.toString());
                 if (m.getType().equals("purchase")) {
-                    Truck truck = new Truck(new Sprite(new Texture("truck.png")), stage_, tapHandler_,
+                    String truckPng = Settings.TRUCK_PNG[opponentPlayerNum_];
+                    Truck truck = new Truck(new Sprite(new Texture(truckPng)),
+                            stage_, tapHandler_,
                             Settings.INITIAL_TRUCK_MONEY, opponentPlayer_);
-                    truck.setX(35f);
-                    truck.setY(35f);
+                    truck.setX(opponentPlayer_.getSpawnPoint().getX());
+                    truck.setY(opponentPlayer_.getSpawnPoint().getY());
 
                     opponentPlayer_.addTruck(truck);
                 } else if (m.getType().equals("route")) {
@@ -335,7 +343,9 @@ public class GameMaster implements Screen{
         //check if we can afford
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
             localPlayer_.subtractMoney(Settings.BUY_TRUCK_COST);
-            Truck truck = new Truck(new Sprite(new Texture("truck.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY, localPlayer_);
+            String truckPng = Settings.TRUCK_PNG[localPlayerNum_];
+            Truck truck = new Truck(new Sprite(new Texture(truckPng)), stage_,
+                    tapHandler_, Settings.INITIAL_TRUCK_MONEY, localPlayer_);
             truck.setX(localPlayer_.getSpawnPoint().getX());
             truck.setY(localPlayer_.getSpawnPoint().getY());
             Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
