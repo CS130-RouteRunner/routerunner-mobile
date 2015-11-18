@@ -11,19 +11,13 @@ public class ConcreteBoxFactory extends BoxFactory {
         Box newBox;
         switch(type) {
             case DeliveryPoint:
-                newBox = new DeliveryPoint(
-                        Settings.DELIVERY_POINT[playerNum][0],
-                        Settings.DELIVERY_POINT[playerNum][1]);
+                newBox = new DeliveryPoint(playerNum);
                 break;
             case SpawnPoint:
-                newBox = new SpawnPoint(
-                        Settings.SPAWN_POINT[playerNum][0],
-                        Settings.SPAWN_POINT[playerNum][1]);
+                newBox = new SpawnPoint(playerNum);
                 break;
             default:
-                newBox = new SpawnPoint(
-                        Settings.SPAWN_POINT[playerNum][0],
-                        Settings.SPAWN_POINT[playerNum][1]);
+                newBox = new SpawnPoint(playerNum);
         }
         return newBox;
     }
