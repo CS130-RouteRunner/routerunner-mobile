@@ -5,7 +5,7 @@ Android
 1. Download [Android Studio](https://developer.android.com/sdk/index.html)
 
 ## Setup Project
-1. Select `Import Project` in Android Studio and click the `build.gradle` at the top-level directory
+1. Select `Import Project` in Android Studio and click the `build.gradle` at the top-level directory, i.e. `routerunner-mobile/RouteRunner/build.gradle`
 2. Go to `SDK Manager` and add APK 21, Google Play Services 
 3. Click the green play button
 4. Android virtual device configuration
