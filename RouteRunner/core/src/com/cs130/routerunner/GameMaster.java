@@ -12,8 +12,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.cs130.routerunner.Actors.Box.Box;
 import com.cs130.routerunner.Actors.Missile;
 import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.CoordinateConverter.CoordinateConverter;
@@ -42,6 +42,7 @@ public class GameMaster implements Screen{
     private ShapeRenderer shapeRenderer_;
     private Player localPlayer_;
     private Player opponentPlayer_;
+    private List<Player> players_;
     private ArrayList<Missile> missiles_;
     private Batch hudBatch_;
 
@@ -55,7 +56,8 @@ public class GameMaster implements Screen{
 
     private CoordinateConverter coordConverter_;
 
-    public GameMaster(RouteRunner game, MessageCenter messageCenter) {
+    public GameMaster(RouteRunner game, MessageCenter messageCenter,
+                      int localPlayerNum_) {
         framesSinceLastSync_ = 0;
         this.messageCenter_ = messageCenter;
 
@@ -86,9 +88,13 @@ public class GameMaster implements Screen{
         PlayerButtonInfo playerButtonInfo = new PlayerButtonInfo(stage_, tapHandler_);
         playerButtonInfo.display();
 
-        localPlayer_ = new Player(Settings.INITIAL_MONEY);
+        localPlayer_ = new Player(Settings.INITIAL_MONEY, localPlayerNum_);
         localPlayer_.setPlayerButtonInfo(playerButtonInfo);
-        opponentPlayer_ = new Player(Settings.INITIAL_MONEY);
+        opponentPlayer_ = new Player(Settings.INITIAL_MONEY,
+                1 - localPlayerNum_);
+        players_ = new ArrayList<Player>();
+        players_.add(localPlayer_);
+        players_.add(opponentPlayer_);
 
         //setup missile arraylist
         missiles_ = new ArrayList<Missile>();
@@ -117,23 +123,21 @@ public class GameMaster implements Screen{
 
         stage_.getBatch().begin();
         mapSprite_.draw(stage_.getBatch());
-        for (Truck truck: localPlayer_.getTruckList()) {
-            drawSpriteCentered(truck, truck.getX(), truck.getY());
+        for (Player player : players_) {
+            for (Truck truck : player.getTruckList()) {
+                drawSpriteCentered(truck, truck.getX(), truck.getY());
+            }
+            Box spawnPoint = player.getSpawnPoint();
+            drawSpriteCentered(spawnPoint.getSprite(), spawnPoint.getX(),
+                    spawnPoint.getY());
+            Box deliveryPoint = player.getDeliveryPoint();
+            drawSpriteCentered(deliveryPoint.getSprite(), deliveryPoint.getX(),
+                    deliveryPoint.getY());
         }
-
-        // add rendering for opponent actor trucks
-        for (Truck truck: opponentPlayer_.getTruckList()) {
-            drawSpriteCentered(truck, truck.getX(), truck.getY());
-        }
-
         for (Missile missile: missiles_) {
             drawSpriteCentered(missile, missile.getX(), missile.getY());
         }
-//        for (Vector3 waypoint: waypoints_) {
-//            drawSpriteCentered(waypointSprite_, waypoint.x, waypoint.y);
-//        }
 
-        drawSpriteCentered(localPlayer_.getBase().getSprite(), localPlayer_.getBase().getX(), localPlayer_.getBase().getY());
         //TODO: rlau (draw opponent money)
         stage_.getBatch().end();
 
@@ -325,18 +329,18 @@ public class GameMaster implements Screen{
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
             localPlayer_.subtractMoney(Settings.BUY_TRUCK_COST);
             Truck truck = new Truck(new Sprite(new Texture("truck.png")), stage_, tapHandler_, Settings.INITIAL_TRUCK_MONEY, localPlayer_);
-            truck.setX(35f);
-            truck.setY(35f);
+            truck.setX(localPlayer_.getSpawnPoint().getX());
+            truck.setY(localPlayer_.getSpawnPoint().getY());
             Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
- 	        // Send message to other client
+            // Send message to other client
             JSONObject payload = new JSONObject();
             payload.put("item", "truck");
             payload.put("id", localPlayer_.getTruckID());
             localPlayer_.incTruckID_();
             localPlayer_.addTruck(truck);
             Message toSend = messageCenter_.createPurchaseMessage(messageCenter_.getUUID(), payload);
-            messageCenter_.sendMessage(toSend);            
-	        return true;
+            messageCenter_.sendMessage(toSend);
+            return true;
         }
         else
             return false;
