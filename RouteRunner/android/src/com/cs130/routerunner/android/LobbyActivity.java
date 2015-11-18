@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cs130.routerunner.Settings;
 import com.pubnub.api.*;
 import org.json.*;
 
@@ -27,6 +28,9 @@ public class LobbyActivity extends Activity {
     private String channel_;
 
     private ArrayList<String> playerList_;
+
+    private boolean opponentStart_;
+    private boolean selfStart_;
 
 
     @Override
@@ -60,6 +64,10 @@ public class LobbyActivity extends Activity {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("lobby-id",channel);
         setResult(RESULT_OK,returnIntent);
+
+        // Set default start to false
+        this.opponentStart_ = false;
+        this.selfStart_ = false;
     }
 
     /**
@@ -89,8 +97,15 @@ public class LobbyActivity extends Activity {
                                 }
 
                                 if (action.equals("state-change")) {
-                                    System.out.println("state is changed!");
-                                    enterGame();
+                                    if (!user.equals(pubnubHelper_.getUUID())) {
+                                        opponentStart_ = true;
+                                    }
+
+                                    if (selfStart_ && opponentStart_) {
+                                        System.out.println("state is changed!");
+                                        pubnubHelper_.setState();
+                                        enterGame();
+                                    }
                                 }
 
                             }
@@ -162,9 +177,14 @@ public class LobbyActivity extends Activity {
      * Starts the Routerunner game, e.g. opens up LibGDX engine
      */
     public void startGame(View view) {
-        ProgressDialog progress;
-        pubnubHelper_.setState();
-        progress = ProgressDialog.show(this, "Waiting for other players", "Please wait", true, true);
+        if (Settings.DEV_FLAG) {
+            selfStart_ = true;
+            pubnubHelper_.setState();
+            ProgressDialog progress = ProgressDialog.show(this, "Waiting for other players", "Please wait", true, true);
+        }
+        else
+            enterGame();
+
     }
 
     public void enterGame() {

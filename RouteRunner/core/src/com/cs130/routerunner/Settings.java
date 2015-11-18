@@ -58,4 +58,7 @@ public class Settings {
 
     // Delivery points
     public static final int DELIVERY_POINT[][] = {{1082, 1143},{1082, 1143}};
+
+    // Setting flag for synchronized start game
+    public static final boolean DEV_FLAG = false;
 }
