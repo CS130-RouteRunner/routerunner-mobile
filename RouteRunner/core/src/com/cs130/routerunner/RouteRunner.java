@@ -13,15 +13,17 @@ public class RouteRunner extends Game {
 	public SpriteBatch batch;
 	Texture img;
     private MessageCenter messageCenter_;
+	private int playerNum_;
 
-	public RouteRunner(MessageCenter messageCenter) {
+	public RouteRunner(MessageCenter messageCenter, int playerNum) {
 		this.messageCenter_ = messageCenter;
+		this.playerNum_ = playerNum;
     }
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new GameMaster(this, this.messageCenter_));
+		setScreen(new GameMaster(this, this.messageCenter_, this.playerNum_));
 	}
 
 	@Override

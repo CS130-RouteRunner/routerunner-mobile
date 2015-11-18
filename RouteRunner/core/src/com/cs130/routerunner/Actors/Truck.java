@@ -45,11 +45,16 @@ public class Truck extends Actor {
         }
     }
 
+    public void resetToSpawn() {
+        this.setX(player_.getSpawnPoint().getX());
+        this.setY(player_.getSpawnPoint().getY());
+    }
+
     //check if we are intersecting our player's base
     //if yes, then add money to the player
     //if no, then do not
     public void checkIntersectingBase(){
-        if (player_.getBase().overlaps(this.getBoundingRectangle()))
+        if (player_.getDeliveryPoint().overlaps(this.getBoundingRectangle()))
             player_.addMoney(this.getAmount());
     }
 

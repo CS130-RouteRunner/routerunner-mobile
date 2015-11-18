@@ -38,7 +38,7 @@ public class PubnubHelper implements MessageCenter {
         this.pubnub_.setUUID(username);
         this.messageList_ = new ArrayList<Message>();
         this.messageListLock_ = new ReentrantLock(false);
-
+        this.lastSyncTime_ = 0L;
         if (channel != null) {
             this.channel_ = channel;
             subscribeChannel(channel);
@@ -47,25 +47,25 @@ public class PubnubHelper implements MessageCenter {
         this.getMessagesCallback_ = new Callback() {
             public void successCallback(String channel, Object response) {
                 try {
-                    System.out.println("This is the response: " + response.toString());
                     JSONArray jarr = (JSONArray) response;
                     ArrayList<Message> messages = new ArrayList<Message>();
                     JSONArray data = (JSONArray) jarr.get(0);
-                    lastSyncTime_ = Long.parseLong(jarr.getString(2));
+                    long oldestTimeToken = Long.parseLong(jarr.getString(1));
+                    long newestTimeToken = Long.parseLong(jarr.getString(2));
+                    lastSyncTime_ = newestTimeToken > lastSyncTime_ ? newestTimeToken : lastSyncTime_;
                     for (int idx = 0; idx < data.length(); idx++) {
                         JSONObject m = (JSONObject) data.get(idx);
-                        System.out.println("------Curr message--------");
-                        System.out.println(m.toString());
+                        // System.out.println("------Curr message--------");
+                        // System.out.println(m.toString());
                         if (!m.getString("uid").equals(getUUID())) {
                             messages.add(new Message(m));
-                            System.out.println("Size: " + String.valueOf(messages.size()));
                         }
                     }
                     // Clear the messageList_ before adding new ones
                     messageListLock_.lock();
                     messageList_.addAll(messages);
                     messageListLock_.unlock();
-                    System.out.println("Size of messageList_: " + String.valueOf(messageList_.size()));
+                    // System.out.println("Size of messageList_: " + String.valueOf(messageList_.size()));
                 } catch (Exception e) {
                     System.out.println(e.toString());
                 }
@@ -139,7 +139,7 @@ public class PubnubHelper implements MessageCenter {
     public void sendMessage(Message message) {
         Callback callback = new Callback() {
             public void successCallback(String channel, Object response) {
-                //System.out.println(response.toString());
+                // System.out.println("Sent: " + response.toString());
             }
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error.toString());

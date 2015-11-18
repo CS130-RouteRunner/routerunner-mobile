@@ -14,6 +14,7 @@ public class Message {
     private String item_;
     private String uid_;
     private List<LatLngPoint> coords_;
+    private Integer itemId_;
 
     /**
      * Constructs a Message object based on the JSONObject passed in
@@ -24,6 +25,7 @@ public class Message {
             type_ = obj.getString("type");
             uid_ = obj.getString("uid");
             JSONObject data = obj.getJSONObject("data");
+            itemId_ = data.getInt("id");
             if (type_.equals("purchase")) {
                 item_ = data.getString("item");
                 coords_ = null;
@@ -57,6 +59,7 @@ public class Message {
         json.put("type", type_);
 
         JSONObject data = new JSONObject();
+        data.put("id", itemId_);
         if (type_.equals("purchase")) {
             data.put("item", item_);
         }
@@ -95,6 +98,12 @@ public class Message {
      * @return
      */
     public List<LatLngPoint> getCoords() { return coords_; }
+
+    /**
+     * Gets the item ID
+     * @return
+     */
+    public Integer getItemId() { return itemId_; }
 
     /**
      * Stringifies a Message object

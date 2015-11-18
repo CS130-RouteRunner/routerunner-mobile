@@ -42,8 +42,7 @@ public class Route {
             truck.checkIntersectingBase();
 
             currWayPointIndex_ = 0;
-            truck.setX(0f);
-            truck.setY(0f);
+            truck.resetToSpawn();
             truck.setMovementVectorToNextWaypoint(wayPoints_.get(currWayPointIndex_).x, wayPoints_.get(currWayPointIndex_).y);
 
             return true;
