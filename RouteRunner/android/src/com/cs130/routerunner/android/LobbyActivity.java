@@ -159,6 +159,7 @@ public class LobbyActivity extends Activity {
     public void startGame(View view) {
         Intent routeRunner = new Intent(this, AndroidLauncher.class);
         routeRunner.putExtra("username", pubnubHelper_.getUUID());
+        routeRunner.putExtra("playerNum", 0);
         routeRunner.putExtra("lobby-id", channel_);
         startActivity(routeRunner);
     }

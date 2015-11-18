@@ -51,4 +51,10 @@ public class Settings {
     public static final int INITIAL_MONEY = 100000;
     public static final int INITIAL_TRUCK_MONEY = 50;
     public static final int BUY_TRUCK_COST = 100;
+
+    // Spawn points
+    public static final int SPAWN_POINT[][] = {{100, 100}, {1510, 1833}};
+
+    // Delivery points
+    public static final int DELIVERY_POINT[][] = {{1082, 1143},{1082, 1143}};
 }

@@ -1,10 +1,13 @@
 package com.cs130.routerunner;
 
-import com.cs130.routerunner.Actors.Base;
+import com.cs130.routerunner.Actors.Box.Box;
+import com.cs130.routerunner.Actors.Box.BoxFactory;
+import com.cs130.routerunner.Actors.Box.BoxType;
+import com.cs130.routerunner.Actors.Box.ConcreteBoxFactory;
+import com.cs130.routerunner.Actors.Box.DeliveryPoint;
 import com.cs130.routerunner.Actors.Truck;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Patrick on 11/15/2015.
@@ -12,20 +15,27 @@ import java.util.HashMap;
 public class Player {
     private int money_;
     private ArrayList<Truck> truckList_;
-    private Base base_;
+    private Box deliveryPoint_;
+    private Box spawnPoint_;
+    private int playerNum_;
     public PlayerButtonInfo playerButtonInfo_;
 
     private int truckID_;
 
-    public Player(int initialAmount){
+    public Player(int initialAmount, int playerNum){
         truckID_ = 0;
         money_ = initialAmount;
         truckList_ = new ArrayList<Truck>();
+        playerNum_ = playerNum;
         //TODO: change to real player base position
-        base_ = new Base(500, 500);
+        BoxFactory boxFactory = new ConcreteBoxFactory();
+        deliveryPoint_ = boxFactory.createBox(BoxType.DeliveryPoint,
+                playerNum_);
+        spawnPoint_ = boxFactory.createBox(BoxType.SpawnPoint, playerNum_);
     }
 
-    public Base getBase(){ return base_;};
+    public Box getSpawnPoint() { return spawnPoint_;}
+    public Box getDeliveryPoint(){ return deliveryPoint_;}
     public int getMoney(){
         return money_;
     }
