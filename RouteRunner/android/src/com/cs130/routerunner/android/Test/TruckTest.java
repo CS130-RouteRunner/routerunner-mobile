@@ -8,7 +8,7 @@ import com.cs130.routerunner.Actors.Truck;
 /**
  * Created by Roger on 11/11/2015.
  */
-public class ActorTest extends InstrumentationTestCase {
+public class TruckTest extends InstrumentationTestCase {
 
     public void test() {
 
