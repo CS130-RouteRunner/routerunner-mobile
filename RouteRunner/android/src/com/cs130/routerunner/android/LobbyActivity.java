@@ -182,7 +182,7 @@ public class LobbyActivity extends Activity {
      * Starts the Routerunner game, e.g. opens up LibGDX engine
      */
     public void startGame(View view) {
-        if (Settings.DEV_FLAG) {
+        if (Settings.WAIT_FOR_PLAYERS) {
             selfStart_ = true;
             pubnubHelper_.setState();
             ProgressDialog progress = ProgressDialog.show(this, "Waiting for other players", "Please wait", true, true);
@@ -195,9 +195,23 @@ public class LobbyActivity extends Activity {
     public void enterGame() {
         Intent routeRunner = new Intent(this, AndroidLauncher.class);
         routeRunner.putExtra("username", pubnubHelper_.getUUID());
-        routeRunner.putExtra("playerNum", 0);
+        routeRunner.putExtra("playerNum", getPlayerID());
         routeRunner.putExtra("lobby-id", channel_);
         startActivity(routeRunner);
+    }
+
+    private int getPlayerID() {
+        assert playerList_.size() == 2;
+        // just assume opponent entered lobby first, fix it if it isn't the case
+        String opponentName = playerList_.get(0);
+        if(opponentName.equals(username_)) {
+            opponentName = playerList_.get(1);
+        }
+        int comparison = username_.compareTo(opponentName);
+        System.out.println("username: " + username_);
+        int playerID = comparison == -1 ? 0 : 1;
+        System.out.println("playerID: " + playerID);
+        return playerID;
     }
 
 }

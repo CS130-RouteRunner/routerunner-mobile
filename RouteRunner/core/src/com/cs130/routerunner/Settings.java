@@ -49,7 +49,7 @@ public class Settings {
     public static final int FRAMES_BETWEEN_SYNC = 10;
 
     // Game Mechanics
-    public static final int INITIAL_MONEY = 100000;
+    public static final int INITIAL_MONEY = 500;
     public static final int INITIAL_TRUCK_MONEY = 50;
     public static final int BUY_TRUCK_COST = 100;
     public static final int BUY_MISSILE_COST = 200;
@@ -67,6 +67,6 @@ public class Settings {
             ".png"};
 
     // Setting flag for synchronized start game
-    public static final boolean DEV_FLAG = false;
+    public static final boolean WAIT_FOR_PLAYERS = false;
 
 }
