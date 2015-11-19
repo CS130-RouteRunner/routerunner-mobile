@@ -55,8 +55,9 @@ public class LobbyActivity extends Activity {
         subscribePresence(channel);
 
         // Get players
-        getPlayers();
-        this.playerList_ = new ArrayList<String>();
+        getPlayers(channel);
+        if(this.playerList_ == null)
+            this.playerList_ = new ArrayList<String>();
         this.playerAdapter_ = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.playerList_);
         this.listView_.setAdapter(this.playerAdapter_);
 
@@ -128,7 +129,7 @@ public class LobbyActivity extends Activity {
      * Retrieves a list of players currently in lobby.
      * @return
      */
-    private void getPlayers() {
+    private void getPlayers(String channel) {
         Callback hereCallback = new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
@@ -150,8 +151,12 @@ public class LobbyActivity extends Activity {
                         // TODO: Dunno why this doesn't work, look at it later
                         public void run() {
                             //playerList_ = new ArrayList<String>(players);
-                            //playerAdapter_.notifyDataSetChanged();
-                            //System.out.println(playerList_);
+                            for(String player: players) {
+                                if(!playerList_.contains(player)) {
+                                    playerList_.add(player);
+                                    playerAdapter_.notifyDataSetChanged();
+                                }
+                            }
                         }
 
                     });
@@ -166,7 +171,7 @@ public class LobbyActivity extends Activity {
             }
          };
         try {
-            pubnubHelper_.hereNow(channel_, hereCallback);
+            pubnubHelper_.hereNow(channel, hereCallback);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
