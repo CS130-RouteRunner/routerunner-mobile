@@ -12,7 +12,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.cs130.routerunner.Actors.Box.Box;
 import com.cs130.routerunner.Actors.Missile;
 import com.cs130.routerunner.Actors.Truck;
@@ -37,6 +44,7 @@ public class GameMaster implements Screen{
     private RouteRunner game_;
     private MapCamera camera_;
     private TapHandler tapHandler_;
+    private Skin skin_;
     private Sprite mapSprite_;
     private Stage stage_;
     private ShapeRenderer shapeRenderer_;
@@ -71,6 +79,11 @@ public class GameMaster implements Screen{
         this.game_ = game;
         //setup touch stuff
         tapHandler_ = new TapHandler(this);
+
+        //setup skin
+        skin_ = new Skin(Gdx.files.internal("uiskin.json"));
+        skin_.getFont("default-font").getData().setScale(2.00f, 2.00f);
+
 
         //setup some map related things
         mapSprite_ = new Sprite(new Texture(Gdx.files.internal
@@ -243,7 +256,7 @@ public class GameMaster implements Screen{
                     // TODO(Grace): fix this to be opponentPlayer when we
                     // update the game to only allow targeting on opponent
                     // trucks
-                    localPlayer_.getTruckList().remove(missile.getTargetTruck());
+                    opponentPlayer_.getTruckList().remove(missile.getTargetTruck());
                     missiles_.remove(missile);
                 }
             }
@@ -314,6 +327,8 @@ public class GameMaster implements Screen{
 
     public ArrayList<Truck> getTrucks() { return localPlayer_.getTruckList(); }
 
+    public ArrayList<Truck> getOpponentTrucks() {return opponentPlayer_.getTruckList(); }
+
     public ArrayList<Missile> getMissiles() { return missiles_; }
 
 
@@ -365,8 +380,8 @@ public class GameMaster implements Screen{
 
     public Missile buyMissile(){
         Missile missile = new Missile(new Sprite(new Texture("missile.png")), stage_, tapHandler_);
-        missile.setX(35f);
-        missile.setY(35f);
+        missile.setX(localPlayer_.getSpawnPoint().getX());
+        missile.setY(localPlayer_.getSpawnPoint().getY());
         missiles_.add(missile);
         Gdx.app.log("BoughtMissile", "Bought Missile!");
         return missile;
@@ -399,5 +414,33 @@ public class GameMaster implements Screen{
     public ArrayList<Vector3> getWayPoints() {
         return this.waypoints_;
 
+    }
+
+    public void showAlert(String alertString){
+        Label label = new Label(alertString, skin_);
+        label.setWrap(true);
+        label.setFontScale(1.6f);
+        label.setAlignment(Align.center);
+
+        final Dialog dialog = new Dialog("", skin_) {
+            @Override
+            public float getPrefWidth() { return 600f; }
+
+            @Override
+            public float getPrefHeight() { return 200f; }
+        };
+        dialog.getContentTable().add(label);
+
+        TextButton dbutton = new TextButton("OK", skin_);
+        dbutton.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) {
+                dialog.remove();
+            }
+        });
+        dialog.button(dbutton, true);
+        dialog.invalidateHierarchy();
+        dialog.invalidate();
+        dialog.layout();
+        dialog.show(stage_);
     }
 }

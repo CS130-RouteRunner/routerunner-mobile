@@ -14,23 +14,24 @@ import java.util.ArrayList;
 public class MissileMode implements TapMode {
     Missile selectedActor_;
     TapHandler tapHandler_;
-    Route newRoute_;
 
     public MissileMode(TapHandler tapHandler) {
         this.tapHandler_ = tapHandler;
     }
 
     public void Init() {
-        newRoute_ = new Route();
+        tapHandler_.gameMaster_.showAlert("Select an opponent's truck to attack");
     }
 
     public void Tap(float x, float y, int count) {
         Gdx.app.log("TapTag", "Tapped Location " + x + " " + y + "\n");
-        if (tappedTruck(x, y)) {
+        if (tappedOpponentTruck(x, y)) {
             Gdx.app.log("TapTag", "Tapped Truck To Set Target" + x + " " + y + "\n");
             tapHandler_.curMode_ = tapHandler_.normalMode_;
             tapHandler_.gameMaster_.getLocalPlayerButtonInfo().display();
-            //font_.dispose();
+        } else {
+            // If user does not tap an opponent's truck
+            tapHandler_.gameMaster_.showAlert("Please choose an opponent's truck to attack");
         }
     }
     public void SetSelectedActor(Actor a) {
@@ -45,8 +46,8 @@ public class MissileMode implements TapMode {
     * Loop on all trucks, return true if tap collides with truck location
     * Change actorSelected to tapped truck coordinates
     */
-    private boolean tappedTruck(float x, float y) {
-        ArrayList<Truck> trucks_ = tapHandler_.gameMaster_.getTrucks();
+    private boolean tappedOpponentTruck(float x, float y) {
+        ArrayList<Truck> trucks_ = tapHandler_.gameMaster_.getOpponentTrucks();
 
         for (Truck truck: trucks_) {
             if (truck.tryToTap(x, y)) {
@@ -56,6 +57,7 @@ public class MissileMode implements TapMode {
                 return true;
             }
         }
+
         return false;
     }
 }

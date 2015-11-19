@@ -237,6 +237,8 @@ public class PubnubHelper implements MessageCenter {
         return new Message(msg);
     }
 
+
+
     public void setState()  {
         Callback callback = new Callback() {
             public void successCallback(String channel, Object response) {

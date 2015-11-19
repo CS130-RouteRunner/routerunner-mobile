@@ -127,34 +127,6 @@ public class ActorInfo {
         lastClicked_ = ButtonType.NONE;
     }
 
-    public void showAlert(String alertString){
-        Label label = new Label(alertString, skin_);
-        label.setWrap(true);
-        label.setFontScale(1.6f);
-        label.setAlignment(Align.center);
-
-        final Dialog dialog = new Dialog("", skin_) {
-            @Override
-            public float getPrefWidth() { return 600f; }
-
-            @Override
-            public float getPrefHeight() { return 200f; }
-        };
-        dialog.getContentTable().add(label);
-
-        TextButton dbutton = new TextButton("OK", skin_);
-        dbutton.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y) {
-                dialog.remove();
-            }
-        });
-        dialog.button(dbutton, true);
-        dialog.invalidateHierarchy();
-        dialog.invalidate();
-        dialog.layout();
-        dialog.show(stage_);
-    }
-
     public boolean isEditRoute() { return lastClicked_.equals(ButtonType.EDIT_ROUTE); }
 
     public boolean isSnapRoute() { return lastClicked_.equals(ButtonType.SNAP_ROUTE); }
