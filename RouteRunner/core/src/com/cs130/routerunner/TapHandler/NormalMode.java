@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.cs130.routerunner.Actors.*;
 import com.cs130.routerunner.Actors.Missile;
 import com.cs130.routerunner.Routes.*;
+import com.cs130.routerunner.Settings;
 
 import java.util.ArrayList;
 
@@ -56,11 +57,20 @@ public class NormalMode implements TapMode {
         else if (tappedBuyMissile(x, y)) {
             Gdx.app.log("TapTag", "Tapped to Buy a Missile " + x + " " + y + "\n");
             //Missile m = tapHandler_.gameMaster_.buyMissile();
-            Missile m = tapHandler_.gameMaster_.buyMissile();
-            tapHandler_.gameMaster_.getLocalPlayerButtonInfo().hide();
-            tapHandler_.curMode_ = tapHandler_.missileMode_;
-            tapHandler_.curMode_.Init();
-            tapHandler_.curMode_.SetSelectedActor(m);
+            if (!tapHandler_.gameMaster_.getOpponentTrucks().isEmpty()) {
+                if (tapHandler_.gameMaster_.getLocalPlayer().getMoney() >= Settings.BUY_MISSILE_COST) {
+                    tapHandler_.gameMaster_.getLocalPlayer().subtractMoney(Settings.BUY_MISSILE_COST);
+                    Missile m = tapHandler_.gameMaster_.buyMissile();
+                    tapHandler_.gameMaster_.getLocalPlayerButtonInfo().hide();
+                    tapHandler_.curMode_ = tapHandler_.missileMode_;
+                    tapHandler_.missileMode_.Init();
+                    tapHandler_.missileMode_.SetSelectedActor(m);
+                } else {
+                    tapHandler_.gameMaster_.showAlert("Insufficient Funds");
+                }
+            } else {
+                tapHandler_.gameMaster_.showAlert("Opponent does not have any trucks to attack");
+            }
         }
         else {
             // do nothing for now.

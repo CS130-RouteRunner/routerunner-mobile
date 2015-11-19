@@ -123,7 +123,7 @@ public abstract class Actor extends Sprite {
     }
 
     public void showAlert(String string){
-        actorInfo_.showAlert(string);
+        tapHandler_.getGameMaster().showAlert(string);
     }
 
 }
