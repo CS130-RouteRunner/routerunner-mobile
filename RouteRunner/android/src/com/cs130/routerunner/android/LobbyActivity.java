@@ -213,7 +213,7 @@ public class LobbyActivity extends Activity {
         System.out.println("username: " + username_);
         System.out.println("opponent: " + opponentName);
         System.out.println("comparison: " + comparison);
-        int playerID = comparison == -1 ? 0 : 1;
+        int playerID = comparison < 0 ? 0 : 1;
         System.out.println("playerID: " + playerID);
         return playerID;
     }
