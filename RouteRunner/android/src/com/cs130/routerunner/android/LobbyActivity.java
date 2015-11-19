@@ -201,7 +201,9 @@ public class LobbyActivity extends Activity {
     }
 
     private int getPlayerID() {
-        assert playerList_.size() == 2;
+        if (playerList_.size() != 2) {
+            return 0;
+        }
         // just assume opponent entered lobby first, fix it if it isn't the case
         String opponentName = playerList_.get(0);
         if(opponentName.equals(username_)) {
@@ -209,6 +211,8 @@ public class LobbyActivity extends Activity {
         }
         int comparison = username_.compareTo(opponentName);
         System.out.println("username: " + username_);
+        System.out.println("opponent: " + opponentName);
+        System.out.println("comparison: " + comparison);
         int playerID = comparison == -1 ? 0 : 1;
         System.out.println("playerID: " + playerID);
         return playerID;
