@@ -142,10 +142,10 @@ public class GameMaster implements Screen{
 
         stage_.getBatch().begin();
         mapSprite_.draw(stage_.getBatch());
-        for (Truck truck: localPlayer_.getTruckList()) {
+        /*for (Truck truck: localPlayer_.getTruckList()) {
             drawSpriteCentered(truck, truck.getX(), truck.getY());
             //if(truck.isEditRoute())
-        }
+        }*/
 
         for (Player player : players_) {
             Box spawnPoint = player.getSpawnPoint();
@@ -157,7 +157,8 @@ public class GameMaster implements Screen{
                     deliveryPoint.getY());
 
             for (Truck truck : player.getTruckList()) {
-                drawSpriteCentered(truck, truck.getX(), truck.getY());
+                if (!truck.getTombStoned())
+                    drawSpriteCentered(truck, truck.getX(), truck.getY());
             }
         }
         for (Missile missile: missiles_) {
@@ -312,8 +313,11 @@ public class GameMaster implements Screen{
                         truck.setY(opponentPlayer_.getSpawnPoint().getY());
 
                         opponentPlayer_.addTruck(truck);
-                    } else if (m.getItem().equals("missle")) {
-
+                    } else if (m.getItem().equals("missile")) {
+                        int truckID = m.getItemId();
+                        Truck target = localPlayer_.getTruckList().get(truckID);
+                        target.setTombStoned_(true);
+                        Gdx.app.log("MessageTag", String.valueOf(truckID));
                     }
 
                 } else if (m.getType().equals("route")) {

@@ -148,9 +148,7 @@ public class LobbyActivity extends Activity {
                     }
                     LobbyActivity.this.runOnUiThread(new Runnable() {
                         @Override
-                        // TODO: Dunno why this doesn't work, look at it later
                         public void run() {
-                            //playerList_ = new ArrayList<String>(players);
                             for(String player: players) {
                                 if(!playerList_.contains(player)) {
                                     playerList_.add(player);

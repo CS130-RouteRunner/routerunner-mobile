@@ -12,6 +12,7 @@ import com.cs130.routerunner.TapHandler.TapHandler;
 public class Truck extends Actor {
     private int amountCarrying_;
     private Player player_;
+    private boolean tombStoned_;
 
     public Truck(){
         super();
@@ -19,6 +20,7 @@ public class Truck extends Actor {
 
     public Truck (Sprite sprite, Stage stage, TapHandler tapHandler, Player player){
         this(sprite, stage, tapHandler, 0, player);
+        tombStoned_ = false;
     }
 
     public Truck (Sprite sprite, Stage stage, TapHandler tapHandler, int initialMoney, Player player){
@@ -27,6 +29,7 @@ public class Truck extends Actor {
         actorInfo_ = new ActorInfo(stage, tapHandler);
         amountCarrying_ = initialMoney;
         player_ = player;
+        tombStoned_ = false;
     }
 
     public void move() {
@@ -61,4 +64,8 @@ public class Truck extends Actor {
     public int getAmount(){
         return amountCarrying_;
     }
+
+    public boolean getTombStoned() { return tombStoned_; }
+
+    public void setTombStoned_(boolean tombStoned_) { this.tombStoned_ = tombStoned_; }
 }
