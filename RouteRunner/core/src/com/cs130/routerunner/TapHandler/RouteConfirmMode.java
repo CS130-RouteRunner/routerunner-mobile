@@ -49,6 +49,8 @@ public class RouteConfirmMode implements TapMode {
             selectedActor_.setRoute(snappedRoute_);
 
             ArrayList<Vector3> waypoints = tapHandler_.gameMaster_.getWayPoints();
+
+            // Prepare Route message
             JSONObject data = new JSONObject();
             String coords = "";
 
@@ -64,6 +66,7 @@ public class RouteConfirmMode implements TapMode {
             data.put("id", truckId);
             Gdx.app.log("RCTag", "selected truck id :" + Integer.toString(truckId));
 
+            // Send message
             Message toSend = messageCenter_.createRouteMessage(messageCenter_.getUUID(), data);
             messageCenter_.sendMessage(toSend);
         } else if (selectedActor_.isCancelSave()) {

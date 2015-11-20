@@ -6,6 +6,7 @@ import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.Message;
 import com.cs130.routerunner.MessageCenter;
 import com.cs130.routerunner.Routes.Route;
+import com.cs130.routerunner.Settings;
 
 import org.json.JSONObject;
 
@@ -41,14 +42,15 @@ public class ActorSelectedMode implements TapMode {
 
             this.selectedActor_.setPaused(true);
 
-            Gdx.app.log("ASTag", "Constructing JSONObject");
+            // Prepare Truck pause Message
             JSONObject data = new JSONObject();
             ArrayList<Truck> trucks = tapHandler_.gameMaster_.getLocalPlayer().getTruckList();
-            Gdx.app.log("TruckSizeTag", String.valueOf(trucks.size()));
             int truckID = trucks.indexOf(this.selectedActor_);
             Gdx.app.log("TruckIDTag", String.valueOf(truckID));
             data.put("id", truckID);
-            data.put("item", "truck");
+            data.put("item", Settings.TRUCK_ITEM);
+
+            // Send Message
             Message msgToSend = messageCenter_.createUpdateMessage(messageCenter_.getUUID(), data);
             messageCenter_.sendMessage(msgToSend);
 

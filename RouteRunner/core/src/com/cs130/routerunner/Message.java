@@ -60,7 +60,7 @@ public class Message {
 
         JSONObject data = new JSONObject();
         data.put("id", itemId_);
-        if (type_.equals("purchase") || type_.equals("update")) {
+        if (type_.equals(Settings.PURCHASE_TYPE) || type_.equals(Settings.UPDATE_TYPE)) {
             data.put("item", item_);
         }
         else {
@@ -111,7 +111,7 @@ public class Message {
      */
     public String toString() {
         String data;
-        if (type_.equals("purchase") || type_.equals("update")) {
+        if (type_.equals(Settings.PURCHASE_TYPE) || type_.equals(Settings.UPDATE_TYPE)) {
             data = "{item:" + item_ + "}";
         } else {
             String coords = "";

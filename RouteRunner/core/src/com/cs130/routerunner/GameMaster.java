@@ -142,10 +142,6 @@ public class GameMaster implements Screen{
 
         stage_.getBatch().begin();
         mapSprite_.draw(stage_.getBatch());
-        /*for (Truck truck: localPlayer_.getTruckList()) {
-            drawSpriteCentered(truck, truck.getX(), truck.getY());
-            //if(truck.isEditRoute())
-        }*/
 
         for (Player player : players_) {
             Box spawnPoint = player.getSpawnPoint();
@@ -256,7 +252,7 @@ public class GameMaster implements Screen{
                          && Math.abs(missile.getY() - missile.getTargetTruck().getY()) < tolerance) {
                     // Prepare missile message
                     JSONObject data = new JSONObject();
-                    data.put("item", "missile");
+                    data.put("item", Settings.MISSILE_ITEM);
                     Truck target = missile.getTargetTruck();
                     ArrayList<Truck> trucks = opponentPlayer_.getTruckList();
                     int truckId = trucks.indexOf(target);
@@ -268,7 +264,7 @@ public class GameMaster implements Screen{
                     messageCenter_.sendMessage(toSend);
 
                     // Cleanup
-                    opponentPlayer_.getTruckList().remove(missile.getTargetTruck());
+                    missile.getTargetTruck().setTombStoned_(true);
                     missiles_.remove(missile);
                 }
             }
@@ -297,14 +293,14 @@ public class GameMaster implements Screen{
 
     public void syncGame() {
         List<Message> result = messageCenter_.getMessages(messageCenter_.getLastSyncTime());
-        Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
+       // Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
         if (result != null && !result.isEmpty()) {
-            Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
+            //Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
             for (Message m : result) {
                 Gdx.app.log("MessageTag", m.toString());
-                if (m.getType().equals("purchase")) {
+                if (m.getType().equals(Settings.PURCHASE_TYPE)) {
                     // If opponent bought a truck
-                    if (m.getItem().equals("truck")) {
+                    if (m.getItem().equals(Settings.TRUCK_ITEM)) {
                         String truckPng = Settings.TRUCK_PNG[opponentPlayerNum_];
                         Truck truck = new Truck(new Sprite(new Texture(truckPng)),
                                 stage_, tapHandler_,
@@ -313,14 +309,14 @@ public class GameMaster implements Screen{
                         truck.setY(opponentPlayer_.getSpawnPoint().getY());
 
                         opponentPlayer_.addTruck(truck);
-                    } else if (m.getItem().equals("missile")) {
+                    } else if (m.getItem().equals(Settings.MISSILE_ITEM)) {
                         int truckID = m.getItemId();
                         Truck target = localPlayer_.getTruckList().get(truckID);
                         target.setTombStoned_(true);
                         Gdx.app.log("MessageTag", String.valueOf(truckID));
                     }
 
-                } else if (m.getType().equals("route")) {
+                } else if (m.getType().equals(Settings.ROUTE_TYPE)) {
                     Truck truck = opponentPlayer_.getTruckList().get(m.getItemId());
                     List<LatLngPoint> points = m.getCoords();
                     Route r = new Route();
@@ -334,7 +330,7 @@ public class GameMaster implements Screen{
                     }
                     truck.setRoute(r);
                     truck.setPaused(false);
-                } else if (m.getType().equals("update")) {
+                } else if (m.getType().equals(Settings.UPDATE_TYPE)) {
                     int truckID = m.getItemId();
                     Truck target = opponentPlayer_.getTruckList().get(truckID);
                     target.setPaused(true);
@@ -357,7 +353,6 @@ public class GameMaster implements Screen{
     public ArrayList<Truck> getOpponentTrucks() {return opponentPlayer_.getTruckList(); }
 
     public ArrayList<Missile> getMissiles() { return missiles_; }
-
 
     //TODO(juliany): clean this up to use routes or soemthing.
     public void setWaypoints(ArrayList<Vector3> waypoints) {
@@ -393,7 +388,7 @@ public class GameMaster implements Screen{
             Gdx.app.log("BoughtTruck", "Bought truck! Now: " + localPlayer_.getTruckList().size() + " trucks!");
             // Send message to other client
             JSONObject payload = new JSONObject();
-            payload.put("item", "truck");
+            payload.put("item", Settings.TRUCK_ITEM);
             payload.put("id", localPlayer_.getTruckID());
             localPlayer_.incTruckID_();
             localPlayer_.addTruck(truck);

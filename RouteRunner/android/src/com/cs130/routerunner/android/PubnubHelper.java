@@ -157,7 +157,7 @@ public class PubnubHelper implements MessageCenter {
      * @return list of Message (possibly null)
      */
     public List<Message> getMessages(long timeToken) {
-        System.out.println(timeToken);
+        // System.out.println(timeToken);
         List<Message> snapshotList = null;
         // use a tryLock() so that getMessages() will return fast
         if (messageListLock_.tryLock()) {

@@ -69,4 +69,11 @@ public class Settings {
     // Setting flag for synchronized start game
     public static final boolean WAIT_FOR_PLAYERS = false;
 
+    // Message constants
+    public static final String PURCHASE_TYPE = "purchase";
+    public static final String ROUTE_TYPE = "route";
+    public static final String UPDATE_TYPE = "update";
+    public static final String TRUCK_ITEM = "truck";
+    public static final String MISSILE_ITEM = "missile";
+
 }
