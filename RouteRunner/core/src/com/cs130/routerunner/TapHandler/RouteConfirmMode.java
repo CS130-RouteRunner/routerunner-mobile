@@ -60,9 +60,9 @@ public class RouteConfirmMode implements TapMode {
             coords += coordinateConverter_.px2ll(waypoints.get(waypoints.size()-1));
             data.put("coords", coords);
             ArrayList<Truck> trucks = tapHandler_.gameMaster_.getLocalPlayer().getTruckList();
-            int id = trucks.indexOf(selectedActor_);
-            data.put("id", id);
-            Gdx.app.log("RCTag", "selected truck id :" + Integer.toString(id));
+            int truckId = trucks.indexOf(selectedActor_);
+            data.put("id", truckId);
+            Gdx.app.log("RCTag", "selected truck id :" + Integer.toString(truckId));
 
             Message toSend = messageCenter_.createRouteMessage(messageCenter_.getUUID(), data);
             messageCenter_.sendMessage(toSend);

@@ -253,9 +253,20 @@ public class GameMaster implements Screen{
                 float tolerance = Settings.MISSILE_MOVEMENT / Settings.EPSILON * Gdx.graphics.getDeltaTime();
                 if (Math.abs(missile.getX() - missile.getTargetTruck().getX()) < tolerance
                          && Math.abs(missile.getY() - missile.getTargetTruck().getY()) < tolerance) {
-                    // TODO(Grace): fix this to be opponentPlayer when we
-                    // update the game to only allow targeting on opponent
-                    // trucks
+                    // Prepare missile message
+                    JSONObject data = new JSONObject();
+                    data.put("item", "missile");
+                    Truck target = missile.getTargetTruck();
+                    ArrayList<Truck> trucks = opponentPlayer_.getTruckList();
+                    int truckId = trucks.indexOf(target);
+                    data.put("id", truckId);
+                    Gdx.app.log("TargetTruckTag", "selected truck:" + Integer.toString(truckId));
+
+                    // Send it
+                    Message toSend = messageCenter_.createPurchaseMessage(messageCenter_.getUUID(), data);
+                    messageCenter_.sendMessage(toSend);
+
+                    // Cleanup
                     opponentPlayer_.getTruckList().remove(missile.getTargetTruck());
                     missiles_.remove(missile);
                 }
@@ -291,14 +302,20 @@ public class GameMaster implements Screen{
             for (Message m : result) {
                 Gdx.app.log("MessageTag", m.toString());
                 if (m.getType().equals("purchase")) {
-                    String truckPng = Settings.TRUCK_PNG[opponentPlayerNum_];
-                    Truck truck = new Truck(new Sprite(new Texture(truckPng)),
-                            stage_, tapHandler_,
-                            Settings.INITIAL_TRUCK_MONEY, opponentPlayer_);
-                    truck.setX(opponentPlayer_.getSpawnPoint().getX());
-                    truck.setY(opponentPlayer_.getSpawnPoint().getY());
+                    // If opponent bought a truck
+                    if (m.getItem().equals("truck")) {
+                        String truckPng = Settings.TRUCK_PNG[opponentPlayerNum_];
+                        Truck truck = new Truck(new Sprite(new Texture(truckPng)),
+                                stage_, tapHandler_,
+                                Settings.INITIAL_TRUCK_MONEY, opponentPlayer_);
+                        truck.setX(opponentPlayer_.getSpawnPoint().getX());
+                        truck.setY(opponentPlayer_.getSpawnPoint().getY());
 
-                    opponentPlayer_.addTruck(truck);
+                        opponentPlayer_.addTruck(truck);
+                    } else if (m.getItem().equals("missle")) {
+
+                    }
+
                 } else if (m.getType().equals("route")) {
                     Truck truck = opponentPlayer_.getTruckList().get(m.getItemId());
                     List<LatLngPoint> points = m.getCoords();
