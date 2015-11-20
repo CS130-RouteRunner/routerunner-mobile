@@ -84,4 +84,12 @@ public interface MessageCenter {
      * @return
      */
     Message createRouteMessage(String uuid, JSONObject data);
+
+    /**
+     * Creates a Message of type 'update'
+     * @param uuid
+     * @param data
+     * @return
+     */
+    Message createUpdateMessage(String uuid, JSONObject data);
 }

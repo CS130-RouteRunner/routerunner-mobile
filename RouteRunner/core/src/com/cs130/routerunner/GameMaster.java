@@ -333,6 +333,12 @@ public class GameMaster implements Screen{
                         }
                     }
                     truck.setRoute(r);
+                    truck.setPaused(false);
+                } else if (m.getType().equals("update")) {
+                    int truckID = m.getItemId();
+                    Truck target = opponentPlayer_.getTruckList().get(truckID);
+                    target.setPaused(true);
+                    Gdx.app.log("TruckPause", String.valueOf(truckID));
                 }
             }
         }
@@ -418,7 +424,7 @@ public class GameMaster implements Screen{
 
 
     public void showRadius(ShapeRenderer shapeRenderer, Vector3 point){
-        Gdx.app.log("GMshowRadius", "Enter showRadius()\n");
+        //Gdx.app.log("GMshowRadius", "Enter showRadius()\n");
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.setColor(0, 1, 0, 0.2f);

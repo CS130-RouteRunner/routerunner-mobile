@@ -238,6 +238,17 @@ public class PubnubHelper implements MessageCenter {
     }
 
 
+    public Message createUpdateMessage(String uuid, JSONObject data) {
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("type", "update");
+            msg.put("uid", uuid);
+            msg.put("data", data);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return new Message(msg);
+    }
 
     public void setState()  {
         Callback callback = new Callback() {
