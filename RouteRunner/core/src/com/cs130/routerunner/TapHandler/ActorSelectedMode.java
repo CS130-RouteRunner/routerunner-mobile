@@ -49,6 +49,7 @@ public class ActorSelectedMode implements TapMode {
             Gdx.app.log("TruckIDTag", String.valueOf(truckID));
             data.put("id", truckID);
             data.put("item", Settings.TRUCK_ITEM);
+            data.put("status", Settings.PAUSE_STATUS);
 
             // Send Message
             Message msgToSend = messageCenter_.createUpdateMessage(messageCenter_.getUUID(), data);

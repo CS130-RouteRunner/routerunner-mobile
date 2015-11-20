@@ -56,7 +56,7 @@ public class RouteConfirmMode implements TapMode {
 
             for (int i = 0; i < waypoints.size() - 1; i++) {
                 LatLngPoint convertedPoint = coordinateConverter_.px2ll(waypoints.get(i));
-                Gdx.app.log("RCTag", convertedPoint.toString());
+                //Gdx.app.log("RCTag", convertedPoint.toString());
                 coords += convertedPoint + ";";
             }
             coords += coordinateConverter_.px2ll(waypoints.get(waypoints.size()-1));

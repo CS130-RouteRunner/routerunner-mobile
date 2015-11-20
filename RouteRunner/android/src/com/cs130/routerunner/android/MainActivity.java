@@ -108,17 +108,13 @@ public class MainActivity extends Activity {
         populateLobbies();
     }
 
-    /**
-     * Join an existing lobby.
-     */
     public void joinLobby(String lobbyId) throws Exception {
         ApiServerPostTask apiServerPostTask = new ApiServerPostTask();
-        String endpoint = Settings.ROUTERUNNER_BASE + Settings.MATCHMAKING_URL + "join";
         JSONObject params = new JSONObject();
         String userId = this.username_;
         params.put("uid", userId);
         params.put("lid", lobbyId);
-        JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
+        JSONObject response = apiServerPostTask.execute(Settings.JOIN_LOBBY_URL, params.toString()).get();
         System.out.println("Response: " + response.toString());
         String status = response.getString("status");
         if (status.equals("error")) {

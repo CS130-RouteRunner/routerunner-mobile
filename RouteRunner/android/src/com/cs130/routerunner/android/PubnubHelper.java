@@ -210,7 +210,7 @@ public class PubnubHelper implements MessageCenter {
     public Message createPurchaseMessage(String uuid, JSONObject data) {
         JSONObject msg = new JSONObject();
         try {
-            msg.put("type", "purchase");
+            msg.put("type", Settings.PURCHASE_TYPE);
             msg.put("uid", uuid);
             msg.put("data", data);
         } catch (Exception e) {
@@ -228,7 +228,7 @@ public class PubnubHelper implements MessageCenter {
     public Message createRouteMessage(String uuid, JSONObject data) {
         JSONObject msg = new JSONObject();
         try {
-            msg.put("type", "route");
+            msg.put("type", Settings.ROUTE_TYPE);
             msg.put("uid", uuid);
             msg.put("data", data);
         } catch (Exception e) {
@@ -237,11 +237,16 @@ public class PubnubHelper implements MessageCenter {
         return new Message(msg);
     }
 
-
+    /**
+     * Creates a Message of type 'update'
+     * @param uuid - uuid associated with Pubnub instance
+     * @param data
+     * @return
+     */
     public Message createUpdateMessage(String uuid, JSONObject data) {
         JSONObject msg = new JSONObject();
         try {
-            msg.put("type", "update");
+            msg.put("type", Settings.UPDATE_TYPE);
             msg.put("uid", uuid);
             msg.put("data", data);
         } catch (Exception e) {
@@ -250,6 +255,9 @@ public class PubnubHelper implements MessageCenter {
         return new Message(msg);
     }
 
+    /**
+     * Sends a state change to Pubnub.
+     */
     public void setState()  {
         Callback callback = new Callback() {
             public void successCallback(String channel, Object response) {

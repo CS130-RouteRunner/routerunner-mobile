@@ -60,7 +60,7 @@ public class PlayerButtonInfo {
 
     //display the correct buttons onto the screen
     public void display(){
-        Gdx.app.log("PBIdisplay", "Enter display()\n");
+        //Gdx.app.log("PBIdisplay", "Enter display()\n");
 
         stage_.addActor(buttonBuyTruck_);
         stage_.addActor(buttonBuyMissile_);

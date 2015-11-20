@@ -309,32 +309,44 @@ public class GameMaster implements Screen{
                         truck.setY(opponentPlayer_.getSpawnPoint().getY());
 
                         opponentPlayer_.addTruck(truck);
-                    } else if (m.getItem().equals(Settings.MISSILE_ITEM)) {
+                    }
+                    // If opponnent bought a missile
+                    else if (m.getItem().equals(Settings.MISSILE_ITEM)) {
                         int truckID = m.getItemId();
                         Truck target = localPlayer_.getTruckList().get(truckID);
                         target.setTombStoned_(true);
                         Gdx.app.log("MessageTag", String.valueOf(truckID));
                     }
 
-                } else if (m.getType().equals(Settings.ROUTE_TYPE)) {
+                }
+                // Opponent set a route for his truck
+                else if (m.getType().equals(Settings.ROUTE_TYPE)) {
                     Truck truck = opponentPlayer_.getTruckList().get(m.getItemId());
                     List<LatLngPoint> points = m.getCoords();
                     Route r = new Route();
 
+                    // Add the points for the route
                     if (points != null && !points.isEmpty()) {
                         for (LatLngPoint p : points) {
-                            Gdx.app.log("MessageRoute", p.toString());
+                            // Gdx.app.log("MessageRoute", p.toString());
                             Vector3 v = coordConverter_.ll2px(p.lat, p.lng);
                             r.addWayPoint(v.x, v.y);
                         }
                     }
+
+                    // Set the route and unpause the truck
                     truck.setRoute(r);
                     truck.setPaused(false);
-                } else if (m.getType().equals(Settings.UPDATE_TYPE)) {
-                    int truckID = m.getItemId();
-                    Truck target = opponentPlayer_.getTruckList().get(truckID);
-                    target.setPaused(true);
-                    Gdx.app.log("TruckPause", String.valueOf(truckID));
+                }
+                // Synchronization messages
+                else if (m.getType().equals(Settings.UPDATE_TYPE)) {
+                    // If it is a truck pause
+                    if (m.getStatus().equals(Settings.PAUSE_STATUS)) {
+                        int truckID = m.getItemId();
+                        Truck target = opponentPlayer_.getTruckList().get(truckID);
+                        target.setPaused(true);
+                        Gdx.app.log("TruckPause", String.valueOf(truckID));
+                    }
                 }
             }
         }

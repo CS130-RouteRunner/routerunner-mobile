@@ -44,6 +44,7 @@ public class Settings {
     public static final String ROUTERUNNER_BASE = "http://route-runner-130.appspot.com";
     public static final String MATCHMAKING_URL = "/api/matchmaking/";
     public static final String CREATE_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "new";
+    public static final String JOIN_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "join";
 
     // Sync frame rate
     public static final int FRAMES_BETWEEN_SYNC = 10;
@@ -75,5 +76,6 @@ public class Settings {
     public static final String UPDATE_TYPE = "update";
     public static final String TRUCK_ITEM = "truck";
     public static final String MISSILE_ITEM = "missile";
+    public static final String PAUSE_STATUS = "pause";
 
 }
