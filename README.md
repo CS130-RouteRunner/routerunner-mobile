@@ -1,5 +1,5 @@
 # Route Runner Mobile Client
-Android
+An Android real-time PvP supply delivery game powered by LibGDX and PubNub.
 
 ## Setup IDE
 1. Download [Android Studio](https://developer.android.com/sdk/index.html)
@@ -16,6 +16,16 @@ Android
 
 ## Testing
 1. Right-click any *Test.java file within the `Test` folder and click Run.
+
+
+## How to Play
+- Goal: To get to the target amount of money before the other player
+- Create a lobby or join a lobby
+- The person with the lexicographically smallest name is blue and starts in the bottom left corner, while the other player is red and starts in the top right corner. Their respective drop-off points for trucks is the UCLA Bruin and the USC Trojan.
+- To deliver money to the drop-off point, buy a truck.
+- To move the truck, click the truck, click `Edit Route`, plot waypoints within the green radius, click `Snap to Roads` when you are satisfied with your route
+- To destroy an opponent's truck, buy a missile and tap on an opponent's truck to destroy it.
+- When a truck reaches the drop-off point, your current money will increase and the truck will respawn at your base, i.e. the factory.
 
 ## Pivotal Tracker
 [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/1445446)
