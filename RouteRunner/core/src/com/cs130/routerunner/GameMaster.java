@@ -316,6 +316,7 @@ public class GameMaster implements Screen{
                         Truck target = localPlayer_.getTruckList().get(truckID);
                         target.setTombStoned_(true);
                         Gdx.app.log("MessageTag", String.valueOf(truckID));
+                        showAlert("Your truck has been destroyed by a missile!");
                     }
 
                 }
