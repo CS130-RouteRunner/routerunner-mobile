@@ -20,7 +20,7 @@ public class Missile extends Actor {
 
     @Override
     public void move() {
-        if (!isPaused() && targetTruck_!= null) {
+        if (targetTruck_!= null) {
             setMovementVectorToNextWaypoint(targetTruck_.getX(), targetTruck_.getY());
             this.setX(this.getX() + getMoveXDelta());
             this.setY(this.getY() + getMoveYDelta());
