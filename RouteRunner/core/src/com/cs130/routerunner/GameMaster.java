@@ -341,12 +341,13 @@ public class GameMaster implements Screen{
                 // Synchronization messages
                 else if (m.getType().equals(Settings.UPDATE_TYPE)) {
                     // If it is a truck pause
-                    if (m.getStatus().equals(Settings.PAUSE_STATUS)) {
+                    Gdx.app.log("SyncTag", "Update: " + m.toString());
+//                    if (m.getStatus().equals(Settings.PAUSE_STATUS)) {
                         int truckID = m.getItemId();
                         Truck target = opponentPlayer_.getTruckList().get(truckID);
                         target.setPaused(true);
                         Gdx.app.log("TruckPause", String.valueOf(truckID));
-                    }
+//                    }
                 }
             }
         }

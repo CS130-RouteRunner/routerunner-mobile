@@ -51,6 +51,7 @@ public class ActorSelectedMode implements TapMode {
             data.put("item", Settings.TRUCK_ITEM);
             data.put("status", Settings.PAUSE_STATUS);
 
+
             // Send Message
             Message msgToSend = messageCenter_.createUpdateMessage(messageCenter_.getUUID(), data);
             messageCenter_.sendMessage(msgToSend);
