@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -21,12 +22,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.cs130.routerunner.Actors.Box.Box;
+import com.cs130.routerunner.Actors.Box.BoxFactory;
+import com.cs130.routerunner.Actors.Box.BoxType;
+import com.cs130.routerunner.Actors.Box.ConcreteBoxFactory;
+import com.cs130.routerunner.Actors.Box.RandomEvent;
 import com.cs130.routerunner.Actors.Missile;
 import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.CoordinateConverter.CoordinateConverter;
 import com.cs130.routerunner.CoordinateConverter.CoordinateConverterAdapter;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
 import com.cs130.routerunner.Routes.Route;
+import com.cs130.routerunner.SnapToRoads.SnapToRoads;
 import com.cs130.routerunner.TapHandler.TapHandler;
 import com.badlogic.gdx.math.Vector3;
 
@@ -52,14 +58,17 @@ public class GameMaster implements Screen{
     private Player opponentPlayer_;
     private List<Player> players_;
     private ArrayList<Missile> missiles_;
+    private ArrayList<RandomEvent> randomEvents_;
     private Batch hudBatch_;
-
     private Sprite waypointSprite_;
     private ArrayList<Vector3> waypoints_;
-
+    private BoxFactory boxFactory_;
+    private SnapToRoads snapToRoads_;
     private MessageCenter messageCenter_;
 
     private int framesSinceLastSync_;
+    private int framesSinceLastTryEvent_;
+
     private int localPlayerNum_;
     private int opponentPlayerNum_;
     private BitmapFont font_;
@@ -74,7 +83,7 @@ public class GameMaster implements Screen{
         camera_ = new MapCamera();
 
         coordConverter_ = new CoordinateConverterAdapter();
-
+        snapToRoads_ = new SnapToRoads();
         //create self reference
         this.game_ = game;
         //setup touch stuff
@@ -103,12 +112,16 @@ public class GameMaster implements Screen{
         PlayerButtonInfo playerButtonInfo = new PlayerButtonInfo(stage_, tapHandler_);
         playerButtonInfo.display();
 
-        localPlayer_ = new Player(Settings.INITIAL_MONEY, localPlayerNum);
+        boxFactory_ = new ConcreteBoxFactory(snapToRoads_);
+        randomEvents_ = new ArrayList<RandomEvent>();
+
+        localPlayer_ = new Player(Settings.INITIAL_MONEY, localPlayerNum,
+                boxFactory_);
         this.localPlayerNum_ = localPlayerNum;
         localPlayer_.setPlayerButtonInfo(playerButtonInfo);
         this.opponentPlayerNum_ = 1 - localPlayerNum;
         opponentPlayer_ = new Player(Settings.INITIAL_MONEY,
-                opponentPlayerNum_);
+                opponentPlayerNum_, boxFactory_);
         players_ = new ArrayList<Player>();
         players_.add(localPlayer_);
         players_.add(opponentPlayer_);
@@ -159,6 +172,11 @@ public class GameMaster implements Screen{
         }
         for (Missile missile: missiles_) {
             drawSpriteCentered(missile, missile.getX(), missile.getY());
+        }
+
+        for (RandomEvent randomEvent : randomEvents_) {
+            drawSpriteCentered(randomEvent.getSprite(), randomEvent.getX(), randomEvent
+                    .getY());
         }
 
         //TODO: rlau (draw opponent money)
@@ -233,6 +251,17 @@ public class GameMaster implements Screen{
         }
         framesSinceLastSync_++;
 
+        if (framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0) {
+            if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_RATE)) {
+                RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
+                                BoxType.RandomEvent, localPlayerNum_);
+                randomEvents_.add(randomEvent);
+                Gdx.app.log("RandomEvent", "Created Random Event at " +
+                    randomEvent.getX() + " " + randomEvent.getY());
+            }
+            framesSinceLastTryEvent_ = 0;
+        }
+
         for (Truck truck: localPlayer_.getTruckList()) {
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
@@ -269,6 +298,8 @@ public class GameMaster implements Screen{
                 }
             }
         }
+
+
     }
 
     public void handleTap(float x, float y, int count) {

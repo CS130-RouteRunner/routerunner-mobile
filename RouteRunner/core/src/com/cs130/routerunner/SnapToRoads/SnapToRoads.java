@@ -1,4 +1,8 @@
 package com.cs130.routerunner.SnapToRoads;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector3;
+import com.cs130.routerunner.CoordinateConverter.CoordinateConverter;
+import com.cs130.routerunner.CoordinateConverter.CoordinateConverterAdapter;
 import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.CoordinateConverter.LatLngPoint;
 import java.util.ArrayList;
@@ -15,8 +19,15 @@ import com.google.maps.GeoApiContext;
  */
 public class SnapToRoads {
     private GeoApiContext Context;
+    private CoordinateConverter coordinateConverter_;
+
     public SnapToRoads() {
+        this(new CoordinateConverterAdapter());
+    }
+
+    public SnapToRoads(CoordinateConverter coordinateConverter) {
         Context = new GeoApiContext().setApiKey(Settings.SNAP_ROADS_KEY);
+        coordinateConverter_ = coordinateConverter;
     }
 
     /* TODO: the api limits the number of points in a path to 100, so we should implement
@@ -48,5 +59,20 @@ public class SnapToRoads {
         }
 
         return ConvertedSnappedPoints;
+    }
+
+    public List<Vector3> snapPoints(List<Vector3> points) {
+        ArrayList<LatLngPoint> convertedPoints = new ArrayList<LatLngPoint>();
+        for (Vector3 point : points) {
+            convertedPoints.add(coordinateConverter_.px2ll(point));
+        }
+        convertedPoints = GetSnappedPoints(convertedPoints);
+        points.clear();
+        for (LatLngPoint coord : convertedPoints) {
+            Gdx.app.log("SNAP", "Adding point at: " + coord.lat + " " + coord
+                    .lng);
+            points.add(coordinateConverter_.ll2px(coord.lat, coord.lng));
+        }
+        return points;
     }
 }

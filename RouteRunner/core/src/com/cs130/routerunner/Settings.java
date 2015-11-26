@@ -54,7 +54,13 @@ public class Settings {
     public static final int INITIAL_TRUCK_MONEY = 50;
     public static final int BUY_TRUCK_COST = 100;
     public static final int BUY_MISSILE_COST = 200;
+    public static final int FRAMES_BETWEEN_TRY_EVENT = 30;
 
+    // Random Events
+    public static final String RANDOM_EVENT_PNG = "treasure.png";
+    public static final float RANDOM_EVENT_AREA_PROPORTION = 0.6f;
+    // Rate is in units of Events/Second
+    public static final float RANDOM_EVENT_RATE = 0.002f;
     // Spawn points
     public static final int SPAWN_POINT[][] = {{100, 100}, {1510, 1833}};
     public static final String SPAWN_PNG[] = {"factory_blue.png",

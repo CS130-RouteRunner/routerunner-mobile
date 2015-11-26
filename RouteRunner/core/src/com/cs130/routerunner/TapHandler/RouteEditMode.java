@@ -11,6 +11,7 @@ import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.SnapToRoads.SnapToRoads;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -26,7 +27,7 @@ public class RouteEditMode implements TapMode {
         this.tapHandler_ = tapHandler;
         newRoute_ = new Route();
         coordinateConverter_ = new CoordinateConverterAdapter();
-        snapToRoads_ = new SnapToRoads();
+        snapToRoads_ = new SnapToRoads(coordinateConverter_);
     }
     public void Init() {
         newRoute_ = new Route();
@@ -60,18 +61,28 @@ public class RouteEditMode implements TapMode {
             selectedActor_.route_.printWaypoints();
 
             // Run our input points through Google Snap to Roads
-            ArrayList<LatLngPoint> convertedPoints = new
-                    ArrayList<LatLngPoint>();
-            for (Vector3 waypoint : newRoute_.wayPoints_) {
-                convertedPoints.add(coordinateConverter_.px2ll(waypoint));
+//            ArrayList<LatLngPoint> convertedPoints = new
+//                    ArrayList<LatLngPoint>();
+//            for (Vector3 waypoint : newRoute_.wayPoints_) {
+//                convertedPoints.add(coordinateConverter_.px2ll(waypoint));
+//            }
+//            convertedPoints = snapToRoads_.GetSnappedPoints(convertedPoints);
+//            newRoute_.clearWaypoints();
+//            for (LatLngPoint coord : convertedPoints) {
+//                Vector3 pixel =
+//                        coordinateConverter_.ll2px(coord.lat, coord.lng);
+//                newRoute_.addWayPoint(pixel.x, pixel.y);
+//            }
+            List<Vector3> convertedPoints = snapToRoads_.snapPoints
+                    (newRoute_.wayPoints_);
+            for (Vector3 point: convertedPoints) {
+                Gdx.app.log("CP", point.x + " " + point.y);
             }
-            convertedPoints = snapToRoads_.GetSnappedPoints(convertedPoints);
-            newRoute_.clearWaypoints();
-            for (LatLngPoint coord : convertedPoints) {
-                Vector3 pixel =
-                        coordinateConverter_.ll2px(coord.lat, coord.lng);
-                newRoute_.addWayPoint(pixel.x, pixel.y);
-            }
+//            newRoute_.clearWaypoints();
+//            for (Vector3 point : convertedPoints) {
+//                Gdx.app.log("CP", "adding point: " + point.x + " " + point.y);
+//                newRoute_.addWayPoint(point.x, point.y);
+//            }
 
             Gdx.app.log("RETag", "new route: ");
             newRoute_.printWaypoints();

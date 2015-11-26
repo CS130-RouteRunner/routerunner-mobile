@@ -22,13 +22,11 @@ public class Player {
 
     private int truckID_;
 
-    public Player(int initialAmount, int playerNum){
+    public Player(int initialAmount, int playerNum, BoxFactory boxFactory){
         truckID_ = 0;
         money_ = initialAmount;
         truckList_ = new ArrayList<Truck>();
         playerNum_ = playerNum;
-        //TODO: change to real player base position
-        BoxFactory boxFactory = new ConcreteBoxFactory();
         deliveryPoint_ = boxFactory.createBox(BoxType.DeliveryPoint,
                 playerNum_);
         spawnPoint_ = boxFactory.createBox(BoxType.SpawnPoint, playerNum_);
