@@ -20,14 +20,12 @@ public class RouteEditMode implements TapMode {
     Actor selectedActor_;
     TapHandler tapHandler_;
     Route newRoute_;
-    CoordinateConverter coordinateConverter_;
     SnapToRoads snapToRoads_;
 
-    public RouteEditMode(TapHandler tapHandler) {
+    public RouteEditMode(TapHandler tapHandler, SnapToRoads snapToRoads) {
         this.tapHandler_ = tapHandler;
         newRoute_ = new Route();
-        coordinateConverter_ = new CoordinateConverterAdapter();
-        snapToRoads_ = new SnapToRoads(coordinateConverter_);
+        snapToRoads_ = snapToRoads;
     }
     public void Init() {
         newRoute_ = new Route();
@@ -51,40 +49,21 @@ public class RouteEditMode implements TapMode {
             tapHandler_.gameMaster_.addWaypoint(touchPos);
         }
 
-
-        // TODO(Julian/Patrick): change this to a confirm route button or something
         Gdx.app.log("RETag", "saveRoute is " + selectedActor_.isSnapRoute());
         if(selectedActor_.isSnapRoute()){
             //when we have touched the base, then set the route and re-enter normal mode
 
-            Gdx.app.log("RETag", "old route: ");
+            Gdx.app.debug("RETag", "old route: ");
             selectedActor_.route_.printWaypoints();
 
             // Run our input points through Google Snap to Roads
-//            ArrayList<LatLngPoint> convertedPoints = new
-//                    ArrayList<LatLngPoint>();
-//            for (Vector3 waypoint : newRoute_.wayPoints_) {
-//                convertedPoints.add(coordinateConverter_.px2ll(waypoint));
-//            }
-//            convertedPoints = snapToRoads_.GetSnappedPoints(convertedPoints);
-//            newRoute_.clearWaypoints();
-//            for (LatLngPoint coord : convertedPoints) {
-//                Vector3 pixel =
-//                        coordinateConverter_.ll2px(coord.lat, coord.lng);
-//                newRoute_.addWayPoint(pixel.x, pixel.y);
-//            }
             List<Vector3> convertedPoints = snapToRoads_.snapPoints
                     (newRoute_.wayPoints_);
             for (Vector3 point: convertedPoints) {
-                Gdx.app.log("CP", point.x + " " + point.y);
+                Gdx.app.debug("CP", point.x + " " + point.y);
             }
-//            newRoute_.clearWaypoints();
-//            for (Vector3 point : convertedPoints) {
-//                Gdx.app.log("CP", "adding point: " + point.x + " " + point.y);
-//                newRoute_.addWayPoint(point.x, point.y);
-//            }
 
-            Gdx.app.log("RETag", "new route: ");
+            Gdx.app.debug("RETag", "new route: ");
             newRoute_.printWaypoints();
             // update the waypoint sprites
             tapHandler_.gameMaster_.setWaypoints(newRoute_.wayPoints_);
@@ -112,7 +91,6 @@ public class RouteEditMode implements TapMode {
                 return;
             }
 
-            // TODO(Julian/Patrick): collect all the points into an array. And
             //if we want to edit routes, get old truck route if exists and populate array
             Gdx.app.log("ReTag", "Received tap at: " + touchPos.x + ", " +
                     touchPos.y);

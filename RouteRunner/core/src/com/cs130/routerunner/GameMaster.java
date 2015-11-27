@@ -63,7 +63,7 @@ public class GameMaster implements Screen{
     private Sprite waypointSprite_;
     private ArrayList<Vector3> waypoints_;
     private BoxFactory boxFactory_;
-    private SnapToRoads snapToRoads_;
+    public SnapToRoads snapToRoads_;
     private MessageCenter messageCenter_;
 
     private int framesSinceLastSync_;

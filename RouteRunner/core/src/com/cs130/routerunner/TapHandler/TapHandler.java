@@ -16,7 +16,7 @@ import com.cs130.routerunner.GameMaster;
  */
 public class TapHandler {
     GameMaster gameMaster_;
-    TapMode routeEditMode_ = new RouteEditMode(this);
+    TapMode routeEditMode_ = new RouteEditMode(this, this.gameMaster_.snapToRoads_);
     TapMode normalMode_ = new NormalMode(this);
     TapMode actorSelectedMode_ = new ActorSelectedMode(this);
     TapMode routeConfirmMode_ = new RouteConfirmMode(this);
