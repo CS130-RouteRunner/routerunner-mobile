@@ -3,6 +3,7 @@ package com.cs130.routerunner.Actors.Box;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.cs130.routerunner.GameMaster;
 
 /**
  * Created by Roger on 11/16/2015.
@@ -22,10 +23,6 @@ public abstract class Box {
     public float getY(){
         return hitBox_.getY();
     }
-    public Sprite getSprite(){
-        return boxSprite_;
-    }
-    public boolean overlaps(Rectangle r){
-        return hitBox_.overlaps(r);
-    }
+    public Sprite getSprite() { return boxSprite_; }
+    public boolean overlaps(Rectangle r){ return hitBox_.overlaps(r); }
 }

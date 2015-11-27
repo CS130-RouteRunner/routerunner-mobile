@@ -2,6 +2,7 @@ package com.cs130.routerunner.Actors;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.cs130.routerunner.Actors.Box.RandomEvent;
 import com.cs130.routerunner.Player;
 import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.TapHandler.TapHandler;
@@ -59,6 +60,14 @@ public class Truck extends Actor {
     public void checkIntersectingBase(){
         if (player_.getDeliveryPoint().overlaps(this.getBoundingRectangle()))
             player_.addMoney(this.getAmount());
+    }
+
+    public boolean checkIntersectingRandomEvent(RandomEvent randomEvent){
+        if(randomEvent.overlaps(this.getBoundingRectangle())) {
+            player_.addMoney(Settings.RANDOM_EVENT_VAL);
+            return true;
+        }
+        return false;
     }
 
     public int getAmount(){

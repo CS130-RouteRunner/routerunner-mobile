@@ -61,6 +61,8 @@ public class Settings {
     public static final float RANDOM_EVENT_AREA_PROPORTION = 0.6f;
     // Rate is in units of Events/Second
     public static final float RANDOM_EVENT_RATE = 0.002f;
+    public static final int RANDOM_EVENT_VAL = 30;
+    public static final int RANDOM_EVENT_MAXCOUNT = 20;
     // Spawn points
     public static final int SPAWN_POINT[][] = {{100, 100}, {1510, 1833}};
     public static final String SPAWN_PNG[] = {"factory_blue.png",
