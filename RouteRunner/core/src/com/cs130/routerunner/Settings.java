@@ -54,6 +54,8 @@ public class Settings {
     public static final int INITIAL_TRUCK_MONEY = 50;
     public static final int BUY_TRUCK_COST = 100;
     public static final int BUY_MISSILE_COST = 200;
+    public static final int TRUCK_UPGRADE_COST = 50;
+    public static final int TRUCK_UPGRADE_CARRY = 180;
     public static final int FRAMES_BETWEEN_TRY_EVENT = 30;
 
     // Random Events
@@ -72,8 +74,10 @@ public class Settings {
     public static final String DELIVERY_PNG[] = {
             "house_blue.png", "house_red.png"};
 
-    public static final String TRUCK_PNG[] = {"truck_blue.png", "truck_red" +
-            ".png"};
+    public static final String TRUCK_PNG[] = {"truck_blue.png",
+            "truck_red.png",
+            "truck_blue_upgrade.png",
+            "truck_red_upgrade.png" };
 
     // Setting flag for synchronized start game
     public static final boolean WAIT_FOR_PLAYERS = false;

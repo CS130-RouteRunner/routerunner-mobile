@@ -189,8 +189,13 @@ public class GameMaster implements Screen{
                     deliveryPoint.getY());
 
             for (Truck truck : player.getTruckList()) {
-                if (!truck.getTombStoned())
+                if (!truck.getTombStoned()) {
+                    if (truck.getUpgraded()) {
+                        String truckpng = Settings.TRUCK_PNG[localPlayerNum_ + 2];
+                        truck.setTexture(new Texture(truckpng));
+                    }
                     drawSpriteCentered(truck, truck.getX(), truck.getY());
+                }
             }
         }
         for (Missile missile: missiles_) {
@@ -433,6 +438,15 @@ public class GameMaster implements Screen{
     public PlayerButtonInfo getLocalPlayerButtonInfo(){
         return localPlayer_.getPlayerButtonInfo();
     }
+
+    public boolean upgradeTruck(){
+        if(localPlayer_.getMoney() >= Settings.TRUCK_UPGRADE_COST) {
+            localPlayer_.subtractMoney(Settings.TRUCK_UPGRADE_COST);
+            return true;
+        }else
+            return false;
+    }
+
     public boolean buyTruck() {
         //check if we can afford
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
