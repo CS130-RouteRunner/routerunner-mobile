@@ -22,6 +22,7 @@ public abstract class Actor extends Sprite {
     private boolean paused_ = false;
     private float speed_ = Settings.DEFAULT_MOVEMENT;
     protected ActorInfo actorInfo_;
+    private boolean isUpgraded_ = false;
 
     public Route route_;
     private Stage stage_;
@@ -129,6 +130,13 @@ public abstract class Actor extends Sprite {
     }
 
     public void upgrade(){
-        this.setSpeed(this.getSpeed() * 1.5f);
+        setUpgraded();
+        setSpeed(this.getSpeed() * 1.5f);
     }
+
+    private void setUpgraded(){
+        isUpgraded_ = true;
+    }
+
+    public boolean getUpgraded(){return isUpgraded_;}
 }

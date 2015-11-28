@@ -27,7 +27,7 @@ public class Truck extends Actor {
     public Truck (Sprite sprite, Stage stage, TapHandler tapHandler, int initialMoney, Player player){
         super(sprite, stage, tapHandler);
         setSpeed(Settings.DEFAULT_MOVEMENT);
-        actorInfo_ = new ActorInfo(stage, tapHandler);
+        actorInfo_ = new ActorInfo(this, stage, tapHandler);
         amountCarrying_ = initialMoney;
         player_ = player;
         tombStoned_ = false;

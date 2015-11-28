@@ -5,6 +5,7 @@ import com.cs130.routerunner.Actors.Actor;
 import com.cs130.routerunner.Actors.Truck;
 import com.cs130.routerunner.Message;
 import com.cs130.routerunner.MessageCenter;
+import com.cs130.routerunner.Player;
 import com.cs130.routerunner.Routes.Route;
 import com.cs130.routerunner.Settings;
 
@@ -60,8 +61,10 @@ public class ActorSelectedMode implements TapMode {
             tapHandler_.curMode_.Init();
 
         }else if(selectedActor_.isUpgrade()){
-            selectedActor_.upgrade();
-            Gdx.app.log("ASTruckUpgrade", String.valueOf(selectedActor_.getSpeed()));
+            if(tapHandler_.gameMaster_.upgradeTruck()){
+                selectedActor_.upgrade();
+                Gdx.app.log("ASTruckUpgrade", String.valueOf(selectedActor_.getSpeed()));
+            }
             tapHandler_.curMode_ = tapHandler_.normalMode_;
             tapHandler_.gameMaster_.clearWaypoints();
             tapHandler_.gameMaster_.getLocalPlayerButtonInfo().display();

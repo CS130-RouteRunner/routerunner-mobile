@@ -26,6 +26,7 @@ import java.util.Set;
  * Created by Evannnnn on 10/29/15.
  */
 public class ActorInfo {
+    private Actor actor_;
     private Stage stage_;
     private Skin skin_;
     private static ButtonType lastClicked_;
@@ -37,9 +38,9 @@ public class ActorInfo {
     private Button buttonUpgrade_;
     private TapHandler tapHandler_;
     private ShapeRenderer shapeRenderer_;
-    private boolean isUpgraded_ = false;
 
-    public ActorInfo(Stage stage, final TapHandler tapHandler){
+    public ActorInfo(Actor actor, Stage stage, final TapHandler tapHandler){
+        actor_ = actor;
         stage_ = stage;
         lastClicked_ = ButtonType.NONE;
         tapHandler_ = tapHandler;
@@ -89,7 +90,6 @@ public class ActorInfo {
         buttonUpgrade_.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 lastClicked_ = ButtonType.UPGRADE_TRUCK;
-                isUpgraded_ = true;
                 Gdx.app.log("AIdisplay", "Upgrade truck");
                 tapHandler_.Tap(x, y, 1);
                 hide();
@@ -128,7 +128,7 @@ public class ActorInfo {
         Gdx.app.log("AIdisplay", "Enter display()\n");
         stage_.addActor(buttonEditRoute_);
         stage_.addActor(buttonCancelEdit_);
-        if(! isUpgraded_)
+        if(! actor_.getUpgraded() )
             stage_.addActor(buttonUpgrade_);
     }
 

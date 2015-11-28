@@ -434,6 +434,14 @@ public class GameMaster implements Screen{
         return localPlayer_.getPlayerButtonInfo();
     }
 
+    public boolean upgradeTruck(){
+        if(localPlayer_.getMoney() >= Settings.TRUCK_UPGRADE_COST) {
+            localPlayer_.subtractMoney(Settings.TRUCK_UPGRADE_COST);
+            return true;
+        }else
+            return false;
+    }
+
     public boolean buyTruck() {
         //check if we can afford
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {
