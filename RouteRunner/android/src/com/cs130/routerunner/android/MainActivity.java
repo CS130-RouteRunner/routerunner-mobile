@@ -47,7 +47,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.username_ = randomString();   // Change this when login is merged
+        Intent intent = getIntent();
+        String user = intent.getStringExtra("username");
+        this.username_ = user;   // Change this when login is merged
         System.out.println(this.username_);
         this.listView_ = (ListView) findViewById(R.id.listView);
         this.listView_.setEmptyView(findViewById(R.id.emptyLobbyItem));
@@ -84,7 +86,7 @@ public class MainActivity extends Activity {
         try {
             JSONObject params = new JSONObject();
             String userId = this.username_;
-            String lobbyId = Settings.LOBBY_PREFIX + userId;
+            String lobbyId = Settings.LOBBY_PREFIX + randomString();
             params.put("uid", userId);
             params.put("lid", lobbyId);
             JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();

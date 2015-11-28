@@ -68,16 +68,4 @@
         android:text="@string/emptyLobbyList" >
     </TextView>
 
-    <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/button_publish"-->
-        <!--android:onClick="publishMessage" />-->
-
-    <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/button_unsubscribe"-->
-        <!--android:onClick="unsubscribeChannel" />-->
-
 </LinearLayout>
