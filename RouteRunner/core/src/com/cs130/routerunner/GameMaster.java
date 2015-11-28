@@ -334,8 +334,7 @@ public class GameMaster implements Screen{
                     if (m.getItem().equals(Settings.TRUCK_ITEM)) {
                         String truckPng = Settings.TRUCK_PNG[opponentPlayerNum_];
                         Truck truck = new Truck(new Sprite(new Texture(truckPng)),
-                                stage_, tapHandler_,
-                                Settings.INITIAL_TRUCK_MONEY, opponentPlayer_);
+                                stage_, tapHandler_, opponentPlayer_);
                         truck.setX(opponentPlayer_.getSpawnPoint().getX());
                         truck.setY(opponentPlayer_.getSpawnPoint().getY());
 
