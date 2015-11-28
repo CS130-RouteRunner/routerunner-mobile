@@ -189,8 +189,13 @@ public class GameMaster implements Screen{
                     deliveryPoint.getY());
 
             for (Truck truck : player.getTruckList()) {
-                if (!truck.getTombStoned())
+                if (!truck.getTombStoned()) {
+                    if (truck.getUpgraded()) {
+                        String truckpng = Settings.TRUCK_PNG[localPlayerNum_ + 2];
+                        truck.setTexture(new Texture(truckpng));
+                    }
                     drawSpriteCentered(truck, truck.getX(), truck.getY());
+                }
             }
         }
         for (Missile missile: missiles_) {
