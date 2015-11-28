@@ -13,4 +13,11 @@ public class RandomEvent extends Box {
 
         super(x, y, Settings.RANDOM_EVENT_PNG, 10, 10);
     }
+
+    @Override
+    public boolean overlaps(Rectangle r){
+        r.setWidth(10);
+        r.setHeight(10);
+        return super.overlaps(r);
+    }
 }
