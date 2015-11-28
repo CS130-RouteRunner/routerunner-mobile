@@ -256,6 +256,17 @@ public class PubnubHelper implements MessageCenter {
     }
 
     /**
+     * Creates a Message of type 'event'
+     * @param uuid - uuid associated with Pubnub instance
+     * @param data
+     * @return
+     * TODO: Fill this out
+     */
+    public Message createEventMessage(String uuid, JSONObject data) {
+        return new Message(new JSONObject());
+    }
+
+    /**
      * Sends a state change to Pubnub.
      */
     public void setState()  {

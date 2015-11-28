@@ -14,9 +14,10 @@ public class Message {
     private String type_;
     private String item_;
     private String uid_;
-    private String status_;
     private List<LatLngPoint> coords_;
     private Integer itemId_;
+
+    // TODO: Add 'event' type handling to constructor, toJSON(), toString() and getters
 
     /**
      * Constructs a Message object based on the JSONObject passed in
@@ -31,14 +32,10 @@ public class Message {
             itemId_ = data.getInt("id");
             if (type_.equals(Settings.PURCHASE_TYPE) || type_.equals(Settings.UPDATE_TYPE)) {
                 item_ = data.getString("item");
-                if (type_.equals(Settings.UPDATE_TYPE)) {
-                    status_ = obj.getString("status");
-                }
                 coords_ = null;
             }
             else {
                 item_ = null;
-                status_ = null;
                 coords_ = new ArrayList<LatLngPoint>();
                 String coordsString = data.getString("coords");
                 List<String> coordPairs = Arrays.asList(coordsString.split(";"));
@@ -70,9 +67,6 @@ public class Message {
         data.put("id", itemId_);
         if (type_.equals(Settings.PURCHASE_TYPE) || type_.equals(Settings.UPDATE_TYPE)) {
             data.put("item", item_);
-            if (type_.equals(Settings.UPDATE_TYPE)) {
-                data.put("status", Settings.PAUSE_STATUS);
-            }
         }
         else {
             String points = "";
@@ -116,8 +110,6 @@ public class Message {
      */
     public Integer getItemId() { return itemId_; }
 
-    public String getStatus() {return status_; }
-
     /**
      * Stringifies a Message object
      * @return
@@ -128,7 +120,7 @@ public class Message {
             data = "{item:" + item_ + "}";
         }
         else if (type_.equals(Settings.UPDATE_TYPE)) {
-            data = "{item:" + item_ + ";status:" + status_ + "}";
+            data = "{item:" + item_ + "}";
         }
         else {
             String coords = "";

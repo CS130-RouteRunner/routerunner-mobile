@@ -203,6 +203,7 @@ public class GameMaster implements Screen{
                 }
             }
         }
+
         for (Missile missile: missiles_) {
             drawSpriteCentered(missile, missile.getX(), missile.getY());
         }
@@ -270,11 +271,17 @@ public class GameMaster implements Screen{
             framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
                 randomEvents_.size() < Settings.RANDOM_EVENT_MAXCOUNT) {
             if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_PROBABILITY)) {
+		// Create random event
                 RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
                                 BoxType.RandomEvent, localPlayerNum_);
                 randomEvents_.add(randomEvent);
                 Gdx.app.log("RandomEvent", "Created Random Event at " +
                     randomEvent.getX() + " " + randomEvent.getY());
+
+                // TODO: Prepare random event msg
+
+                // TODO: Send random event msg
+
             }
             framesSinceLastTryEvent_ = 0;
         }
@@ -404,13 +411,12 @@ public class GameMaster implements Screen{
                 else if (m.getType().equals(Settings.UPDATE_TYPE)) {
                     // If it is a truck pause
                     Gdx.app.log("SyncTag", "Update: " + m.toString());
-//                    if (m.getStatus().equals(Settings.PAUSE_STATUS)) {
                         int truckID = m.getItemId();
                         Truck target = opponentPlayer_.getTruckList().get(truckID);
                         target.setPaused(true);
                         Gdx.app.log("TruckPause", String.valueOf(truckID));
-//                    }
                 }
+                // TODO: Add handling of 'event' messages
             }
         }
     }
