@@ -131,10 +131,10 @@ public abstract class Actor extends Sprite {
 
     public void upgrade(){
         setUpgraded();
-        setSpeed(this.getSpeed() * 1.5f);
+        //setSpeed(this.getSpeed() * 1.5f);
     }
 
-    private void setUpgraded(){
+    protected void setUpgraded(){
         isUpgraded_ = true;
     }
 

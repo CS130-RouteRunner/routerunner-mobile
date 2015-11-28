@@ -7,6 +7,8 @@ import com.cs130.routerunner.Player;
 import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.TapHandler.TapHandler;
 
+import java.util.Set;
+
 /**
  * Created by Roger on 11/16/2015.
  */
@@ -74,7 +76,17 @@ public class Truck extends Actor {
         return amountCarrying_;
     }
 
+    public void setAmount(int money){
+        amountCarrying_ = money;
+    }
+
     public boolean getTombStoned() { return tombStoned_; }
 
     public void setTombStoned_(boolean tombStoned_) { this.tombStoned_ = tombStoned_; }
+
+    @Override
+    public void upgrade(){
+        setUpgraded();
+        setAmount(Settings.TRUCK_UPGRADE_CARRY);
+    }
 }

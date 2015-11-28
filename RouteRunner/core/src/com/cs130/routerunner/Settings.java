@@ -54,7 +54,8 @@ public class Settings {
     public static final int INITIAL_TRUCK_MONEY = 50;
     public static final int BUY_TRUCK_COST = 100;
     public static final int BUY_MISSILE_COST = 200;
-    public static final int TRUCK_UPGRADE_COST = 50;
+    public static final int TRUCK_UPGRADE_COST = 100;
+    public static final int TRUCK_UPGRADE_CARRY = 150;
     public static final int FRAMES_BETWEEN_TRY_EVENT = 30;
 
     // Random Events
