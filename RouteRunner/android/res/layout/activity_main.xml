@@ -5,12 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.cs130.routerunner.android.MainActivity"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:weightSum="1">
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="208dp"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:weightSum="1">
 
         <Button
             android:layout_width="wrap_content"
@@ -20,10 +21,14 @@
             android:background="#149ce0"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#ffffff"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:layout_gravity="bottom" />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="146dp"
+            android:id="@+id/profileImage"
+            android:layout_weight="1.02" />
 
         <Button
             android:layout_width="wrap_content"
@@ -33,9 +38,8 @@
             android:background="#149ce0"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#ffffff"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="10dp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:layout_gravity="bottom" />
 
     </LinearLayout>
 
@@ -57,8 +61,8 @@
         android:divider="#149ce0"
         android:dividerHeight="1dp"
         android:background="#71149ce0"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
+
+
         android:paddingLeft="10dp" />
     <TextView
         android:id="@+id/emptyLobbyItem"

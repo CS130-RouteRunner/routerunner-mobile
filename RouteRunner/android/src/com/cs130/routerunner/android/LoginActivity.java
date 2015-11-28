@@ -25,6 +25,7 @@ public class LoginActivity extends Activity {
 
         Intent main = new Intent(this, MainActivity.class);
         main.putExtra("username", username.getText().toString());
+        // TODO: Kailin Make a POST request to CREATE_USER_URL
         startActivity(main);
     }
 

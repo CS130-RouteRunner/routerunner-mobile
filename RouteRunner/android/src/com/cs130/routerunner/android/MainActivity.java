@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.view.View;
 import android.content.Intent;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ public class MainActivity extends Activity {
     private PubnubHelper pubnubHelper_;
     private ListView listView_;
     private ArrayAdapter<String> lobbyAdapter_;
-    //private ChatAdapter chatAdapter_;
+    private ImageButton profileImage_;
 
     private String username_;
     private ArrayList<String> channelList_ = new ArrayList<String>();
@@ -47,12 +48,13 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Intent intent = getIntent();
-        String user = intent.getStringExtra("username");
-        this.username_ = user;   // Change this when login is merged
+        this.username_ = intent.getStringExtra("username");
         System.out.println(this.username_);
         this.listView_ = (ListView) findViewById(R.id.listView);
         this.listView_.setEmptyView(findViewById(R.id.emptyLobbyItem));
+        this.profileImage_ = (ImageButton) findViewById(R.id.profileImage);
 
         // Connect to PubNub
         pubnubHelper_ = new PubnubHelper(this.username_, null);
@@ -71,6 +73,15 @@ public class MainActivity extends Activity {
                 } catch (Exception e) {
                     Toast.makeText(getBaseContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        // Add listener to profile picture
+        this.profileImage_.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Kailin navigate to User Profile Activity
+                Toast.makeText(getApplicationContext(), "Go to profile", Toast.LENGTH_SHORT).show();
             }
         });
 
