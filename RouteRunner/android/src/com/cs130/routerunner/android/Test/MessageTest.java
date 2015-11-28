@@ -24,6 +24,7 @@ public class MessageTest extends InstrumentationTestCase {
         String expectedPurchaseType = "purchase";
         JSONObject payload = new JSONObject();
         payload.put(expectedPurchaseKey, expectedPurchaseValue);
+        payload.put("id", 1);
         expectedPurchase.put("type", expectedPurchaseType);
         expectedPurchase.put("uid", expecteduuid);
         expectedPurchase.put("data", payload);
@@ -40,7 +41,7 @@ public class MessageTest extends InstrumentationTestCase {
             String key = resultJSON.names().getString(i);
             if (key.equals("data")) {
                 JSONObject data = (JSONObject) resultJSON.get(key);
-                String dataKey = data.names().getString(0);
+                String dataKey = data.names().getString(1);
                 assertEquals(expectedPurchaseKey, dataKey);
                 assertEquals(expectedPurchaseValue, data.get(dataKey));
             } else {
@@ -66,6 +67,7 @@ public class MessageTest extends InstrumentationTestCase {
         String expectedRouteType = "route";
         JSONObject payload = new JSONObject();
         payload.put(expectedRouteKey, expectedRouteString);
+        payload.put("id", 1);
         expectedRoute.put("type", expectedRouteType);
         expectedRoute.put("uid", expecteduuid);
         expectedRoute.put("data", payload);
@@ -86,7 +88,7 @@ public class MessageTest extends InstrumentationTestCase {
             String key = resultJSON.names().getString(i);
             if (key.equals("data")) {
                 JSONObject data = (JSONObject) resultJSON.get(key);
-                String dataKey = data.names().getString(0);
+                String dataKey = data.names().getString(1);
                 assertEquals(expectedRouteKey, dataKey);
                 assertEquals(expectedRouteString, data.get(dataKey));
             } else {
