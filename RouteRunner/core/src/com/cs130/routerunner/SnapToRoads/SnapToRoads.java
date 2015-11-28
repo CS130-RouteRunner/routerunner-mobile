@@ -49,6 +49,7 @@ public class SnapToRoads {
         }
         catch (Exception e) {
             // do some error handling
+            Gdx.app.error("SnapToRoads", e.getMessage());
         }
         List<SnappedPoint> Points = Arrays.asList(SPoints);
 

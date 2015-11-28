@@ -39,7 +39,9 @@ import com.badlogic.gdx.math.Vector3;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -63,7 +65,7 @@ public class GameMaster implements Screen{
     private Sprite waypointSprite_;
     private ArrayList<Vector3> waypoints_;
     private BoxFactory boxFactory_;
-    private SnapToRoads snapToRoads_;
+    public SnapToRoads snapToRoads_;
     private MessageCenter messageCenter_;
 
     private int framesSinceLastSync_;
@@ -155,6 +157,27 @@ public class GameMaster implements Screen{
 
         stage_.getBatch().begin();
         mapSprite_.draw(stage_.getBatch());
+        stage_.getBatch().end();
+
+        Vector3 previous = null;
+        if (!waypoints_.isEmpty())
+            previous = waypoints_.get(0);
+
+        Gdx.gl.glLineWidth(20);
+        for (Vector3 waypoint : waypoints_) {
+            shapeRenderer_.setColor(Color.FOREST);
+            shapeRenderer_.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer_.rectLine(previous.x, previous.y, waypoint.x, waypoint.y, 15);
+            shapeRenderer_.end();
+
+            shapeRenderer_.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer_.circle(waypoint.x, waypoint.y, 7);
+            shapeRenderer_.end();
+
+            previous = waypoint;
+        }
+
+        stage_.getBatch().begin();
 
         for (Player player : players_) {
             Box spawnPoint = player.getSpawnPoint();
@@ -186,24 +209,6 @@ public class GameMaster implements Screen{
         hudBatch_.begin();
         font_.draw(hudBatch_, "Money: " + localPlayer_.getMoney(), 40, 1020);
         hudBatch_.end();
-
-        Vector3 previous = null;
-        if (!waypoints_.isEmpty())
-            previous = waypoints_.get(0);
-
-        Gdx.gl.glLineWidth(20);
-        for (Vector3 waypoint : waypoints_) {
-            shapeRenderer_.setColor(Color.FOREST);
-            shapeRenderer_.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer_.rectLine(previous.x, previous.y, waypoint.x, waypoint.y, 15);
-            shapeRenderer_.end();
-
-            shapeRenderer_.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer_.circle(waypoint.x, waypoint.y, 7);
-            shapeRenderer_.end();
-
-            previous = waypoint;
-        }
 
         if(!waypoints_.isEmpty())
             showRadius(shapeRenderer_, waypoints_.get(waypoints_.size() - 1));
@@ -251,7 +256,8 @@ public class GameMaster implements Screen{
         }
         framesSinceLastSync_++;
 
-        if (framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0) {
+        if (framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
+                randomEvents_.size() < Settings.RANDOM_EVENT_MAXCOUNT) {
             if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_RATE)) {
                 RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
                                 BoxType.RandomEvent, localPlayerNum_);
@@ -265,6 +271,13 @@ public class GameMaster implements Screen{
         for (Truck truck: localPlayer_.getTruckList()) {
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
+            Iterator<RandomEvent> iter = randomEvents_.iterator();
+            while(iter.hasNext()){
+                RandomEvent randomEvent = iter.next();
+                if(truck.checkIntersectingRandomEvent(randomEvent))
+                    iter.remove();
+            }
+
         }
 
         for (Truck truck: opponentPlayer_.getTruckList()) {
