@@ -75,6 +75,9 @@ public class GameMaster implements Screen{
 
     private int localPlayerNum_;
     private int opponentPlayerNum_;
+    private boolean gameOver = false;
+    private boolean restartGame = false;
+    private boolean showOnce = false;
     private BitmapFont font_;
 
     private CoordinateConverter coordConverter_;
@@ -145,9 +148,38 @@ public class GameMaster implements Screen{
 
     @Override
     public void render(float delta) {
-        if(Settings.LOG_FPS) {
+	if(Settings.LOG_FPS) {
             fpsLogger_.log();
         }
+
+        //exit the game
+        if(gameOver) {
+            //Gdx.app.log("Ending Game", "Game is ending");
+            //return;
+            gameOver = false;
+            Gdx.app.exit();
+            return;
+        }
+
+        //logic for restarting game here
+        if(restartGame){
+            restartGame = false;
+            showOnce = false;
+            showAlert("A new game is starting.");
+            localPlayer_.restartPlayer();
+            opponentPlayer_.restartPlayer();
+        }
+
+        if(localPlayer_.getMoney() >= Settings.TARGET_MONEY && !showOnce){
+            showOnce = true;
+            gameOverAlert("You have won the game!");
+        }
+
+        if(opponentPlayer_.getMoney() >= Settings.TARGET_MONEY && !showOnce){
+            showOnce = true;
+            gameOverAlert("Your opponent has won the game.");
+        }
+
         update(delta);
         camera_.update();
 
@@ -277,7 +309,7 @@ public class GameMaster implements Screen{
             if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_PROBABILITY)) {
 		        // Create random event
                 RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
-                                BoxType.RandomEvent, localPlayerNum_);
+                        BoxType.RandomEvent, localPlayerNum_);
                 randomEvents_.add(randomEvent);
                 Gdx.app.log("RandomEvent", "Created Random Event at " +
                     randomEvent.getX() + " " + randomEvent.getY());
@@ -333,7 +365,7 @@ public class GameMaster implements Screen{
             if (missile.getTargetTruck()!= null) {
                 float tolerance = Settings.MISSILE_MOVEMENT / Settings.EPSILON * Gdx.graphics.getDeltaTime();
                 if (Math.abs(missile.getX() - missile.getTargetTruck().getX()) < tolerance
-                         && Math.abs(missile.getY() - missile.getTargetTruck().getY()) < tolerance) {
+                        && Math.abs(missile.getY() - missile.getTargetTruck().getY()) < tolerance) {
                     // Prepare missile message
                     JSONObject data = new JSONObject();
                     data.put("item", Settings.MISSILE_ITEM);
@@ -379,7 +411,7 @@ public class GameMaster implements Screen{
 
     public void syncGame() {
         List<Message> result = messageCenter_.getMessages(messageCenter_.getLastSyncTime());
-       // Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
+        // Gdx.app.log("LastSyncTag", Long.toString(messageCenter_.getLastSyncTime()));
         if (result != null && !result.isEmpty()) {
             //Gdx.app.log("MessageSizeTag", String.valueOf(result.size()));
             for (Message m : result) {
@@ -597,6 +629,44 @@ public class GameMaster implements Screen{
             }
         });
         dialog.button(dbutton, true);
+        dialog.invalidateHierarchy();
+        dialog.invalidate();
+        dialog.layout();
+        dialog.show(stage_);
+    }
+
+    public void gameOverAlert(String alertString){
+        Label label = new Label(alertString, skin_);
+        label.setWrap(true);
+        label.setFontScale(1.6f);
+        label.setAlignment(Align.center);
+
+        final Dialog dialog = new Dialog("", skin_) {
+            @Override
+            public float getPrefWidth() { return 600f; }
+
+            @Override
+            public float getPrefHeight() { return 200f; }
+        };
+        dialog.getContentTable().add(label);
+
+        TextButton restartButton = new TextButton("Restart", skin_);
+        restartButton.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) {
+                restartGame = true;
+                dialog.remove();
+            }
+        });
+
+        TextButton quitButton = new TextButton("Quit", skin_);
+        quitButton.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) {
+                gameOver = true;
+                dialog.remove();
+            }
+        });
+        dialog.button(restartButton, true);
+        dialog.button(quitButton, true);
         dialog.invalidateHierarchy();
         dialog.invalidate();
         dialog.layout();
