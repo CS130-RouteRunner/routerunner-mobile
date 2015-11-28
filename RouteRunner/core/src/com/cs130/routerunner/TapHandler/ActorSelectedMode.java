@@ -46,7 +46,7 @@ public class ActorSelectedMode implements TapMode {
             JSONObject data = new JSONObject();
             ArrayList<Truck> trucks = tapHandler_.gameMaster_.getLocalPlayer().getTruckList();
             int truckID = trucks.indexOf(this.selectedActor_);
-            Gdx.app.log("TruckIDTag", String.valueOf(truckID));
+            Gdx.app.log("ASTruckIDTag", String.valueOf(truckID));
             data.put("id", truckID);
             data.put("item", Settings.TRUCK_ITEM);
             data.put("status", Settings.PAUSE_STATUS);
@@ -59,16 +59,20 @@ public class ActorSelectedMode implements TapMode {
             tapHandler_.curMode_ = tapHandler_.routeEditMode_;
             tapHandler_.curMode_.Init();
 
-        } else/* if (selectedActor_.isCancelEdit()) */{
+        }else if(selectedActor_.isUpgrade()){
+            selectedActor_.upgrade();
+            Gdx.app.log("ASTruckUpgrade", String.valueOf(selectedActor_.getSpeed()));
+            tapHandler_.curMode_ = tapHandler_.normalMode_;
+            tapHandler_.gameMaster_.clearWaypoints();
+            tapHandler_.gameMaster_.getLocalPlayerButtonInfo().display();
+        }
+        else/* if (selectedActor_.isCancelEdit()) */{
             // user tapped out of ActorSelectMode so go back to normal mode
             // clean up any display stuff (ie "EditRouteButton")
             tapHandler_.curMode_ = tapHandler_.normalMode_;
             tapHandler_.gameMaster_.clearWaypoints();
             tapHandler_.gameMaster_.getLocalPlayerButtonInfo().display();
-            //selectedActor_.hideInfo();
+            selectedActor_.hideInfo();
         }
-
-
-
     }
 }

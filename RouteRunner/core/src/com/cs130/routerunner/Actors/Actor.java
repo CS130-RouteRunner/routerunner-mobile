@@ -91,6 +91,7 @@ public abstract class Actor extends Sprite {
     }
 
     protected void setSpeed(float speed) {speed_ = speed;}
+    public float getSpeed(){return speed_;}
     protected boolean isPaused() {return paused_;}
 
     public void setPaused(boolean paused) {
@@ -106,6 +107,7 @@ public abstract class Actor extends Sprite {
     public boolean isSnapRoute() { return actorInfo_.isSnapRoute(); }
     public boolean isCancelEdit() { return actorInfo_.isCancelEdit(); }
     public boolean isCancelSave() { return actorInfo_.isCancelSave(); }
+    public boolean isUpgrade() { return actorInfo_.isUpdateTruck(); }
 
     public TapHandler getTapHandler(){
         return tapHandler_;
@@ -126,4 +128,7 @@ public abstract class Actor extends Sprite {
         tapHandler_.getGameMaster().showAlert(string);
     }
 
+    public void upgrade(){
+        this.setSpeed(this.getSpeed() * 1.5f);
+    }
 }
