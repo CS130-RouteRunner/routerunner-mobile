@@ -48,6 +48,7 @@ public class Settings {
     public static final String CREATE_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "new";
     public static final String JOIN_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "join";
     public static final String CREATE_USER_URL = ROUTERUNNER_BASE + "/api/user/new";
+    public static final String USER_STATS_URL = "/api/stats/user/";
 
     // Sync frame rate
     public static final int FRAMES_BETWEEN_SYNC = 10;
