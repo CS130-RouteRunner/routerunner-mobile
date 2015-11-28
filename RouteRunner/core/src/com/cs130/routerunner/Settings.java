@@ -29,7 +29,7 @@ public class Settings {
     public static final String SNAP_ROADS_KEY = "AIzaSyAQceKfG7dnkUsnOelOzUfpul5Zi4-FKUg";
 
     // Actor (truck) default movement speed
-    public static final float DEFAULT_MOVEMENT = 0.5f;
+    public static final float DEFAULT_MOVEMENT = 0.5f; //0.5f
     public static final float MISSILE_MOVEMENT = 5.0f;
 
     //Our "float equals" epsilon
@@ -55,6 +55,7 @@ public class Settings {
     public static final int BUY_TRUCK_COST = 100;
     public static final int BUY_MISSILE_COST = 200;
     public static final int FRAMES_BETWEEN_TRY_EVENT = 30;
+    public static final int TARGET_MONEY = 1000;
 
     // Random Events
     public static final String RANDOM_EVENT_PNG = "treasure.png";

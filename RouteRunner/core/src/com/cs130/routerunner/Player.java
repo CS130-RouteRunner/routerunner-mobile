@@ -32,6 +32,11 @@ public class Player {
         spawnPoint_ = boxFactory.createBox(BoxType.SpawnPoint, playerNum_);
     }
 
+    public void restartPlayer(){
+        truckList_.clear();
+        money_ = Settings.INITIAL_MONEY;
+    }
+
     public Box getSpawnPoint() { return spawnPoint_;}
     public Box getDeliveryPoint(){ return deliveryPoint_;}
     public int getMoney(){
