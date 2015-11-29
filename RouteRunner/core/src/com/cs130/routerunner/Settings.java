@@ -16,6 +16,8 @@ public class Settings {
     public static final float BUTTON_X = 1780 - BUTTON_WIDTH;
     public static final float BUTTON_Y = 1060 - BUTTON_HEIGHT;
     public static final float NEXT_POINT_RADIUS = 200;
+    public static final float TOP_START_OFFSET_X = 150;
+    public static final float TOP_START_OFFSET_Y = 150;
 
     // Pixel Conversion stuff
     public static final float WORLD_CENTER_LAT = 34.0553f;

@@ -14,13 +14,21 @@ public class MapCamera {
     private OrthographicCamera cam_;
     private Viewport viewport_;
 
-    public MapCamera(){
+    public MapCamera(int playerNum){
         cam_ = new OrthographicCamera();
         viewport_ = new StretchViewport(Settings.VIEW_WIDTH,
                 Settings.VIEW_HEIGHT,
                 cam_);
-        cam_.position.set(viewport_.getWorldWidth() / 2,
-                viewport_.getWorldHeight() / 2, 0);
+        float camPositionX = viewport_.getWorldWidth() / 2;
+        float camPositionY = viewport_.getWorldHeight() / 2;
+        if (playerNum == 0) {
+            cam_.position.set(camPositionX, camPositionY, 0);
+        } else {
+            cam_.position.set(
+                    Settings.WORLD_WIDTH - camPositionX - Settings.TOP_START_OFFSET_X,
+                    Settings.WORLD_HEIGHT - camPositionY - Settings.TOP_START_OFFSET_Y,
+                    0);
+        }
         cam_.update();
     }
 

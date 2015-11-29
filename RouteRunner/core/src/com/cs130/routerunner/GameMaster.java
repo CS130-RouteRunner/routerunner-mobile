@@ -82,7 +82,7 @@ public class GameMaster implements Screen{
         framesSinceLastSync_ = 0;
         this.messageCenter_ = messageCenter;
 
-        camera_ = new MapCamera();
+        camera_ = new MapCamera(localPlayerNum);
 
         coordConverter_ = new CoordinateConverterAdapter();
         snapToRoads_ = new SnapToRoads();
@@ -261,7 +261,8 @@ public class GameMaster implements Screen{
         }
         framesSinceLastSync_++;
 
-        if (framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
+        if (localPlayerNum_ == 0 &&
+            framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
                 randomEvents_.size() < Settings.RANDOM_EVENT_MAXCOUNT) {
             if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_RATE)) {
                 RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
