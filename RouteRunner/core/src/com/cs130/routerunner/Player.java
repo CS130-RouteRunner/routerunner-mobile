@@ -67,4 +67,6 @@ public class Player {
     public int getTruckID() { return truckID_; }
 
     public void incTruckID_() { this.truckID_++; }
+
+    public int getPlayerNum() { return playerNum_; }
 }

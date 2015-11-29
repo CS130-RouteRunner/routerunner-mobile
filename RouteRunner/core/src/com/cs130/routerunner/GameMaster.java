@@ -196,7 +196,7 @@ public class GameMaster implements Screen{
             for (Truck truck : player.getTruckList()) {
                 if (!truck.getTombStoned()) {
                     if (truck.getUpgraded()) {
-                        String truckpng = Settings.TRUCK_PNG[localPlayerNum_ + 2];
+                        String truckpng = Settings.TRUCK_PNG[player.getPlayerNum() + 2];
                         truck.setTexture(new Texture(truckpng));
                     }
                     drawSpriteCentered(truck, truck.getX(), truck.getY());
