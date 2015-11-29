@@ -260,10 +260,17 @@ public class PubnubHelper implements MessageCenter {
      * @param uuid - uuid associated with Pubnub instance
      * @param data
      * @return
-     * TODO: Fill this out
      */
     public Message createEventMessage(String uuid, JSONObject data) {
-        return new Message(new JSONObject());
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("type", Settings.EVENT_TYPE);
+            msg.put("uid", uuid);
+            msg.put("data", data);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return new Message(msg);
     }
 
     /**

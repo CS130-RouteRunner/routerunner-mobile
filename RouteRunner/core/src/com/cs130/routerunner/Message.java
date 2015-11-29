@@ -34,7 +34,7 @@ public class Message {
                 item_ = data.getString("item");
                 coords_ = null;
             }
-            else {
+            else if (type_.equals(Settings.ROUTE_TYPE) || type_.equals(Settings.EVENT_TYPE)) {
                 item_ = null;
                 coords_ = new ArrayList<LatLngPoint>();
                 String coordsString = data.getString("coords");
@@ -43,10 +43,6 @@ public class Message {
                     coords_.add(new LatLngPoint(pair));
                 }
 
-            /*for (JsonValue point : data.iterator()) {
-                //TODO: ask julian about serializing coordinates into json
-
-            }*/
             }
         }
         catch (Exception e) {
@@ -68,7 +64,7 @@ public class Message {
         if (type_.equals(Settings.PURCHASE_TYPE) || type_.equals(Settings.UPDATE_TYPE)) {
             data.put("item", item_);
         }
-        else {
+        else if (type_.equals(Settings.ROUTE_TYPE) || type_.equals(Settings.EVENT_TYPE)){
             String points = "";
             for (int i = 0; i < coords_.size() - 1; i++) {
                 points += coords_.get(i).toString() + ";";
@@ -115,14 +111,11 @@ public class Message {
      * @return
      */
     public String toString() {
-        String data;
-        if (type_.equals(Settings.PURCHASE_TYPE)) {
+        String data = "";
+        if (type_.equals(Settings.PURCHASE_TYPE) || type_.equals(Settings.UPDATE_TYPE)) {
             data = "{item:" + item_ + "}";
         }
-        else if (type_.equals(Settings.UPDATE_TYPE)) {
-            data = "{item:" + item_ + "}";
-        }
-        else {
+        else if (type_.equals(Settings.ROUTE_TYPE) || type_.equals(Settings.EVENT_TYPE)){
             String coords = "";
             for (int i = 0; i < coords_.size() - 1; i++) {
                 coords += (coords_.get(i).toString()) + ";";

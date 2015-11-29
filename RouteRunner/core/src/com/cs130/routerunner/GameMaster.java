@@ -278,9 +278,19 @@ public class GameMaster implements Screen{
                 Gdx.app.log("RandomEvent", "Created Random Event at " +
                     randomEvent.getX() + " " + randomEvent.getY());
 
-                // TODO: Prepare random event msg
+                // Prepare event message
+                JSONObject data = new JSONObject();
+                Vector3 v = new Vector3();
+                v.x = randomEvent.getX();
+                v.y = randomEvent.getY();
+                LatLngPoint point = coordConverter_.px2ll(v);
+                String coords = point.lat + "," + point.lng;
+                data.put("coords", coords);
+                data.put("id", randomEvents_.size() - 1);
 
-                // TODO: Send random event msg
+                // Send event message
+                Message toSend = messageCenter_.createEventMessage(messageCenter_.getUUID(), data);
+                messageCenter_.sendMessage(toSend);
 
             }
             framesSinceLastTryEvent_ = 0;
@@ -290,10 +300,12 @@ public class GameMaster implements Screen{
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
             Iterator<RandomEvent> iter = randomEvents_.iterator();
-            while(iter.hasNext()){
+            while (iter.hasNext()) {
                 RandomEvent randomEvent = iter.next();
-                if(truck.checkIntersectingRandomEvent(randomEvent))
+                // TODO: Send a message that this random event has been claimed
+                if (truck.checkIntersectingRandomEvent(randomEvent)) {
                     iter.remove();
+                }
             }
 
         }
@@ -371,7 +383,7 @@ public class GameMaster implements Screen{
 
                         opponentPlayer_.addTruck(truck);
                     }
-                    // If opponnent bought a missile
+                    // If opponent bought a missile
                     else if (m.getItem().equals(Settings.MISSILE_ITEM)) {
                         int truckID = m.getItemId();
                         Truck target = localPlayer_.getTruckList().get(truckID);
