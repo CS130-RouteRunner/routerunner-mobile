@@ -48,6 +48,7 @@ public class Settings {
     public static final String MATCHMAKING_URL = "/api/matchmaking/";
     public static final String CREATE_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "new";
     public static final String JOIN_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "join";
+    public static final String END_GAME_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "end";
     public static final String CREATE_USER_URL = ROUTERUNNER_BASE + "/api/user/new";
     public static final String USER_STATS_URL = ROUTERUNNER_BASE + "/api/stats/user/";
 
@@ -62,7 +63,8 @@ public class Settings {
     public static final int TRUCK_UPGRADE_COST = 50;
     public static final int TRUCK_UPGRADE_CARRY = 180;
     public static final int FRAMES_BETWEEN_TRY_EVENT = 600;
-    public static final int TARGET_MONEY = 1000;
+    public static final int TARGET_MONEY = 600;    // TODO: Change this after win syncing implemented
+
     // Random Events
     public static final String RANDOM_EVENT_PNG = "treasure.png";
     public static final float RANDOM_EVENT_AREA_PROPORTION = 0.6f;
