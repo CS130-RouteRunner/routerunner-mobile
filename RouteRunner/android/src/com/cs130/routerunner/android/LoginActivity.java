@@ -7,6 +7,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.cs130.routerunner.Settings;
+import com.cs130.routerunner.android.ApiServer.ApiServerPostTask;
+
+import org.json.JSONObject;
+
 public class LoginActivity extends Activity {
 
     @Override
@@ -26,11 +31,27 @@ public class LoginActivity extends Activity {
         Intent main = new Intent(this, MainActivity.class);
         main.putExtra("username", username.getText().toString());
         // TODO: Kailin Make a POST request to CREATE_USER_URL
-        startActivity(main);
+        try {
+            createUser(username.getText().toString());
+            startActivity(main);
+        }
+        catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     private boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
+    }
+
+    private void createUser(String username) throws Exception {
+        ApiServerPostTask apiServerPostTask = new ApiServerPostTask();
+        String endpoint = Settings.CREATE_USER_URL;
+        JSONObject params = new JSONObject();
+        String userId = username;
+        params.put("uid", userId);
+        JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
+        System.out.println(response.toString());
     }
 
 }
