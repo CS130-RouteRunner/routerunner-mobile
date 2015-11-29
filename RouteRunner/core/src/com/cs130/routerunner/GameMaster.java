@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -41,7 +42,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -67,6 +67,7 @@ public class GameMaster implements Screen{
     private BoxFactory boxFactory_;
     public SnapToRoads snapToRoads_;
     private MessageCenter messageCenter_;
+    private FPSLogger fpsLogger_;
 
     private int framesSinceLastSync_;
     private int framesSinceLastTryEvent_;
@@ -79,6 +80,7 @@ public class GameMaster implements Screen{
 
     public GameMaster(RouteRunner game, MessageCenter messageCenter,
                       int localPlayerNum) {
+        fpsLogger_ = new FPSLogger();
         framesSinceLastSync_ = 0;
         this.messageCenter_ = messageCenter;
 
@@ -142,6 +144,9 @@ public class GameMaster implements Screen{
 
     @Override
     public void render(float delta) {
+        if(Settings.LOG_FPS) {
+            fpsLogger_.log();
+        }
         update(delta);
         camera_.update();
 
@@ -264,7 +269,7 @@ public class GameMaster implements Screen{
         if (localPlayerNum_ == 0 &&
             framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
                 randomEvents_.size() < Settings.RANDOM_EVENT_MAXCOUNT) {
-            if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_RATE)) {
+            if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_PROBABILITY)) {
                 RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
                                 BoxType.RandomEvent, localPlayerNum_);
                 randomEvents_.add(randomEvent);

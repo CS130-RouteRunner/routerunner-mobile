@@ -4,6 +4,7 @@ package com.cs130.routerunner;
  * Created by julianyang on 10/22/15.
  */
 public class Settings {
+    public static final boolean LOG_FPS = false;
     public static final float PAN_SPEED = 1f;
     public static final float ZOOM_SPEED = 0.00005f;
     public static final float MAX_ZOOM = 0.9f;
@@ -28,7 +29,7 @@ public class Settings {
     public static final float MAP_TO_WEB_DPI_RATIO = WORLD_MAP_DPI /
             (float) WEB_IMAGE_DPI;
 
-    public static final String SNAP_ROADS_KEY = "AIzaSyAQceKfG7dnkUsnOelOzUfpul5Zi4-FKUg";
+    public static final String SNAP_ROADS_KEY = "AIzaSyDKD-woVbi8ldYAAiFuVGNf3ddHLPndUaI";
 
     // Actor (truck) default movement speed
     public static final float DEFAULT_MOVEMENT = 0.5f;
@@ -58,15 +59,16 @@ public class Settings {
     public static final int BUY_MISSILE_COST = 200;
     public static final int TRUCK_UPGRADE_COST = 50;
     public static final int TRUCK_UPGRADE_CARRY = 180;
-    public static final int FRAMES_BETWEEN_TRY_EVENT = 30;
+    public static final int FRAMES_BETWEEN_TRY_EVENT = 600;
 
     // Random Events
     public static final String RANDOM_EVENT_PNG = "treasure.png";
     public static final float RANDOM_EVENT_AREA_PROPORTION = 0.6f;
-    // Rate is in units of Events/Second
-    public static final float RANDOM_EVENT_RATE = 0.002f;
+    // Rate is in units of Events/ Second
+    public static final float RANDOM_EVENT_PROBABILITY = 0.002f;
     public static final int RANDOM_EVENT_VAL = 30;
     public static final int RANDOM_EVENT_MAXCOUNT = 20;
+    public static final boolean SNAP_RANDOM_EVENTS = false;
     // Spawn points
     public static final int SPAWN_POINT[][] = {{100, 100}, {1510, 1833}};
     public static final String SPAWN_PNG[] = {"factory_blue.png",
