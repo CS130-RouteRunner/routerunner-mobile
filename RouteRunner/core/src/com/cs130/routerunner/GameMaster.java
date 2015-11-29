@@ -2,6 +2,8 @@ package com.cs130.routerunner;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Net;
+import com.badlogic.gdx.Net.HttpRequest;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -77,6 +79,8 @@ public class GameMaster implements Screen{
     private boolean gameOver = false;
     private boolean restartGame = false;
     private boolean showOnce = false;
+    private String winner;
+    private String loser;
     private BitmapFont font_;
 
     private CoordinateConverter coordConverter_;
@@ -153,8 +157,33 @@ public class GameMaster implements Screen{
 
         //exit the game
         if(gameOver) {
-            //Gdx.app.log("Ending Game", "Game is ending");
-            //return;
+            // Construct POST request
+            HttpRequest post = new HttpRequest(Net.HttpMethods.POST);
+            post.setUrl(Settings.END_GAME_URL);
+            post.setHeader("Content-Type", "application/json");
+
+            JSONObject content = new JSONObject();
+            content.put("uid", messageCenter_.getUUID());
+            content.put("lid", messageCenter_.getChannel());
+            if (!winner.isEmpty()) {
+                content.put("winner", winner);
+            } else if (!loser.isEmpty()) {
+                content.put("loser", loser);
+            }
+            post.setContent(content.toString());
+
+            // Send it
+            Gdx.net.sendHttpRequest(post, new Net.HttpResponseListener() {
+                @Override
+                public void handleHttpResponse(Net.HttpResponse httpResponse) {}
+
+                @Override
+                public void failed(Throwable t) {}
+
+                @Override
+                public void cancelled() {}
+            });
+
             gameOver = false;
             Gdx.app.exit();
             return;
@@ -170,11 +199,13 @@ public class GameMaster implements Screen{
         }
 
         if(localPlayer_.getMoney() >= Settings.TARGET_MONEY && !showOnce){
+            winner = messageCenter_.getUUID();
             showOnce = true;
             gameOverAlert("You have won the game!");
         }
 
         if(opponentPlayer_.getMoney() >= Settings.TARGET_MONEY && !showOnce){
+            loser = messageCenter_.getUUID();
             showOnce = true;
             gameOverAlert("Your opponent has won the game.");
         }
