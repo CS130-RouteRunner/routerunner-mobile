@@ -91,6 +91,7 @@ public class Settings {
     public static final String ROUTE_TYPE = "route";
     public static final String UPDATE_TYPE = "update";
     public static final String TRUCK_ITEM = "truck";
+    public static final String UPGRADE_ITEM = "upgrade";
     public static final String MISSILE_ITEM = "missile";
     public static final String PAUSE_STATUS = "pause";
 

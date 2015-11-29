@@ -367,6 +367,13 @@ public class GameMaster implements Screen{
                         Gdx.app.log("MessageTag", String.valueOf(truckID));
                         showAlert("Your truck has been destroyed by a missile!");
                     }
+                    // If opponent upgraded a truck
+                    else if(m.getItem().equals(Settings.UPGRADE_ITEM)) {
+                        int truckID = m.getItemId();
+                        Truck truckToUpgrade = opponentPlayer_.getTruckList().get(truckID);
+                        truckToUpgrade.upgrade();
+                        Gdx.app.log("UpgradeMessageTag", String.valueOf(truckID));
+                    }
 
                 }
                 // Opponent set a route for his truck
