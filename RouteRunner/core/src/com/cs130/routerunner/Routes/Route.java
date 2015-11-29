@@ -86,4 +86,7 @@ public class Route {
     public int getCurrWayPointIndex(){
         return this.currWayPointIndex_;
     }
+    public void setCurrWayPointIndex(int index) {
+        currWayPointIndex_ = index;
+    }
 }

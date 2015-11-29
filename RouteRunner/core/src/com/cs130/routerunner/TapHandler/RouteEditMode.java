@@ -21,6 +21,8 @@ public class RouteEditMode implements TapMode {
     TapHandler tapHandler_;
     Route newRoute_;
     SnapToRoads snapToRoads_;
+    ArrayList<Vector3> oldPartialWaypoints_;
+    int oldPartialWaypointIndex;
 
     public RouteEditMode(TapHandler tapHandler, SnapToRoads snapToRoads) {
         this.tapHandler_ = tapHandler;
@@ -41,8 +43,15 @@ public class RouteEditMode implements TapMode {
         // we have entered setting a waypoint mode, so push this waypoint to
         // the actor.
 
-        //make the first waypoint be the truck's current position
-        if (newRoute_.wayPoints_.size() == 0){
+        //fill the route with all the waypoints the truck has already passed
+        if (newRoute_.wayPoints_.size() == 0) {
+            oldPartialWaypoints_ = new ArrayList<Vector3>();
+            if (selectedActor_.route_.getCurrWayPointIndex() > 0) {
+                for (int i = 0; i < selectedActor_.route_.getCurrWayPointIndex(); i++) {
+                    oldPartialWaypoints_.add(selectedActor_.route_.wayPoints_.get(i));
+                }
+            }
+            //make the curr waypoint be the truck's current position
             Vector3 touchPos = new Vector3();
             touchPos.set(selectedActor_.getX(), selectedActor_.getY(), 0);
             newRoute_.addWayPoint(selectedActor_.getX(), selectedActor_.getY());
@@ -62,6 +71,9 @@ public class RouteEditMode implements TapMode {
             for (Vector3 point: convertedPoints) {
                 Gdx.app.debug("CP", point.x + " " + point.y);
             }
+
+            newRoute_.wayPoints_.addAll(0, oldPartialWaypoints_);
+            newRoute_.setCurrWayPointIndex(selectedActor_.route_.getCurrWayPointIndex());
 
             Gdx.app.debug("RETag", "new route: ");
             newRoute_.printWaypoints();
