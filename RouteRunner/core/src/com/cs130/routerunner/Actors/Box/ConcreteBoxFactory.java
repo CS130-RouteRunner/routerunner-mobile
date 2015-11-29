@@ -22,7 +22,9 @@ public class ConcreteBoxFactory extends BoxFactory {
                 Math.min(Settings.WORLD_WIDTH, Settings.WORLD_HEIGHT)) / 2;
         snapToRoads_ = snapToRoads;
     }
-     public Box createBox(BoxType type, int playerNum) {
+
+    // TODO: Add parameters for generating a Box at specific x,y
+    public Box createBox(BoxType type, int playerNum) {
         // switch statement to create boxes.
         Box newBox;
         switch(type) {

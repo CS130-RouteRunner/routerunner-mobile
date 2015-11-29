@@ -17,8 +17,6 @@ public class Message {
     private List<LatLngPoint> coords_;
     private Integer itemId_;
 
-    // TODO: Add 'event' type handling to constructor, toJSON(), toString() and getters
-
     /**
      * Constructs a Message object based on the JSONObject passed in
      * @param obj - data to construct the Message with

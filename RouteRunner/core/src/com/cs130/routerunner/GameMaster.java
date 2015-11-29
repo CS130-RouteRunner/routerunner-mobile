@@ -209,6 +209,7 @@ public class GameMaster implements Screen{
         }
 
         for (RandomEvent randomEvent : randomEvents_) {
+            // TODO: Add tombstone logic
             drawSpriteCentered(randomEvent.getSprite(), randomEvent.getX(), randomEvent
                     .getY());
         }
@@ -303,6 +304,7 @@ public class GameMaster implements Screen{
             while (iter.hasNext()) {
                 RandomEvent randomEvent = iter.next();
                 // TODO: Send a message that this random event has been claimed
+                // TODO: Change to tombstone logic
                 if (truck.checkIntersectingRandomEvent(randomEvent)) {
                     iter.remove();
                 }
@@ -336,7 +338,7 @@ public class GameMaster implements Screen{
                     messageCenter_.sendMessage(toSend);
 
                     // Cleanup
-                    missile.getTargetTruck().setTombStoned_(true);
+                    missile.getTargetTruck().setTombStoned(true);
                     missiles_.remove(missile);
                 }
             }
@@ -387,7 +389,8 @@ public class GameMaster implements Screen{
                     else if (m.getItem().equals(Settings.MISSILE_ITEM)) {
                         int truckID = m.getItemId();
                         Truck target = localPlayer_.getTruckList().get(truckID);
-                        target.setTombStoned_(true);
+                        target.setTombStoned(true);
+
                         Gdx.app.log("MessageTag", String.valueOf(truckID));
                         showAlert("Your truck has been destroyed by a missile!");
                     }
@@ -423,12 +426,26 @@ public class GameMaster implements Screen{
                 else if (m.getType().equals(Settings.UPDATE_TYPE)) {
                     // If it is a truck pause
                     Gdx.app.log("SyncTag", "Update: " + m.toString());
-                        int truckID = m.getItemId();
-                        Truck target = opponentPlayer_.getTruckList().get(truckID);
-                        target.setPaused(true);
-                        Gdx.app.log("TruckPause", String.valueOf(truckID));
+                    int truckID = m.getItemId();
+                    Truck target = opponentPlayer_.getTruckList().get(truckID);
+                    target.setPaused(true);
+                    Gdx.app.log("TruckPause", String.valueOf(truckID));
                 }
-                // TODO: Add handling of 'event' messages
+                // Random event has been generated
+                else if (m.getType().equals(Settings.EVENT_TYPE)) {
+                    // playerNum doesn't do anything for randomEvent constructor
+                    List<LatLngPoint> points = m.getCoords();
+
+                    // TODO: create a random Event at coords
+                    if (points != null && !points.isEmpty()) {
+                        // Should always be a list of size 1
+                        LatLngPoint p = points.get(0);
+                        Vector3 v = coordConverter_.ll2px(p.lat, p.lng);
+
+                        RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(BoxType.RandomEvent, opponentPlayerNum_);
+                        randomEvents_.add(randomEvent);
+                    }
+                }
             }
         }
     }
