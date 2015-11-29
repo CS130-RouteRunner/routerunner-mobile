@@ -189,13 +189,44 @@ public class GameMaster implements Screen{
             return;
         }
 
-        //logic for restarting game here
+        // logic for restarting game here
         if(restartGame){
+            // Construct POST request
+            HttpRequest post = new HttpRequest(Net.HttpMethods.POST);
+            post.setUrl(Settings.END_GAME_URL);
+            post.setHeader("Content-Type", "application/json");
+
+            JSONObject content = new JSONObject();
+            content.put("uid", messageCenter_.getUUID());
+            content.put("lid", messageCenter_.getChannel());
+            if (!winner.isEmpty()) {
+                content.put("winner", winner);
+            } else if (!loser.isEmpty()) {
+                content.put("loser", loser);
+            }
+            post.setContent(content.toString());
+
+            // Send it
+            Gdx.net.sendHttpRequest(post, new Net.HttpResponseListener() {
+                @Override
+                public void handleHttpResponse(Net.HttpResponse httpResponse) {}
+
+                @Override
+                public void failed(Throwable t) {}
+
+                @Override
+                public void cancelled() {}
+            });
+
             restartGame = false;
             showOnce = false;
             showAlert("A new game is starting.");
+
+            // Clean up
             localPlayer_.restartPlayer();
             opponentPlayer_.restartPlayer();
+            randomEvents_.clear();
+            messageCenter_.setLastSyncTime();
         }
 
         if(localPlayer_.getMoney() >= Settings.TARGET_MONEY && !showOnce){
