@@ -18,6 +18,14 @@ public class Message {
     private Integer itemId_;
 
 
+
+    private float truckX_;
+
+
+
+    private float truckY_;
+
+
     private int curWaypoint_;
     /**
      * Constructs a Message object based on the JSONObject passed in
@@ -45,6 +53,8 @@ public class Message {
 
                 if(type_.equals(Settings.ROUTE_TYPE)) {
                     curWaypoint_ = data.getInt("waypointIndex");
+                    truckX_ = (float) data.getDouble("truckX");
+                    truckY_ = (float) data.getDouble("truckY");
                 }
 
             }
@@ -75,6 +85,11 @@ public class Message {
             }
             points += coords_.get(coords_.size() - 1).toString();
             data.put("coords", points);
+            if(type_.equals(Settings.ROUTE_TYPE)) {
+                data.put("waypointIndex", curWaypoint_);
+                data.put("truckX", truckX_);
+                data.put("truckY", truckY_);
+            }
         }
         json.put("data", data);
         return json;
@@ -116,6 +131,14 @@ public class Message {
      */
     public int getCurWaypoint() {
         return curWaypoint_;
+    }
+
+    public float getTruckY() {
+        return truckY_;
+    }
+
+    public float getTruckX() {
+        return truckX_;
     }
 
     /**

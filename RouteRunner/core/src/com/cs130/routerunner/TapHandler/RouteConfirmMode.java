@@ -65,6 +65,8 @@ public class RouteConfirmMode implements TapMode {
             ArrayList<Truck> trucks = tapHandler_.gameMaster_.getLocalPlayer().getTruckList();
             int truckId = trucks.indexOf(selectedActor_);
             data.put("id", truckId);
+            data.put("truckX", selectedActor_.getX());
+            data.put("truckY", selectedActor_.getY());
             Gdx.app.log("RCTag", "selected truck id :" + Integer.toString(truckId));
 
             // Send message

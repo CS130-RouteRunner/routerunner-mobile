@@ -525,9 +525,15 @@ public class GameMaster implements Screen{
                         }
                     }
                     r.setCurrWayPointIndex(m.getCurWaypoint());
-
+                    Gdx.app.debug("UpdateRouteMsg", "set waypoint index orig " +
+                            "to " + r.getCurrWayPointIndex());
+                    Gdx.app.debug("UpdateRouteMsg", "set waypoint index to" +
+                            r.getCurrWayPointIndex());
                     // Set the route and unpause the truck
                     truck.setRoute(r);
+                    truck.setX(m.getTruckX());
+                    truck.setY(m.getTruckY());
+
                     truck.setPaused(false);
                 }
                 // Synchronization messages
