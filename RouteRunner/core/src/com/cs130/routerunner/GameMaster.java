@@ -42,6 +42,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -210,7 +211,8 @@ public class GameMaster implements Screen{
 
         for (RandomEvent randomEvent : randomEvents_) {
             // TODO: Add tombstone logic
-            drawSpriteCentered(randomEvent.getSprite(), randomEvent.getX(), randomEvent
+            if (!randomEvent.isTombStoned())
+                drawSpriteCentered(randomEvent.getSprite(), randomEvent.getX(), randomEvent
                     .getY());
         }
 
@@ -300,16 +302,17 @@ public class GameMaster implements Screen{
         for (Truck truck: localPlayer_.getTruckList()) {
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
-            Iterator<RandomEvent> iter = randomEvents_.iterator();
-            while (iter.hasNext()) {
-                RandomEvent randomEvent = iter.next();
-                // TODO: Send a message that this random event has been claimed
-                // TODO: Change to tombstone logic
-                if (truck.checkIntersectingRandomEvent(randomEvent)) {
-                    iter.remove();
+            for (RandomEvent randomEvent : randomEvents_) {
+                if (truck.checkIntersectingRandomEvent(randomEvent) && !randomEvent.isTombStoned()) {
+                    randomEvent.setTombStoned(true);
+                    JSONObject data = new JSONObject();
+                    int id = randomEvents_.indexOf(randomEvent);
+                    data.put("id", id);
+                    data.put("item", Settings.EVENT_TYPE);
+                    Message m = messageCenter_.createUpdateMessage(messageCenter_.getUUID() ,data);
+                    messageCenter_.sendMessage(m);
                 }
             }
-
         }
 
         for (Truck truck: opponentPlayer_.getTruckList()) {
@@ -425,11 +428,19 @@ public class GameMaster implements Screen{
                 // Synchronization messages
                 else if (m.getType().equals(Settings.UPDATE_TYPE)) {
                     // If it is a truck pause
-                    Gdx.app.log("SyncTag", "Update: " + m.toString());
-                    int truckID = m.getItemId();
-                    Truck target = opponentPlayer_.getTruckList().get(truckID);
-                    target.setPaused(true);
-                    Gdx.app.log("TruckPause", String.valueOf(truckID));
+                    if (m.getItem().equals(Settings.TRUCK_ITEM)) {
+                        Gdx.app.log("SyncTag", "Update: " + m.toString());
+                        int truckID = m.getItemId();
+                        Truck target = opponentPlayer_.getTruckList().get(truckID);
+                        target.setPaused(true);
+                        Gdx.app.log("TruckPause", String.valueOf(truckID));
+                    }
+                    else {
+                        int eventID = m.getItemId();
+                        RandomEvent event = randomEvents_.get(eventID);
+                        event.setTombStoned(true);
+                        Gdx.app.log("tombstoneEvent", String.valueOf(eventID));
+                    }
                 }
                 // Random event has been generated
                 else if (m.getType().equals(Settings.EVENT_TYPE)) {
