@@ -29,6 +29,6 @@ public class RandomEvent extends Box {
     }
 
     public void setTombStoned(boolean tombStoned) {
-        this.tombStoned_ = tombStoned_;
+        this.tombStoned_ = tombStoned;
     }
 }
