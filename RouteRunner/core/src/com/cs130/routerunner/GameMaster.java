@@ -234,6 +234,11 @@ public class GameMaster implements Screen{
             winner = messageCenter_.getUUID();
             showOnce = true;
             gameOverAlert("You have won the game!");
+            JSONObject data = new JSONObject();
+            data.put("id", messageCenter_.getUUID());
+            data.put("item", Settings.WIN_TYPE);
+            Message m = messageCenter_.createUpdateMessage(messageCenter_.getUUID(), data);
+            messageCenter_.sendMessage(m);
         }
 
         update(delta);
@@ -530,11 +535,15 @@ public class GameMaster implements Screen{
                         target.setPaused(true);
                         Gdx.app.log("TruckPause", String.valueOf(truckID));
                     }
-                    else {
+                    else if (m.getItem().equals(Settings.EVENT_TYPE)){
                         int eventID = m.getItemId();
                         RandomEvent event = randomEvents_.get(eventID);
                         event.setTombStoned(true);
                         Gdx.app.log("tombstoneEvent", String.valueOf(eventID));
+                    } else {
+                        loser = messageCenter_.getUUID();
+                        showOnce = true;
+                        gameOverAlert("Your opponent has won the game.");
                     }
                 }
                 // Random event has been generated
