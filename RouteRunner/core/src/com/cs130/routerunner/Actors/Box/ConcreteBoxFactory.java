@@ -35,9 +35,11 @@ public class ConcreteBoxFactory extends BoxFactory {
                 newBox = new SpawnPoint(playerNum);
                 break;
             case RandomEvent:
-                int x = Settings.WORLD_WIDTH/2 +
+                int x = Settings.WORLD_WIDTH/2 -
+                        Settings.RANDOM_EVENT_OFFSET_X +
                     MathUtils.random(randomEventAreaHalfSideLength_  * -1, randomEventAreaHalfSideLength_ );
-                int y = Settings.WORLD_HEIGHT/2 +
+                int y = Settings.WORLD_HEIGHT/2 -
+                        Settings.RANDOM_EVENT_OFFSET_Y +
                 MathUtils.random(randomEventAreaHalfSideLength_  * -1, randomEventAreaHalfSideLength_ );
                 List<Vector3> points = new ArrayList<Vector3>();
                 Vector3 point = new Vector3();

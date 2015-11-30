@@ -17,6 +17,8 @@ public class Message {
     private List<LatLngPoint> coords_;
     private Integer itemId_;
 
+
+    private int curWaypoint_;
     /**
      * Constructs a Message object based on the JSONObject passed in
      * @param obj - data to construct the Message with
@@ -39,6 +41,10 @@ public class Message {
                 List<String> coordPairs = Arrays.asList(coordsString.split(";"));
                 for (String pair : coordPairs) {
                     coords_.add(new LatLngPoint(pair));
+                }
+
+                if(type_.equals(Settings.ROUTE_TYPE)) {
+                    curWaypoint_ = data.getInt("waypointIndex");
                 }
 
             }
@@ -103,6 +109,14 @@ public class Message {
      * @return
      */
     public Integer getItemId() { return itemId_; }
+
+    /**
+     * Gets current waypoint of the route
+     * @return
+     */
+    public int getCurWaypoint() {
+        return curWaypoint_;
+    }
 
     /**
      * Stringifies a Message object
