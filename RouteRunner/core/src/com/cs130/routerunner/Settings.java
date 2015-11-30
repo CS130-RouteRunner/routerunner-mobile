@@ -68,6 +68,8 @@ public class Settings {
     // Random Events
     public static final String RANDOM_EVENT_PNG = "treasure.png";
     public static final float RANDOM_EVENT_AREA_PROPORTION = 0.6f;
+    public static final int RANDOM_EVENT_OFFSET_X = 100;
+    public static final int RANDOM_EVENT_OFFSET_Y = 100;
     // Rate is in units of Events/ Second
     public static final float RANDOM_EVENT_PROBABILITY = 0.002f;
     public static final int RANDOM_EVENT_VAL = 30;
@@ -78,7 +80,7 @@ public class Settings {
     public static final String SPAWN_PNG[] = {"factory_blue.png",
             "factory_red.png"};
     // Delivery points
-    public static final int DELIVERY_POINT[][] = {{1082, 1143},{1120, 986}};
+    public static final int DELIVERY_POINT[][] = {{1082, 1143},{581, 779}};
     public static final String DELIVERY_PNG[] = {
             "house_blue.png", "house_red.png"};
 

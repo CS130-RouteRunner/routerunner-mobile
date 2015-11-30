@@ -524,6 +524,7 @@ public class GameMaster implements Screen{
                             r.addWayPoint(v.x, v.y);
                         }
                     }
+                    r.setCurrWayPointIndex(m.getCurWaypoint());
 
                     // Set the route and unpause the truck
                     truck.setRoute(r);

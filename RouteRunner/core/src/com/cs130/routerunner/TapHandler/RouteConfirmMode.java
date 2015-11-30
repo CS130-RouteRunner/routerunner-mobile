@@ -61,6 +61,7 @@ public class RouteConfirmMode implements TapMode {
             }
             coords += coordinateConverter_.px2ll(waypoints.get(waypoints.size()-1));
             data.put("coords", coords);
+            data.put("waypointIndex", snappedRoute_.getCurrWayPointIndex());
             ArrayList<Truck> trucks = tapHandler_.gameMaster_.getLocalPlayer().getTruckList();
             int truckId = trucks.indexOf(selectedActor_);
             data.put("id", truckId);
