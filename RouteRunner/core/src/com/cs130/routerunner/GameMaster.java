@@ -80,8 +80,8 @@ public class GameMaster implements Screen{
     private boolean gameOver = false;
     private boolean restartGame = false;
     private boolean showOnce = false;
-    private String winner;
-    private String loser;
+    private String winner = "";
+    private String loser = "";
     private BitmapFont font_;
 
     private CoordinateConverter coordConverter_;
@@ -166,9 +166,9 @@ public class GameMaster implements Screen{
             JSONObject content = new JSONObject();
             content.put("uid", messageCenter_.getUUID());
             content.put("lid", messageCenter_.getChannel());
-            if (!(winner.length() == 0)) {
+            if (!winner.isEmpty()) {
                 content.put("winner", winner);
-            } else if (!(loser.length() == 0)) {
+            } else if (!loser.isEmpty()) {
                 content.put("loser", loser);
             }
             post.setContent(content.toString());
@@ -200,9 +200,9 @@ public class GameMaster implements Screen{
             JSONObject content = new JSONObject();
             content.put("uid", messageCenter_.getUUID());
             content.put("lid", messageCenter_.getChannel());
-            if (!(winner.length() == 0)) {
+            if (!winner.isEmpty()) {
                 content.put("winner", winner);
-            } else if (!(loser.length() == 0)) {
+            } else if (!loser.isEmpty()) {
                 content.put("loser", loser);
             }
             post.setContent(content.toString());
@@ -234,12 +234,6 @@ public class GameMaster implements Screen{
             winner = messageCenter_.getUUID();
             showOnce = true;
             gameOverAlert("You have won the game!");
-        }
-
-        if(opponentPlayer_.getMoney() >= Settings.TARGET_MONEY && !showOnce){
-            loser = messageCenter_.getUUID();
-            showOnce = true;
-            gameOverAlert("Your opponent has won the game.");
         }
 
         update(delta);
@@ -713,7 +707,7 @@ public class GameMaster implements Screen{
         dialog.getContentTable().add(label);
 
         TextButton restartButton = new TextButton("Restart", skin_);
-        restartButton.addListener(new ClickListener(){
+        restartButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 restartGame = true;
                 dialog.remove();
