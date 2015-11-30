@@ -42,7 +42,9 @@ public class ConcreteBoxFactory extends BoxFactory {
                 point.x = x;
                 point.y = y;
                 points.add(point);
-                points = snapToRoads_.snapPoints(points);
+                if(Settings.SNAP_RANDOM_EVENTS) {
+                    points = snapToRoads_.snapPoints(points);
+                }
                 newBox = new RandomEvent((int) points.get(0).x, (int) points
                         .get(0).y);
                 break;

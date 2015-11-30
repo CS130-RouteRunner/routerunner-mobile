@@ -1,10 +1,14 @@
 package com.cs130.routerunner.android;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
 import android.content.Intent;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -24,7 +28,7 @@ public class MainActivity extends Activity {
     private PubnubHelper pubnubHelper_;
     private ListView listView_;
     private ArrayAdapter<String> lobbyAdapter_;
-    //private ChatAdapter chatAdapter_;
+    private ImageButton profileImage_;
 
     private String username_;
     private ArrayList<String> channelList_ = new ArrayList<String>();
@@ -47,10 +51,16 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.username_ = randomString();   // Change this when login is merged
+
+        final Context context = this;
+
+        Intent intent = getIntent();
+        final String username_ = intent.getStringExtra("username");
+        this.username_ = username_;
         System.out.println(this.username_);
         this.listView_ = (ListView) findViewById(R.id.listView);
         this.listView_.setEmptyView(findViewById(R.id.emptyLobbyItem));
+        this.profileImage_ = (ImageButton) findViewById(R.id.profileImage);
 
         // Connect to PubNub
         pubnubHelper_ = new PubnubHelper(this.username_, null);
@@ -62,13 +72,47 @@ public class MainActivity extends Activity {
         this.listView_.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String lobbyId = (String)((TextView) view).getText();
+                String lobbyId = (String) ((TextView) view).getText();
                 try {
                     joinLobby(lobbyId);
                     Toast.makeText(getBaseContext(), "Joined " + lobbyId, Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     Toast.makeText(getBaseContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        // Add listener to profile picture
+        this.profileImage_.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Kailin navigate to User Profile Activity
+                // Toast.makeText(getApplicationContext(), "Go to " + username_ + "'s profile", Toast.LENGTH_SHORT).show();
+
+                ArrayList<Integer> data = getUserInfo(username_);
+
+                // custom dialog
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.custom_dialog_fragment);
+                dialog.setTitle(username_ + "'s Stats");
+
+                // set the custom dialog components - text, image and button
+                TextView text1 = (TextView) dialog.findViewById(R.id.textView6);
+                text1.setText("Number of games won: " + data.get(0));
+
+                TextView text2 = (TextView) dialog.findViewById(R.id.textView7);
+                text2.setText("Number of games lost: " + data.get(1));
+
+                Button dialogButton = (Button) dialog.findViewById(R.id.button3);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
         });
 
@@ -84,7 +128,7 @@ public class MainActivity extends Activity {
         try {
             JSONObject params = new JSONObject();
             String userId = this.username_;
-            String lobbyId = Settings.LOBBY_PREFIX + userId;
+            String lobbyId = Settings.LOBBY_PREFIX + randomString();
             params.put("uid", userId);
             params.put("lid", lobbyId);
             JSONObject response = apiServerPostTask.execute(endpoint, params.toString()).get();
@@ -186,6 +230,36 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    /**
+     * @param username
+     * @return ArrayList: (# wins, # losses)
+     */
+    private ArrayList<Integer> getUserInfo(String username) {
+        ApiServerGetTask apiServerGetTask = new ApiServerGetTask();
+        String endpoint = Settings.USER_STATS_URL + username;
+        ArrayList<Integer> data = new ArrayList<Integer>();
+
+        try {
+            JSONObject response = apiServerGetTask.execute(endpoint).get();
+            System.out.println(response.toString());
+            String jstatus = response.getString("status");
+            int jwin = response.getJSONObject("data").getInt("win");
+            int jloss = response.getJSONObject("data").getInt("loss");
+
+            if (jstatus.equals("success")) {
+                data.add(jwin);
+                data.add(jloss);
+            }
+            else {
+                Toast.makeText(getBaseContext(), "User not found!", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+        return data;
     }
 
     /*

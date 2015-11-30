@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -38,7 +39,7 @@ public class PubnubHelper implements MessageCenter {
         this.pubnub_.setUUID(username);
         this.messageList_ = new ArrayList<Message>();
         this.messageListLock_ = new ReentrantLock(false);
-        this.lastSyncTime_ = 0L;
+        this.lastSyncTime_ = new Date().getTime() * 10000;
         if (channel != null) {
             this.channel_ = channel;
             subscribeChannel(channel);
@@ -276,5 +277,9 @@ public class PubnubHelper implements MessageCenter {
             System.out.println(e.toString());
         }
         pubnub_.setState(channel_, pubnub_.getUUID(), jso, callback);
+    }
+
+    public void setLastSyncTime() {
+        this.lastSyncTime_ = new Date().getTime() * 10000;
     }
 }

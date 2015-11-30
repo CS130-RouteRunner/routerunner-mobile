@@ -39,6 +39,7 @@ public class PubnubHelperTest extends InstrumentationTestCase {
         String expectedPurchaseValue = "truck";
         String expectedPurchaseType = "purchase";
         expectedPurchase.put(expectedPurchaseKey, expectedPurchaseValue);
+        expectedPurchase.put("id", 1);
         Message purchaseMessage = pubnubHelper.createPurchaseMessage(expecteduuid, expectedPurchase);
         assertEquals(expectedPurchaseType, purchaseMessage.getType());
         assertEquals(expecteduuid, purchaseMessage.getUid());
@@ -58,6 +59,7 @@ public class PubnubHelperTest extends InstrumentationTestCase {
         expectedRouteList.add(new LatLngPoint(point3));
         String expectedRouteType = "route";
         expectedRoute.put(expectedRouteKey, expectedRouteString);
+        expectedRoute.put("id", 1);
         Message routeMessage = pubnubHelper.createRouteMessage(expecteduuid, expectedRoute);
         assertEquals(expectedRouteType, routeMessage.getType());
         assertEquals(expecteduuid, routeMessage.getUid());

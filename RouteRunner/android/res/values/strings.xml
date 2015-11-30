@@ -13,4 +13,6 @@
     <string name="sign_in_google">Sign in with Google</string>
     <string name="create_account">Create an Account</string>
     <string name="emptyLobbyList">No lobbies exist!</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_user_profile">userProfile</string>
 </resources>

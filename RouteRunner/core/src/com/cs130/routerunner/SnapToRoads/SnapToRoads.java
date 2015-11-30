@@ -43,13 +43,14 @@ public class SnapToRoads {
         }
 
         // Make the API call to get the snapped points
-        SnappedPoint[] SPoints = new SnappedPoint[0];
-        try {
-            SPoints = RoadsApi.snapToRoads(Context, true, DataPoints).await();
-        }
-        catch (Exception e) {
-            // do some error handling
-            Gdx.app.error("SnapToRoads", e.getMessage());
+        SnappedPoint[] SPoints = null;
+        while (SPoints == null) {
+            try {
+                SPoints = RoadsApi.snapToRoads(Context, true, DataPoints).await();
+            } catch (Exception e) {
+                // do some error handling
+                Gdx.app.error("SnapToRoads", e.getMessage());
+            }
         }
         List<SnappedPoint> Points = Arrays.asList(SPoints);
 

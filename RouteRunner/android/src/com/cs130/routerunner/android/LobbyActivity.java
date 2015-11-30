@@ -196,6 +196,7 @@ public class LobbyActivity extends Activity {
         routeRunner.putExtra("playerNum", getPlayerID());
         routeRunner.putExtra("lobby-id", channel_);
         startActivity(routeRunner);
+        finish();
     }
 
     private int getPlayerID() {

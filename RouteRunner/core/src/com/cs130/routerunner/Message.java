@@ -27,7 +27,7 @@ public class Message {
             type_ = obj.getString("type");
             uid_ = obj.getString("uid");
             JSONObject data = obj.getJSONObject("data");
-            Gdx.app.log("MessageConstructorTag", data.toString());
+//            Gdx.app.log("MessageConstructorTag", data.toString());
             itemId_ = data.getInt("id");
             if (type_.equals(Settings.PURCHASE_TYPE) || type_.equals(Settings.UPDATE_TYPE)) {
                 item_ = data.getString("item");

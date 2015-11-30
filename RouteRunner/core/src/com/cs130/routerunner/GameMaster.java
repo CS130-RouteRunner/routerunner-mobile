@@ -2,8 +2,11 @@ package com.cs130.routerunner;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Net;
+import com.badlogic.gdx.Net.HttpRequest;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -41,7 +44,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -67,6 +69,7 @@ public class GameMaster implements Screen{
     private BoxFactory boxFactory_;
     public SnapToRoads snapToRoads_;
     private MessageCenter messageCenter_;
+    private FPSLogger fpsLogger_;
 
     private int framesSinceLastSync_;
     private int framesSinceLastTryEvent_;
@@ -76,16 +79,19 @@ public class GameMaster implements Screen{
     private boolean gameOver = false;
     private boolean restartGame = false;
     private boolean showOnce = false;
+    private String winner;
+    private String loser;
     private BitmapFont font_;
 
     private CoordinateConverter coordConverter_;
 
     public GameMaster(RouteRunner game, MessageCenter messageCenter,
                       int localPlayerNum) {
+        fpsLogger_ = new FPSLogger();
         framesSinceLastSync_ = 0;
         this.messageCenter_ = messageCenter;
 
-        camera_ = new MapCamera();
+        camera_ = new MapCamera(localPlayerNum);
 
         coordConverter_ = new CoordinateConverterAdapter();
         snapToRoads_ = new SnapToRoads();
@@ -145,30 +151,92 @@ public class GameMaster implements Screen{
 
     @Override
     public void render(float delta) {
+        if(Settings.LOG_FPS) {
+            fpsLogger_.log();
+        }
+
         //exit the game
         if(gameOver) {
-            //Gdx.app.log("Ending Game", "Game is ending");
-            //return;
+            // Construct POST request
+            HttpRequest post = new HttpRequest(Net.HttpMethods.POST);
+            post.setUrl(Settings.END_GAME_URL);
+            post.setHeader("Content-Type", "application/json");
+
+            JSONObject content = new JSONObject();
+            content.put("uid", messageCenter_.getUUID());
+            content.put("lid", messageCenter_.getChannel());
+            if (!(winner.length() == 0)) {
+                content.put("winner", winner);
+            } else if (!(loser.length() == 0)) {
+                content.put("loser", loser);
+            }
+            post.setContent(content.toString());
+
+            // Send it
+            Gdx.net.sendHttpRequest(post, new Net.HttpResponseListener() {
+                @Override
+                public void handleHttpResponse(Net.HttpResponse httpResponse) {}
+
+                @Override
+                public void failed(Throwable t) {}
+
+                @Override
+                public void cancelled() {}
+            });
+
             gameOver = false;
             Gdx.app.exit();
             return;
         }
 
-        //logic for restarting game here
+        // logic for restarting game here
         if(restartGame){
+            // Construct POST request
+            HttpRequest post = new HttpRequest(Net.HttpMethods.POST);
+            post.setUrl(Settings.END_GAME_URL);
+            post.setHeader("Content-Type", "application/json");
+
+            JSONObject content = new JSONObject();
+            content.put("uid", messageCenter_.getUUID());
+            content.put("lid", messageCenter_.getChannel());
+            if (!(winner.length() == 0)) {
+                content.put("winner", winner);
+            } else if (!(loser.length() == 0)) {
+                content.put("loser", loser);
+            }
+            post.setContent(content.toString());
+
+            // Send it
+            Gdx.net.sendHttpRequest(post, new Net.HttpResponseListener() {
+                @Override
+                public void handleHttpResponse(Net.HttpResponse httpResponse) {}
+
+                @Override
+                public void failed(Throwable t) {}
+
+                @Override
+                public void cancelled() {}
+            });
+
             restartGame = false;
             showOnce = false;
             showAlert("A new game is starting.");
+
+            // Clean up
             localPlayer_.restartPlayer();
             opponentPlayer_.restartPlayer();
+            randomEvents_.clear();
+            messageCenter_.setLastSyncTime();
         }
 
         if(localPlayer_.getMoney() >= Settings.TARGET_MONEY && !showOnce){
+            winner = messageCenter_.getUUID();
             showOnce = true;
             gameOverAlert("You have won the game!");
         }
 
         if(opponentPlayer_.getMoney() >= Settings.TARGET_MONEY && !showOnce){
+            loser = messageCenter_.getUUID();
             showOnce = true;
             gameOverAlert("Your opponent has won the game.");
         }
@@ -220,8 +288,13 @@ public class GameMaster implements Screen{
                     deliveryPoint.getY());
 
             for (Truck truck : player.getTruckList()) {
-                if (!truck.getTombStoned())
+                if (!truck.getTombStoned()) {
+                    if (truck.getUpgraded()) {
+                        String truckpng = Settings.TRUCK_PNG[localPlayerNum_ + 2];
+                        truck.setTexture(new Texture(truckpng));
+                    }
                     drawSpriteCentered(truck, truck.getX(), truck.getY());
+                }
             }
         }
         for (Missile missile: missiles_) {
@@ -287,9 +360,10 @@ public class GameMaster implements Screen{
         }
         framesSinceLastSync_++;
 
-        if (framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
+        if (localPlayerNum_ == 0 &&
+                framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
                 randomEvents_.size() < Settings.RANDOM_EVENT_MAXCOUNT) {
-            if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_RATE)) {
+            if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_PROBABILITY)) {
                 RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
                         BoxType.RandomEvent, localPlayerNum_);
                 randomEvents_.add(randomEvent);
@@ -392,6 +466,13 @@ public class GameMaster implements Screen{
                         Gdx.app.log("MessageTag", String.valueOf(truckID));
                         showAlert("Your truck has been destroyed by a missile!");
                     }
+                    // If opponent upgraded a truck
+                    else if(m.getItem().equals(Settings.UPGRADE_ITEM)) {
+                        int truckID = m.getItemId();
+                        Truck truckToUpgrade = opponentPlayer_.getTruckList().get(truckID);
+                        truckToUpgrade.upgrade();
+                        Gdx.app.log("UpgradeMessageTag", String.valueOf(truckID));
+                    }
 
                 }
                 // Opponent set a route for his truck
@@ -464,6 +545,15 @@ public class GameMaster implements Screen{
     public PlayerButtonInfo getLocalPlayerButtonInfo(){
         return localPlayer_.getPlayerButtonInfo();
     }
+
+    public boolean upgradeTruck(){
+        if(localPlayer_.getMoney() >= Settings.TRUCK_UPGRADE_COST) {
+            localPlayer_.subtractMoney(Settings.TRUCK_UPGRADE_COST);
+            return true;
+        }else
+            return false;
+    }
+
     public boolean buyTruck() {
         //check if we can afford
         if (localPlayer_.getMoney() >= Settings.BUY_TRUCK_COST) {

@@ -70,6 +70,11 @@ public interface MessageCenter {
     long getLastSyncTime();
 
     /**
+     * Sets lastSyncTime to be now.
+     */
+    void setLastSyncTime();
+
+    /**
      * Creates a Message of type 'purchase'
      * @param uuid - uuid associated with Pubnub instance
      * @param data - payload

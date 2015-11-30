@@ -4,18 +4,21 @@ package com.cs130.routerunner;
  * Created by julianyang on 10/22/15.
  */
 public class Settings {
+    public static final boolean LOG_FPS = false;
     public static final float PAN_SPEED = 1f;
     public static final float ZOOM_SPEED = 0.00005f;
     public static final float MAX_ZOOM = 0.9f;
     public static final int WORLD_WIDTH = 1984;
     public static final int WORLD_HEIGHT = 2244;
-	public static final int VIEW_WIDTH = 800;
-	public static final int VIEW_HEIGHT = 450;
+    public static final int VIEW_WIDTH = 800;
+    public static final int VIEW_HEIGHT = 450;
     public static final float BUTTON_WIDTH = 380f;
     public static final float BUTTON_HEIGHT = 100f;
     public static final float BUTTON_X = 1780 - BUTTON_WIDTH;
     public static final float BUTTON_Y = 1060 - BUTTON_HEIGHT;
     public static final float NEXT_POINT_RADIUS = 200;
+    public static final float TOP_START_OFFSET_X = 150;
+    public static final float TOP_START_OFFSET_Y = 150;
 
     // Pixel Conversion stuff
     public static final float WORLD_CENTER_LAT = 34.0553f;
@@ -26,7 +29,7 @@ public class Settings {
     public static final float MAP_TO_WEB_DPI_RATIO = WORLD_MAP_DPI /
             (float) WEB_IMAGE_DPI;
 
-    public static final String SNAP_ROADS_KEY = "AIzaSyAQceKfG7dnkUsnOelOzUfpul5Zi4-FKUg";
+    public static final String SNAP_ROADS_KEY = "AIzaSyDKD-woVbi8ldYAAiFuVGNf3ddHLPndUaI";
 
     // Actor (truck) default movement speed
     public static final float DEFAULT_MOVEMENT = 0.5f; //0.5f
@@ -45,6 +48,9 @@ public class Settings {
     public static final String MATCHMAKING_URL = "/api/matchmaking/";
     public static final String CREATE_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "new";
     public static final String JOIN_LOBBY_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "join";
+    public static final String END_GAME_URL = ROUTERUNNER_BASE + MATCHMAKING_URL + "end";
+    public static final String CREATE_USER_URL = ROUTERUNNER_BASE + "/api/user/new";
+    public static final String USER_STATS_URL = ROUTERUNNER_BASE + "/api/stats/user/";
 
     // Sync frame rate
     public static final int FRAMES_BETWEEN_SYNC = 10;
@@ -54,16 +60,19 @@ public class Settings {
     public static final int INITIAL_TRUCK_MONEY = 50;
     public static final int BUY_TRUCK_COST = 100;
     public static final int BUY_MISSILE_COST = 200;
-    public static final int FRAMES_BETWEEN_TRY_EVENT = 30;
-    public static final int TARGET_MONEY = 1000;
+    public static final int TRUCK_UPGRADE_COST = 50;
+    public static final int TRUCK_UPGRADE_CARRY = 180;
+    public static final int FRAMES_BETWEEN_TRY_EVENT = 600;
+    public static final int TARGET_MONEY = 600;    // TODO: Change this after win syncing implemented
 
     // Random Events
     public static final String RANDOM_EVENT_PNG = "treasure.png";
     public static final float RANDOM_EVENT_AREA_PROPORTION = 0.6f;
-    // Rate is in units of Events/Second
-    public static final float RANDOM_EVENT_RATE = 0.002f;
+    // Rate is in units of Events/ Second
+    public static final float RANDOM_EVENT_PROBABILITY = 0.002f;
     public static final int RANDOM_EVENT_VAL = 30;
     public static final int RANDOM_EVENT_MAXCOUNT = 20;
+    public static final boolean SNAP_RANDOM_EVENTS = false;
     // Spawn points
     public static final int SPAWN_POINT[][] = {{100, 100}, {1510, 1833}};
     public static final String SPAWN_PNG[] = {"factory_blue.png",
@@ -73,8 +82,10 @@ public class Settings {
     public static final String DELIVERY_PNG[] = {
             "house_blue.png", "house_red.png"};
 
-    public static final String TRUCK_PNG[] = {"truck_blue.png", "truck_red" +
-            ".png"};
+    public static final String TRUCK_PNG[] = {"truck_blue.png",
+            "truck_red.png",
+            "truck_blue_upgrade.png",
+            "truck_red_upgrade.png" };
 
     // Setting flag for synchronized start game
     public static final boolean WAIT_FOR_PLAYERS = false;
@@ -84,6 +95,7 @@ public class Settings {
     public static final String ROUTE_TYPE = "route";
     public static final String UPDATE_TYPE = "update";
     public static final String TRUCK_ITEM = "truck";
+    public static final String UPGRADE_ITEM = "upgrade";
     public static final String MISSILE_ITEM = "missile";
     public static final String PAUSE_STATUS = "pause";
 

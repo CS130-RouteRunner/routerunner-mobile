@@ -19,12 +19,14 @@ import com.cs130.routerunner.Settings;
 import com.cs130.routerunner.TapHandler.TapHandler;
 
 import java.util.EventListener;
+import java.util.Set;
 
 
 /**
  * Created by Evannnnn on 10/29/15.
  */
 public class ActorInfo {
+    private Actor actor_;
     private Stage stage_;
     private Skin skin_;
     private static ButtonType lastClicked_;
@@ -33,10 +35,12 @@ public class ActorInfo {
     private Button buttonSaveRoute_;
     private Button buttonCancelEdit_;
     private Button buttonCancelSave_;
+    private Button buttonUpgrade_;
     private TapHandler tapHandler_;
     private ShapeRenderer shapeRenderer_;
 
-    public ActorInfo(Stage stage, TapHandler tapHandler){
+    public ActorInfo(Actor actor, Stage stage, final TapHandler tapHandler){
+        actor_ = actor;
         stage_ = stage;
         lastClicked_ = ButtonType.NONE;
         tapHandler_ = tapHandler;
@@ -48,10 +52,13 @@ public class ActorInfo {
         buttonSnapRoute_ = new TextButton("Snap Route", skin_);
         buttonSaveRoute_ = new TextButton("Save Route", skin_);
         buttonCancelSave_ = new TextButton("Cancel", skin_);
+        buttonUpgrade_ = new TextButton("Upgrade", skin_);
 
         buttonEditRoute_.setBounds(Settings.BUTTON_X-Settings.BUTTON_WIDTH, Settings.BUTTON_Y,
                 Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
         buttonCancelEdit_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y,
+                Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
+        buttonUpgrade_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y-Settings.BUTTON_HEIGHT,
                 Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
         buttonSnapRoute_.setBounds(Settings.BUTTON_X, Settings.BUTTON_Y,
                 Settings.BUTTON_WIDTH, Settings.BUTTON_HEIGHT);
@@ -65,20 +72,30 @@ public class ActorInfo {
                 lastClicked_ = ButtonType.EDIT_ROUTE;
                 Gdx.app.log("AIdisplay", "Edit\n");
                 tapHandler_.Tap(x, y, 1);
-                buttonEditRoute_.remove();
+                hide();
                 stage_.addActor(buttonSnapRoute_);
 
             }
         });
+
         buttonCancelEdit_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 lastClicked_ = ButtonType.CANCEL_EDIT;
                 Gdx.app.log("AIdisplay", "Cancel Edit\n");
                 tapHandler_.Tap(x, y, 1);
                 hide();
-
             }
         });
+
+        buttonUpgrade_.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                lastClicked_ = ButtonType.UPGRADE_TRUCK;
+                Gdx.app.log("AIdisplay", "Upgrade truck");
+                tapHandler_.Tap(x, y, 1);
+                hide();
+            }
+        });
+
         buttonSnapRoute_.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 lastClicked_ = ButtonType.SNAP_ROUTE;
@@ -111,6 +128,8 @@ public class ActorInfo {
         Gdx.app.log("AIdisplay", "Enter display()\n");
         stage_.addActor(buttonEditRoute_);
         stage_.addActor(buttonCancelEdit_);
+        if(! actor_.getUpgraded() )
+            stage_.addActor(buttonUpgrade_);
     }
 
     public void hide(){
@@ -118,13 +137,15 @@ public class ActorInfo {
             buttonEditRoute_.remove();
         if(buttonSnapRoute_ != null && buttonSnapRoute_.isVisible())
             buttonSnapRoute_.remove();
+        if(buttonUpgrade_ != null && buttonUpgrade_.isVisible())
+            buttonUpgrade_.remove();
         if(buttonCancelEdit_ != null && buttonCancelEdit_.isVisible())
             buttonCancelEdit_.remove();
         if(buttonSaveRoute_ != null && buttonSaveRoute_.isVisible())
             buttonSaveRoute_.remove();
         if(buttonCancelSave_ != null && buttonCancelSave_.isVisible())
             buttonCancelSave_.remove();
-        lastClicked_ = ButtonType.NONE;
+        //lastClicked_ = ButtonType.NONE;
     }
 
     public boolean isEditRoute() { return lastClicked_.equals(ButtonType.EDIT_ROUTE); }
@@ -136,4 +157,10 @@ public class ActorInfo {
     public boolean isSaveRoute() { return lastClicked_.equals(ButtonType.SAVE_ROUTE); }
 
     public boolean isCancelSave() { return lastClicked_.equals(ButtonType.CANCEL_SAVE); }
+
+    public boolean isUpdateTruck() {
+        boolean ret = lastClicked_.equals(ButtonType.UPGRADE_TRUCK);
+        lastClicked_ = ButtonType.NONE;
+        return ret;
+    }
 }
