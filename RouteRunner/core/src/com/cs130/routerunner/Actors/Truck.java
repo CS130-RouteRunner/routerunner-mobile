@@ -82,7 +82,7 @@ public class Truck extends Actor {
 
     public boolean getTombStoned() { return tombStoned_; }
 
-    public void setTombStoned_(boolean tombStoned_) { this.tombStoned_ = tombStoned_; }
+    public void setTombStoned(boolean tombStoned_) { this.tombStoned_ = tombStoned_; }
 
     @Override
     public void upgrade(){
