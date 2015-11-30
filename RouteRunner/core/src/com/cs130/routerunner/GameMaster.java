@@ -211,9 +211,10 @@ public class GameMaster implements Screen{
 
         for (RandomEvent randomEvent : randomEvents_) {
             // TODO: Add tombstone logic
-            if (!randomEvent.isTombStoned())
+            if (!randomEvent.isTombStoned()) {
                 drawSpriteCentered(randomEvent.getSprite(), randomEvent.getX(), randomEvent
-                    .getY());
+                        .getY());
+            }
         }
 
         //TODO: rlau (draw opponent money)
@@ -274,7 +275,7 @@ public class GameMaster implements Screen{
             framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
                 randomEvents_.size() < Settings.RANDOM_EVENT_MAXCOUNT) {
             if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_PROBABILITY)) {
-		// Create random event
+		        // Create random event
                 RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
                                 BoxType.RandomEvent, localPlayerNum_);
                 randomEvents_.add(randomEvent);
@@ -303,12 +304,18 @@ public class GameMaster implements Screen{
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
             for (RandomEvent randomEvent : randomEvents_) {
-                if (truck.checkIntersectingRandomEvent(randomEvent) && !randomEvent.isTombStoned()) {
+                if (!randomEvent.isTombStoned() && truck.checkIntersectingRandomEvent(randomEvent)) {
+                    // Tombstone it
                     randomEvent.setTombStoned(true);
+
+                    // Prepare message
                     JSONObject data = new JSONObject();
                     int id = randomEvents_.indexOf(randomEvent);
+                    Gdx.app.log("RandomEventTag", "Sending event " + String.valueOf(id));
                     data.put("id", id);
                     data.put("item", Settings.EVENT_TYPE);
+
+                    // Send message
                     Message m = messageCenter_.createUpdateMessage(messageCenter_.getUUID() ,data);
                     messageCenter_.sendMessage(m);
                 }
