@@ -44,6 +44,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by julianyang on 10/22/15.
@@ -290,20 +291,24 @@ public class GameMaster implements Screen{
             for (Truck truck : player.getTruckList()) {
                 if (!truck.getTombStoned()) {
                     if (truck.getUpgraded()) {
-                        String truckpng = Settings.TRUCK_PNG[localPlayerNum_ + 2];
+                        String truckpng = Settings.TRUCK_PNG[player.getPlayerNum() + 2];
                         truck.setTexture(new Texture(truckpng));
                     }
                     drawSpriteCentered(truck, truck.getX(), truck.getY());
                 }
             }
         }
+
         for (Missile missile: missiles_) {
             drawSpriteCentered(missile, missile.getX(), missile.getY());
         }
 
         for (RandomEvent randomEvent : randomEvents_) {
-            drawSpriteCentered(randomEvent.getSprite(), randomEvent.getX(), randomEvent
-                    .getY());
+            // TODO: Add tombstone logic
+            if (!randomEvent.isTombStoned()) {
+                drawSpriteCentered(randomEvent.getSprite(), randomEvent.getX(), randomEvent
+                        .getY());
+            }
         }
 
         //TODO: rlau (draw opponent money)
@@ -364,11 +369,27 @@ public class GameMaster implements Screen{
                 framesSinceLastTryEvent_ % Settings.FRAMES_BETWEEN_TRY_EVENT == 0 &&
                 randomEvents_.size() < Settings.RANDOM_EVENT_MAXCOUNT) {
             if (MathUtils.randomBoolean(Settings.RANDOM_EVENT_PROBABILITY)) {
+		        // Create random event
                 RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(
                         BoxType.RandomEvent, localPlayerNum_);
                 randomEvents_.add(randomEvent);
                 Gdx.app.log("RandomEvent", "Created Random Event at " +
-                        randomEvent.getX() + " " + randomEvent.getY());
+                    randomEvent.getX() + " " + randomEvent.getY());
+
+                // Prepare event message
+                JSONObject data = new JSONObject();
+                Vector3 v = new Vector3();
+                v.x = randomEvent.getX();
+                v.y = randomEvent.getY();
+                LatLngPoint point = coordConverter_.px2ll(v);
+                String coords = point.lat + "," + point.lng;
+                data.put("coords", coords);
+                data.put("id", randomEvents_.size() - 1);
+
+                // Send event message
+                Message toSend = messageCenter_.createEventMessage(messageCenter_.getUUID(), data);
+                messageCenter_.sendMessage(toSend);
+
             }
             framesSinceLastTryEvent_ = 0;
         }
@@ -376,13 +397,23 @@ public class GameMaster implements Screen{
         for (Truck truck: localPlayer_.getTruckList()) {
             Gdx.app.debug("GameMaster", "Calling update on truck");
             truck.update();
-            Iterator<RandomEvent> iter = randomEvents_.iterator();
-            while(iter.hasNext()){
-                RandomEvent randomEvent = iter.next();
-                if(truck.checkIntersectingRandomEvent(randomEvent))
-                    iter.remove();
-            }
+            for (RandomEvent randomEvent : randomEvents_) {
+                if (!randomEvent.isTombStoned() && truck.checkIntersectingRandomEvent(randomEvent)) {
+                    // Tombstone it
+                    randomEvent.setTombStoned(true);
 
+                    // Prepare message
+                    JSONObject data = new JSONObject();
+                    int id = randomEvents_.indexOf(randomEvent);
+                    Gdx.app.log("RandomEventTag", "Sending event " + String.valueOf(id));
+                    data.put("id", id);
+                    data.put("item", Settings.EVENT_TYPE);
+
+                    // Send message
+                    Message m = messageCenter_.createUpdateMessage(messageCenter_.getUUID() ,data);
+                    messageCenter_.sendMessage(m);
+                }
+            }
         }
 
         for (Truck truck: opponentPlayer_.getTruckList()) {
@@ -411,7 +442,7 @@ public class GameMaster implements Screen{
                     messageCenter_.sendMessage(toSend);
 
                     // Cleanup
-                    missile.getTargetTruck().setTombStoned_(true);
+                    missile.getTargetTruck().setTombStoned(true);
                     missiles_.remove(missile);
                 }
             }
@@ -458,11 +489,12 @@ public class GameMaster implements Screen{
 
                         opponentPlayer_.addTruck(truck);
                     }
-                    // If opponnent bought a missile
+                    // If opponent bought a missile
                     else if (m.getItem().equals(Settings.MISSILE_ITEM)) {
                         int truckID = m.getItemId();
                         Truck target = localPlayer_.getTruckList().get(truckID);
-                        target.setTombStoned_(true);
+                        target.setTombStoned(true);
+
                         Gdx.app.log("MessageTag", String.valueOf(truckID));
                         showAlert("Your truck has been destroyed by a missile!");
                     }
@@ -497,13 +529,34 @@ public class GameMaster implements Screen{
                 // Synchronization messages
                 else if (m.getType().equals(Settings.UPDATE_TYPE)) {
                     // If it is a truck pause
-                    Gdx.app.log("SyncTag", "Update: " + m.toString());
-//                    if (m.getStatus().equals(Settings.PAUSE_STATUS)) {
-                    int truckID = m.getItemId();
-                    Truck target = opponentPlayer_.getTruckList().get(truckID);
-                    target.setPaused(true);
-                    Gdx.app.log("TruckPause", String.valueOf(truckID));
-//                    }
+                    if (m.getItem().equals(Settings.TRUCK_ITEM)) {
+                        Gdx.app.log("SyncTag", "Update: " + m.toString());
+                        int truckID = m.getItemId();
+                        Truck target = opponentPlayer_.getTruckList().get(truckID);
+                        target.setPaused(true);
+                        Gdx.app.log("TruckPause", String.valueOf(truckID));
+                    }
+                    else {
+                        int eventID = m.getItemId();
+                        RandomEvent event = randomEvents_.get(eventID);
+                        event.setTombStoned(true);
+                        Gdx.app.log("tombstoneEvent", String.valueOf(eventID));
+                    }
+                }
+                // Random event has been generated
+                else if (m.getType().equals(Settings.EVENT_TYPE)) {
+                    // playerNum doesn't do anything for randomEvent constructor
+                    List<LatLngPoint> points = m.getCoords();
+
+                    // TODO: create a random Event at coords
+                    if (points != null && !points.isEmpty()) {
+                        // Should always be a list of size 1
+                        LatLngPoint p = points.get(0);
+                        Vector3 v = coordConverter_.ll2px(p.lat, p.lng);
+
+                        RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(BoxType.RandomEvent, opponentPlayerNum_, v);
+                        randomEvents_.add(randomEvent);
+                    }
                 }
             }
         }

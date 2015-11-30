@@ -97,4 +97,12 @@ public interface MessageCenter {
      * @return
      */
     Message createUpdateMessage(String uuid, JSONObject data);
+
+    /**
+     * Creates a Message of type 'event'
+     * @param uuid
+     * @param data
+     * @return
+     */
+    Message createEventMessage(String uuid, JSONObject data);
 }
