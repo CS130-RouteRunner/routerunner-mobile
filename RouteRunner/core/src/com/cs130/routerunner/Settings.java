@@ -62,8 +62,8 @@ public class Settings {
     public static final int BUY_MISSILE_COST = 200;
     public static final int TRUCK_UPGRADE_COST = 50;
     public static final int TRUCK_UPGRADE_CARRY = 180;
-    public static final int FRAMES_BETWEEN_TRY_EVENT = 1200;
-    public static final int TARGET_MONEY = 600;    // TODO: Change this after win syncing implemented
+    public static final int FRAMES_BETWEEN_TRY_EVENT = 1600;
+    public static final int TARGET_MONEY = 1000;
 
     // Random Events
     public static final String RANDOM_EVENT_PNG = "treasure.png";
@@ -72,7 +72,7 @@ public class Settings {
     public static final float RANDOM_EVENT_PROBABILITY = 0.002f;
     public static final int RANDOM_EVENT_VAL = 30;
     public static final int RANDOM_EVENT_MAXCOUNT = 20;
-    public static final boolean SNAP_RANDOM_EVENTS = false;
+    public static final boolean SNAP_RANDOM_EVENTS = true;
     // Spawn points
     public static final int SPAWN_POINT[][] = {{100, 100}, {1510, 1833}};
     public static final String SPAWN_PNG[] = {"factory_blue.png",
@@ -88,7 +88,7 @@ public class Settings {
             "truck_red_upgrade.png" };
 
     // Setting flag for synchronized start game
-    public static final boolean WAIT_FOR_PLAYERS = false;
+    public static final boolean WAIT_FOR_PLAYERS = true;
 
     // Message constants
     public static final String PURCHASE_TYPE = "purchase";
