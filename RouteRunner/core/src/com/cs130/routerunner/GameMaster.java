@@ -442,7 +442,7 @@ public class GameMaster implements Screen{
                         LatLngPoint p = points.get(0);
                         Vector3 v = coordConverter_.ll2px(p.lat, p.lng);
 
-                        RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(BoxType.RandomEvent, opponentPlayerNum_);
+                        RandomEvent randomEvent = (RandomEvent) boxFactory_.createBox(BoxType.RandomEvent, opponentPlayerNum_, v);
                         randomEvents_.add(randomEvent);
                     }
                 }
