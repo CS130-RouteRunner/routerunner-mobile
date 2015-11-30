@@ -176,13 +176,16 @@ public class GameMaster implements Screen{
             // Send it
             Gdx.net.sendHttpRequest(post, new Net.HttpResponseListener() {
                 @Override
-                public void handleHttpResponse(Net.HttpResponse httpResponse) {}
+                public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                }
 
                 @Override
-                public void failed(Throwable t) {}
+                public void failed(Throwable t) {
+                }
 
                 @Override
-                public void cancelled() {}
+                public void cancelled() {
+                }
             });
 
             gameOver = false;
@@ -235,10 +238,11 @@ public class GameMaster implements Screen{
             showOnce = true;
             gameOverAlert("You have won the game!");
             JSONObject data = new JSONObject();
-            data.put("id", messageCenter_.getUUID());
+            data.put("id", localPlayerNum_);
             data.put("item", Settings.WIN_TYPE);
             Message m = messageCenter_.createUpdateMessage(messageCenter_.getUUID(), data);
             messageCenter_.sendMessage(m);
+            Gdx.app.log("WinTag", data.toString());
         }
 
         update(delta);

@@ -62,7 +62,7 @@ public class Settings {
     public static final int BUY_MISSILE_COST = 200;
     public static final int TRUCK_UPGRADE_COST = 50;
     public static final int TRUCK_UPGRADE_CARRY = 180;
-    public static final int FRAMES_BETWEEN_TRY_EVENT = 600;
+    public static final int FRAMES_BETWEEN_TRY_EVENT = 1200;
     public static final int TARGET_MONEY = 600;    // TODO: Change this after win syncing implemented
 
     // Random Events
