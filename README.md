@@ -1,6 +1,8 @@
 # Route Runner Mobile Client
 An Android real-time PvP supply delivery game powered by LibGDX and PubNub.
 
+Demo: https://youtu.be/eDsXm5JlFdQ
+
 ## Setup IDE
 1. Download [Android Studio](https://developer.android.com/sdk/index.html)
 
@@ -19,13 +21,20 @@ An Android real-time PvP supply delivery game powered by LibGDX and PubNub.
 
 
 ## How to Play
-- Goal: To get to the target amount of money before the other player
-- Create a lobby or join a lobby
+- Goal: To get to the target amount of money before the other player. This is set at 800 or 1000.
+- Create a lobby or join a lobby.
 - The person with the lexicographically smallest name is blue and starts in the bottom left corner, while the other player is red and starts in the top right corner. Their respective drop-off points for trucks is the UCLA Bruin and the USC Trojan.
 - To deliver money to the drop-off point, buy a truck.
-- To move the truck, click the truck, click `Edit Route`, plot waypoints within the green radius, click `Snap to Roads` when you are satisfied with your route
+- To move the truck, click the truck, click `Edit Route`, plot waypoints within the green radius, click `Snap to Roads` when you are satisfied with your route.
 - To destroy an opponent's truck, buy a missile and tap on an opponent's truck to destroy it.
 - When a truck reaches the drop-off point, your current money will increase and the truck will respawn at your base, i.e. the factory.
+- To upgrade a truck to carry more money, click your truck and click `Upgrade Truck`.
+- The random chests that spawn around the map give you money when a truck goes over the chest.
+
+## Limitations
+- Cannot fire two missiles at once or the game will crash.
+- The game state is unrecoverable if the game crashes, i.e. you cannot rejoin the lobby you were in.
+
 
 ## Pivotal Tracker
 [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/1445446)
